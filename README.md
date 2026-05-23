@@ -92,9 +92,9 @@ cmake --build build --config Release
    - Converts packet payloads across versions while preserving universal packet keys.
 
 3. `kprotocol::MinecraftServer`
-   - Accepts TCP clients.
-   - Decodes framed packets to universal packets.
-   - Handles handshake version negotiation/state switching.
+   - Asio + C++20 coroutine TCP runtime (one `io_context`, no thread-per-client).
+   - Accepts TCP clients, decodes framed packets, handles handshake version/state.
+   - Optional compression threshold on `start()` mirrors Minecraft Set Compression.
    - Sends packets translated to each client version.
    - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`, `onError`).
 

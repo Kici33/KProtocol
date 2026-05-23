@@ -319,7 +319,10 @@ std::optional<std::int32_t> PacketRegistry::packet_id_for(std::string_view key, 
     return std::nullopt;
 }
 
-std::vector<std::uint8_t> PacketRegistry::encode_packet(const Packet& packet, const ProtocolVersion version) const {
+std::vector<std::uint8_t> PacketRegistry::encode_packet(
+    const Packet& packet,
+    const ProtocolVersion version,
+    const std::int32_t compression_threshold) const {
     const auto* schema = schema_for(packet.key);
     if (schema == nullptr) {
         throw std::runtime_error("Unknown packet key: " + packet.key);
@@ -347,7 +350,10 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(const Packet& packet, co
         write_field(payload, field, it->second);
     }
 
-    return codec::encode_frame(*packet_id, payload);
+    if (compression_threshold < 0) {
+        return codec::encode_frame(*packet_id, payload);
+    }
+    return codec::encode_frame_compressed(*packet_id, payload, compression_threshold);
 }
 
 Packet PacketRegistry::decode_packet(

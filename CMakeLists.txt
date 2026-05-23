@@ -108,15 +108,38 @@ if(KPROTOCOL_NODE_EXECUTABLE)
 endif()
 
 # ============================================================================
-# kprotocol_server: TCP accept loop + ClientSession. Optional - users embedding
-# the codec in their own I/O stack can omit it.
+# Asio (standalone, header-only) — used only by kprotocol_server.
+# ============================================================================
+include(FetchContent)
+FetchContent_Declare(
+    kprotocol_asio
+    GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+    GIT_TAG        asio-1-30-2
+)
+FetchContent_GetProperties(kprotocol_asio)
+if(NOT kprotocol_asio_POPULATED)
+    FetchContent_MakeAvailable(kprotocol_asio)
+    if(NOT TARGET kprotocol_asio)
+        add_library(kprotocol_asio INTERFACE)
+        target_include_directories(kprotocol_asio SYSTEM INTERFACE
+            ${kprotocol_asio_SOURCE_DIR}/asio/include)
+        target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
+        if(WIN32)
+            target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
+        endif()
+    endif()
+    add_library(kprotocol::asio ALIAS kprotocol_asio)
+endif()
+
+# ============================================================================
+# kprotocol_server: Asio coroutine TCP runtime + ClientSession.
 # ============================================================================
 add_library(kprotocol_server
     src/server.cpp
 )
-target_link_libraries(kprotocol_server PUBLIC kprotocol_core)
+target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
-    target_link_libraries(kprotocol_server PRIVATE ws2_32)
+    target_link_libraries(kprotocol_server PRIVATE ws2_32 mswsock)
 endif()
 kprotocol_apply_warnings(kprotocol_server)
 add_library(kprotocol::server ALIAS kprotocol_server)
@@ -161,6 +184,7 @@ if(KPROTOCOL_BUILD_TESTS)
         field_types_tests
         versioned_schema_tests
         generated_packets_tests
+        server_smoke_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -186,7 +210,7 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(TARGETS
-        kprotocol kprotocol_codec kprotocol_core kprotocol_packets kprotocol_server
+        kprotocol kprotocol_codec kprotocol_core kprotocol_packets kprotocol_server kprotocol_asio
     EXPORT kprotocolTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

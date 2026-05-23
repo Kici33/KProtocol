@@ -56,10 +56,16 @@ public:
     MinecraftServer(MinecraftServer&&) noexcept;
     MinecraftServer& operator=(MinecraftServer&&) noexcept;
 
-    bool start(std::uint16_t port, ProtocolVersion internal_version = ProtocolVersion::v1_21_1);
+    // compression_threshold: Minecraft "Set Compression" threshold in bytes.
+    // Pass -1 (default) to disable compression on the wire.
+    bool start(std::uint16_t port,
+               ProtocolVersion internal_version = ProtocolVersion::v1_21_1,
+               std::int32_t compression_threshold = -1);
     void stop();
 
     bool running() const noexcept;
+    // Bound port after start(); 0 if not started.
+    std::uint16_t listen_port() const noexcept;
 
     void on_packet(PacketHandler handler);
     void on_error(ErrorHandler handler);
