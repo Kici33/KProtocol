@@ -1,5 +1,10 @@
 #pragma once
 
+#include "kprotocol/codec/errors.hpp"
+#include "kprotocol/codec/limits.hpp"
+#include "kprotocol/codec/reader.hpp"
+#include "kprotocol/codec/writer.hpp"
+
 #include <cstddef>
 #include <cstdint>
 #include <span>
@@ -85,24 +90,33 @@ bool try_decode_frame(std::span<const std::uint8_t> input, std::size_t& consumed
 
 // ===== Compression Support =====
 /**
- * Compress packet data using zlib deflate algorithm.
- * Returns the compressed data (raw deflate format without zlib header).
- * Throws std::runtime_error if compression fails.
+ * Compress data using zlib deflate (Mojang's standard "Set Compression"
+ * format: zlib stream with header, not raw DEFLATE).
+ * Throws codec::EncodeError if zlib reports an unrecoverable error.
  */
 std::vector<std::uint8_t> compress_packet(std::span<const std::uint8_t> data);
 
 /**
- * Decompress zlib-compressed packet data.
- * Returns the decompressed data (original uncompressed payload).
- * Throws std::runtime_error if decompression fails or data is corrupted.
+ * Decompress a zlib-compressed payload.
+ *
+ * @param compressed_data the compressed input
+ * @param max_output_length upper bound on the decompressed size; decompression
+ *        is aborted if the output would grow beyond this cap. Defaults to
+ *        codec::limits::max_decompressed_length (8 MiB). Pass a larger value
+ *        only when the caller already trusts the data_length field.
+ *
+ * Throws codec::DecodeError if the stream is corrupt or would exceed
+ * max_output_length.
  */
-std::vector<std::uint8_t> decompress_packet(std::span<const std::uint8_t> compressed_data);
+std::vector<std::uint8_t> decompress_packet(
+    std::span<const std::uint8_t> compressed_data,
+    std::int32_t max_output_length = limits::max_decompressed_length);
 
 /**
- * Encode a frame with optional compression.
- * If compressed_threshold is -1 (no compression), uses standard frame encoding.
- * If data_length >= threshold, automatically compresses the payload.
- * Returns the encoded frame ready to send over network.
+ * Encode a frame, optionally with Set-Compression semantics.
+ * If compression_threshold is negative, behaves identically to encode_frame.
+ * If the packet body's length is >= threshold, compresses it; otherwise
+ * emits the uncompressed-with-data-length-0 form.
  */
 std::vector<std::uint8_t> encode_frame_compressed(
     std::int32_t packet_id,
@@ -111,8 +125,12 @@ std::vector<std::uint8_t> encode_frame_compressed(
 
 /**
  * Decode a frame that may be compressed.
- * Automatically detects and decompresses if needed based on data_length field.
- * Returns true if a complete frame was decoded, false if more data is needed.
+ *
+ * Returns true on a complete frame; false if more data is needed OR the frame
+ * is structurally invalid (negative length, length above max_packet_length,
+ * compressed body whose declared expanded size exceeds max_decompressed_length).
+ * Does not throw on malformed input; caller can distinguish "need more" from
+ * "garbage" by checking whether the buffer is still growing.
  */
 bool try_decode_frame_compressed(
     std::span<const std::uint8_t> input,

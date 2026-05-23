@@ -1,25 +1,81 @@
-Generating full packet catalog (1.8 → latest)
+# Generating the multi-version packet catalog
 
-This repository includes a generator script that uses PrismarineJS/minecraft-data to emit
-C++ typed packet classes and packet registry mappings across multiple Java Edition versions.
+The `kprotocol` library ships with a generator-first packet catalog. The full
+catalog under `generated/` is auto-produced from
+[PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data)
+and committed to the repository so that consumers can build immediately
+without Node.js.
 
-Prerequisites
-- Node.js and npm installed
+## What gets generated
 
-Generate steps
-1. Install dependency:
-   npm install minecraft-data
-2. Run the generator (example covering major versions):
-   node generate_packets.js --out generated --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+The generator emits three artifacts under the `--out` directory:
 
-What it does
-- Produces a `generated/` tree with `packets/` (C++ header stubs) and `registry/register_all_packets.cpp` (registration skeleton).
-- The output requires manual verification: field encodings vary across protocol versions and must be mapped correctly.
+- `include/kprotocol/generated/packet_keys.hpp` - one
+  `inline constexpr std::string_view` per packet key, so users can avoid
+  stringly-typed lookups (e.g.
+  `kprotocol::generated::packet_keys::login_serverbound_encryption_begin`).
+- `registry/register_all_packets.cpp` - implementation of
+  `kprotocol::register_generated_packets(PacketRegistry&)`. Call this once at
+  startup to register every supported (state, direction, version) tuple.
+- `coverage.json` - per-version stats and per-key status (`ok` vs `rawOnly`).
+  Useful for tracking how much of the wire format is fully typed vs handled
+  as an opaque `rest_buffer` blob.
 
-Integration
-- After generation, inspect `generated/packets/*.hpp` and expand typed fields and conversion logic.
-- Merge generated headers into `include/kprotocol/` and generated registration code into `src/` or call `register_generated_packets(registry)` from your initialization code.
+## Regenerating
 
-Notes
-- PrismarineJS/minecraft-data is MIT-licensed. Some other sources (wiki.vg) are under CC BY-SA which may affect redistribution.
-- This generator is a best-effort scaffold — automated generation will save time but manual review is required to ensure correctness across all protocol versions.
+Prerequisites: Node.js 18+ on PATH.
+
+```bash
+# 1. Install the upstream data package (one-time)
+npm install minecraft-data
+
+# 2. Regenerate. Versions must be a comma-separated list of values that
+#    appear in kprotocol's KPROTOCOL_FOR_EACH_KNOWN_VERSION (see
+#    include/kprotocol/version.hpp).
+node tools/generate_packets.mjs \
+    --out generated \
+    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+```
+
+The CMake build exposes a convenience target that performs the same step:
+
+```bash
+cmake --build <build-dir> --target kprotocol_generate_packets
+```
+
+The target uses the versions listed in the `KPROTOCOL_GENERATE_VERSIONS`
+CMake cache variable (default: `1.8,1.12.2,1.16.5,1.20.4,1.21.1`).
+
+## Type mapping
+
+The generator translates minecraft-data's protocol types into kprotocol's
+`FieldType` enum. Primitives map directly:
+
+| minecraft-data | kprotocol FieldType   |
+|---|---|
+| `varint`, `varlong`, `bool`, `string` | `var_int`, `var_long`, `boolean`, `string` |
+| `u8`, `i8`, `u16`, `i16`, `u32`, `i32`, `u64`, `i64` | `u8`, `i8`, `u16_be`, `i16_be`, `u32_be`, `i32_be`, `u64_be`, `i64_be` |
+| `f32`, `f64` | `f32_be`, `f64_be` |
+| `UUID`, `position` | `uuid`, `position` |
+| `[buffer, {countType: varint}]` | `byte_array` |
+| `restBuffer` | `rest_buffer` |
+
+Any packet whose container references compound types (`switch`, `array`,
+`option`, nested `container`, `mapper`, ...) cannot be fully modeled in
+Wave 2. The generator falls back to a single `rest_buffer` field named
+`raw` so the packet can still round-trip byte-exact as an opaque blob. These
+entries are flagged `rawOnly` in `coverage.json`; a later wave will extend
+`FieldType` with compound primitives so coverage can grow.
+
+## Disabling the committed catalog
+
+If you only need the hand-rolled baseline packets and want to keep your link
+units small, pass `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF`. The generator
+output is then excluded from the build and the `register_generated_packets`
+symbol is unavailable.
+
+## Licensing
+
+The upstream data is MIT-licensed by PrismarineJS. The generator script
+itself (`tools/generate_packets.mjs`) is part of kprotocol and follows the
+project license.

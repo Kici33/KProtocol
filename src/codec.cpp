@@ -1,267 +1,377 @@
+// SPDX-License-Identifier: MIT
+//
+// Wire codec for the Minecraft Java protocol.
+//
+// Design goals:
+//   - No undefined behavior on adversarial input. Bounds-checked.
+//   - try_* decoders never throw; on malformed/truncated input they return
+//     false (so a coroutine-driven Wave 3 server doesn't have to wrap awaits
+//     in try/catch).
+//   - All length-prefixed reads are capped at codec::limits::* unless the
+//     caller passes a larger explicit bound.
+//   - Decompression is bounded - an attacker cannot force unbounded memory
+//     allocation by sending a small "zip-bomb" stream.
+//   - The legacy free-function API (read_*(span, size_t&) -> T) is preserved
+//     verbatim and reimplemented on top of codec::Reader so a single source
+//     of truth governs bounds checks.
+
 #include "kprotocol/codec.hpp"
 
+#include <algorithm>
 #include <cstring>
 #include <stdexcept>
+#include <string>
 #include <zlib.h>
 
 namespace kprotocol::codec {
 
-namespace {
+// ===== Reader implementation =================================================
 
-constexpr std::size_t max_var_int_bytes = 5;
-constexpr std::size_t max_var_long_bytes = 10;
-
-bool try_read_var_int(std::span<const std::uint8_t> input, std::size_t start_offset, std::int32_t& value, std::size_t& bytes_read) {
-    value = 0;
-    bytes_read = 0;
+std::int32_t Reader::read_var_int() noexcept {
+    if (!ok()) return 0;
     std::uint32_t result = 0;
-
-    while (bytes_read < max_var_int_bytes) {
-        if (start_offset + bytes_read >= input.size()) {
-            return false;
+    std::size_t bytes_read = 0;
+    while (bytes_read < limits::max_var_int_bytes) {
+        if (cursor_ + bytes_read >= data_.size()) {
+            poison(ReadError::truncated);
+            return 0;
         }
-        const auto current = input[start_offset + bytes_read];
-        result |= static_cast<std::uint32_t>(current & 0x7F) << (7U * bytes_read);
+        const auto current = data_[cursor_ + bytes_read];
+        result |= static_cast<std::uint32_t>(current & 0x7FU) << (7U * bytes_read);
         ++bytes_read;
         if ((current & 0x80U) == 0U) {
-            value = static_cast<std::int32_t>(result);
-            return true;
+            cursor_ += bytes_read;
+            return static_cast<std::int32_t>(result);
         }
     }
-
-    throw std::runtime_error("VarInt exceeds 5 bytes");
+    poison(ReadError::overlong_varint);
+    return 0;
 }
 
-void ensure_available(const std::span<const std::uint8_t> input, const std::size_t offset, const std::size_t required) {
-    if (offset + required > input.size()) {
-        throw std::runtime_error("Unexpected end of input");
+std::int64_t Reader::read_var_long() noexcept {
+    if (!ok()) return 0;
+    std::uint64_t result = 0;
+    std::size_t bytes_read = 0;
+    while (bytes_read < limits::max_var_long_bytes) {
+        if (cursor_ + bytes_read >= data_.size()) {
+            poison(ReadError::truncated);
+            return 0;
+        }
+        const auto current = data_[cursor_ + bytes_read];
+        result |= static_cast<std::uint64_t>(current & 0x7FU) << (7U * bytes_read);
+        ++bytes_read;
+        if ((current & 0x80U) == 0U) {
+            cursor_ += bytes_read;
+            return static_cast<std::int64_t>(result);
+        }
     }
+    poison(ReadError::overlong_varint);
+    return 0;
+}
+
+std::uint8_t Reader::read_u8() noexcept {
+    if (!ok()) return 0;
+    if (!has_remaining(1)) { poison(ReadError::truncated); return 0; }
+    return data_[cursor_++];
+}
+
+std::int8_t Reader::read_i8() noexcept {
+    return static_cast<std::int8_t>(read_u8());
+}
+
+std::uint16_t Reader::read_u16_be() noexcept {
+    if (!ok()) return 0;
+    if (!has_remaining(2)) { poison(ReadError::truncated); return 0; }
+    const auto hi = static_cast<std::uint16_t>(data_[cursor_]);
+    const auto lo = static_cast<std::uint16_t>(data_[cursor_ + 1]);
+    cursor_ += 2;
+    return static_cast<std::uint16_t>((hi << 8U) | lo);
+}
+
+std::int16_t Reader::read_i16_be() noexcept {
+    return static_cast<std::int16_t>(read_u16_be());
+}
+
+std::uint32_t Reader::read_u32_be() noexcept {
+    if (!ok()) return 0;
+    if (!has_remaining(4)) { poison(ReadError::truncated); return 0; }
+    std::uint32_t v = 0;
+    for (int i = 0; i < 4; ++i) {
+        v = (v << 8U) | static_cast<std::uint32_t>(data_[cursor_ + static_cast<std::size_t>(i)]);
+    }
+    cursor_ += 4;
+    return v;
+}
+
+std::int32_t Reader::read_i32_be() noexcept {
+    return static_cast<std::int32_t>(read_u32_be());
+}
+
+std::uint64_t Reader::read_u64_be() noexcept {
+    if (!ok()) return 0;
+    if (!has_remaining(8)) { poison(ReadError::truncated); return 0; }
+    std::uint64_t v = 0;
+    for (int i = 0; i < 8; ++i) {
+        v = (v << 8U) | static_cast<std::uint64_t>(data_[cursor_ + static_cast<std::size_t>(i)]);
+    }
+    cursor_ += 8;
+    return v;
+}
+
+std::int64_t Reader::read_i64_be() noexcept {
+    return static_cast<std::int64_t>(read_u64_be());
+}
+
+float Reader::read_f32_be() noexcept {
+    const auto bits = read_u32_be();
+    float v = 0.0f;
+    std::memcpy(&v, &bits, sizeof(float));
+    return v;
+}
+
+double Reader::read_f64_be() noexcept {
+    const auto bits = read_u64_be();
+    double v = 0.0;
+    std::memcpy(&v, &bits, sizeof(double));
+    return v;
+}
+
+bool Reader::read_bool() noexcept {
+    return read_u8() != 0U;
+}
+
+std::string Reader::read_string(std::int32_t max_len) noexcept {
+    if (!ok()) return {};
+    const auto length = read_var_int();
+    if (!ok()) return {};
+    if (length < 0) { poison(ReadError::negative_length); return {}; }
+    if (length > max_len) { poison(ReadError::length_exceeds_limit); return {}; }
+    const auto n = static_cast<std::size_t>(length);
+    if (!has_remaining(n)) { poison(ReadError::truncated); return {}; }
+    // Direct slice construction - no per-byte push_back.
+    const auto* begin = reinterpret_cast<const char*>(data_.data() + cursor_);
+    std::string out(begin, n);
+    cursor_ += n;
+    return out;
+}
+
+std::span<const std::uint8_t> Reader::read_bytes(std::int32_t max_len) noexcept {
+    if (!ok()) return {};
+    const auto length = read_var_int();
+    if (!ok()) return {};
+    if (length < 0) { poison(ReadError::negative_length); return {}; }
+    if (length > max_len) { poison(ReadError::length_exceeds_limit); return {}; }
+    const auto n = static_cast<std::size_t>(length);
+    if (!has_remaining(n)) { poison(ReadError::truncated); return {}; }
+    const auto view = data_.subspan(cursor_, n);
+    cursor_ += n;
+    return view;
+}
+
+// ===== Writer implementation =================================================
+
+void Writer::write_var_int(std::int32_t value) noexcept {
+    if (!ok()) return;
+    auto current = static_cast<std::uint32_t>(value);
+    do {
+        auto temp = static_cast<std::uint8_t>(current & 0x7FU);
+        current >>= 7U;
+        if (current != 0U) temp |= 0x80U;
+        out_.push_back(temp);
+        ++written_;
+    } while (current != 0U);
+}
+
+void Writer::write_var_long(std::int64_t value) noexcept {
+    if (!ok()) return;
+    auto current = static_cast<std::uint64_t>(value);
+    do {
+        auto temp = static_cast<std::uint8_t>(current & 0x7FU);
+        current >>= 7U;
+        if (current != 0U) temp |= 0x80U;
+        out_.push_back(temp);
+        ++written_;
+    } while (current != 0U);
+}
+
+void Writer::write_u8(std::uint8_t value) noexcept {
+    if (!ok()) return;
+    out_.push_back(value);
+    ++written_;
+}
+
+void Writer::write_i8(std::int8_t value) noexcept {
+    write_u8(static_cast<std::uint8_t>(value));
+}
+
+void Writer::write_u16_be(std::uint16_t value) noexcept {
+    if (!ok()) return;
+    out_.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xFFU));
+    out_.push_back(static_cast<std::uint8_t>(value & 0xFFU));
+    written_ += 2;
+}
+
+void Writer::write_i16_be(std::int16_t value) noexcept {
+    write_u16_be(static_cast<std::uint16_t>(value));
+}
+
+void Writer::write_u32_be(std::uint32_t value) noexcept {
+    if (!ok()) return;
+    out_.push_back(static_cast<std::uint8_t>((value >> 24U) & 0xFFU));
+    out_.push_back(static_cast<std::uint8_t>((value >> 16U) & 0xFFU));
+    out_.push_back(static_cast<std::uint8_t>((value >> 8U)  & 0xFFU));
+    out_.push_back(static_cast<std::uint8_t>(value & 0xFFU));
+    written_ += 4;
+}
+
+void Writer::write_i32_be(std::int32_t value) noexcept {
+    write_u32_be(static_cast<std::uint32_t>(value));
+}
+
+void Writer::write_u64_be(std::uint64_t value) noexcept {
+    if (!ok()) return;
+    for (int i = 7; i >= 0; --i) {
+        out_.push_back(static_cast<std::uint8_t>((value >> (static_cast<std::uint32_t>(i) * 8U)) & 0xFFU));
+    }
+    written_ += 8;
+}
+
+void Writer::write_i64_be(std::int64_t value) noexcept {
+    write_u64_be(static_cast<std::uint64_t>(value));
+}
+
+void Writer::write_f32_be(float value) noexcept {
+    std::uint32_t bits = 0;
+    std::memcpy(&bits, &value, sizeof(float));
+    write_u32_be(bits);
+}
+
+void Writer::write_f64_be(double value) noexcept {
+    std::uint64_t bits = 0;
+    std::memcpy(&bits, &value, sizeof(double));
+    write_u64_be(bits);
+}
+
+void Writer::write_bool(bool value) noexcept {
+    write_u8(value ? 0x01U : 0x00U);
+}
+
+void Writer::write_string(const std::string& value, std::int32_t max_len) noexcept {
+    if (!ok()) return;
+    if (value.size() > static_cast<std::size_t>(max_len)) {
+        poison(WriteError::length_exceeds_limit);
+        return;
+    }
+    write_var_int(static_cast<std::int32_t>(value.size()));
+    if (!ok()) return;
+    out_.insert(out_.end(), value.begin(), value.end());
+    written_ += value.size();
+}
+
+void Writer::write_bytes(std::span<const std::uint8_t> value, std::int32_t max_len) noexcept {
+    if (!ok()) return;
+    if (value.size() > static_cast<std::size_t>(max_len)) {
+        poison(WriteError::length_exceeds_limit);
+        return;
+    }
+    write_var_int(static_cast<std::int32_t>(value.size()));
+    if (!ok()) return;
+    out_.insert(out_.end(), value.begin(), value.end());
+    written_ += value.size();
+}
+
+void Writer::write_raw(std::span<const std::uint8_t> value) noexcept {
+    if (!ok()) return;
+    out_.insert(out_.end(), value.begin(), value.end());
+    written_ += value.size();
+}
+
+// ===== Legacy free-function API =============================================
+//
+// Every public read_*/write_* free function from previous releases is preserved
+// with its original signature. They now delegate to Reader/Writer so that bounds
+// checking is centralized. The read_* functions still throw codec::DecodeError
+// when the legacy contract demanded it (e.g. they return a value, not a status),
+// but the THROWN exception type is now codec::DecodeError specifically (still
+// derived from std::runtime_error so old catch blocks remain effective).
+
+namespace {
+
+[[noreturn]] void throw_read_failure(ReadError e) {
+    switch (e) {
+    case ReadError::truncated:            throw DecodeError("codec: unexpected end of input");
+    case ReadError::overlong_varint:      throw DecodeError("codec: VarInt/VarLong overflow");
+    case ReadError::length_exceeds_limit: throw DecodeError("codec: length-prefixed value exceeds limit");
+    case ReadError::negative_length:      throw DecodeError("codec: negative length-prefix");
+    case ReadError::ok:                   throw DecodeError("codec: unexpected reader state");
+    }
+    throw DecodeError("codec: unspecified decode error");
+}
+
+template <typename F>
+auto with_reader(std::span<const std::uint8_t> input, std::size_t& offset, F&& fn) {
+    Reader r(input.subspan(offset));
+    auto value = fn(r);
+    if (!r.ok()) {
+        throw_read_failure(r.error());
+    }
+    offset += r.cursor();
+    return value;
 }
 
 } // namespace
 
+// --- Encoders (delegate to Writer; preserve original void signatures) -------
+
 void write_var_int(std::vector<std::uint8_t>& out, std::int32_t value) {
-    auto current = static_cast<std::uint32_t>(value);
-    do {
-        std::uint8_t temp = static_cast<std::uint8_t>(current & 0x7FU);
-        current >>= 7U;
-        if (current != 0U) {
-            temp |= 0x80U;
-        }
-        out.push_back(temp);
-    } while (current != 0U);
+    Writer w(out); w.write_var_int(value);
 }
 
 void write_var_long(std::vector<std::uint8_t>& out, std::int64_t value) {
-    auto current = static_cast<std::uint64_t>(value);
-    do {
-        std::uint8_t temp = static_cast<std::uint8_t>(current & 0x7FU);
-        current >>= 7U;
-        if (current != 0U) {
-            temp |= 0x80U;
-        }
-        out.push_back(temp);
-    } while (current != 0U);
+    Writer w(out); w.write_var_long(value);
 }
 
-void write_bool(std::vector<std::uint8_t>& out, const bool value) {
-    out.push_back(static_cast<std::uint8_t>(value ? 0x01 : 0x00));
-}
+void write_byte(std::vector<std::uint8_t>& out, std::int8_t value)   { Writer w(out); w.write_i8(value); }
+void write_ubyte(std::vector<std::uint8_t>& out, std::uint8_t value) { Writer w(out); w.write_u8(value); }
+void write_short(std::vector<std::uint8_t>& out, std::int16_t value)   { Writer w(out); w.write_i16_be(value); }
+void write_ushort(std::vector<std::uint8_t>& out, std::uint16_t value) { Writer w(out); w.write_u16_be(value); }
+void write_int(std::vector<std::uint8_t>& out, std::int32_t value)   { Writer w(out); w.write_i32_be(value); }
+void write_uint(std::vector<std::uint8_t>& out, std::uint32_t value) { Writer w(out); w.write_u32_be(value); }
+void write_long(std::vector<std::uint8_t>& out, std::int64_t value)   { Writer w(out); w.write_i64_be(value); }
+void write_ulong(std::vector<std::uint8_t>& out, std::uint64_t value) { Writer w(out); w.write_u64_be(value); }
 
-void write_u16(std::vector<std::uint8_t>& out, const std::uint16_t value) {
-    out.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>(value & 0xFFU));
-}
+void write_float(std::vector<std::uint8_t>& out, float value)   { Writer w(out); w.write_f32_be(value); }
+void write_double(std::vector<std::uint8_t>& out, double value) { Writer w(out); w.write_f64_be(value); }
+
+void write_bool(std::vector<std::uint8_t>& out, bool value) { Writer w(out); w.write_bool(value); }
+void write_u16(std::vector<std::uint8_t>& out, std::uint16_t value) { Writer w(out); w.write_u16_be(value); }
 
 void write_string(std::vector<std::uint8_t>& out, const std::string& value) {
-    write_var_int(out, static_cast<std::int32_t>(value.size()));
-    out.insert(out.end(), value.begin(), value.end());
-}
-
-void write_bytes(std::vector<std::uint8_t>& out, const std::span<const std::uint8_t> value) {
-    write_var_int(out, static_cast<std::int32_t>(value.size()));
-    out.insert(out.end(), value.begin(), value.end());
-}
-
-std::int32_t read_var_int(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    std::int32_t value = 0;
-    std::size_t bytes_read = 0;
-    if (!try_read_var_int(input, offset, value, bytes_read)) {
-        throw std::runtime_error("Incomplete VarInt");
-    }
-    offset += bytes_read;
-    return value;
-}
-
-std::int64_t read_var_long(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    std::uint64_t result = 0;
-    std::size_t num_read = 0;
-    while (num_read < max_var_long_bytes) {
-        ensure_available(input, offset + num_read, 1);
-        const auto read = input[offset + num_read];
-        result |= static_cast<std::uint64_t>(read & 0x7FU) << (7U * num_read);
-        ++num_read;
-        if ((read & 0x80U) == 0U) {
-            offset += num_read;
-            return static_cast<std::int64_t>(result);
-        }
-    }
-    throw std::runtime_error("VarLong exceeds 10 bytes");
-}
-
-bool read_bool(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 1);
-    return input[offset++] != 0U;
-}
-
-std::uint16_t read_u16(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 2);
-    const auto hi = static_cast<std::uint16_t>(input[offset]);
-    const auto lo = static_cast<std::uint16_t>(input[offset + 1]);
-    offset += 2;
-    return static_cast<std::uint16_t>((hi << 8U) | lo);
-}
-
-std::string read_string(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    const auto length = read_var_int(input, offset);
-    if (length < 0) {
-        throw std::runtime_error("Negative string length");
-    }
-    const auto safe_length = static_cast<std::size_t>(length);
-    ensure_available(input, offset, safe_length);
-    std::string value;
-    value.reserve(safe_length);
-    for (std::size_t i = 0; i < safe_length; ++i) {
-        value.push_back(static_cast<char>(input[offset + i]));
-    }
-    offset += safe_length;
-    return value;
-}
-
-std::vector<std::uint8_t> read_bytes(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    const auto length = read_var_int(input, offset);
-    if (length < 0) {
-        throw std::runtime_error("Negative bytes length");
-    }
-    const auto safe_length = static_cast<std::size_t>(length);
-    ensure_available(input, offset, safe_length);
-    std::vector<std::uint8_t> value;
-    value.insert(value.end(), input.begin() + static_cast<std::ptrdiff_t>(offset), input.begin() + static_cast<std::ptrdiff_t>(offset + safe_length));
-    offset += safe_length;
-    return value;
-}
-
-std::vector<std::uint8_t> encode_frame(const std::int32_t packet_id, const std::span<const std::uint8_t> payload) {
-    std::vector<std::uint8_t> packet_data;
-    write_var_int(packet_data, packet_id);
-    packet_data.insert(packet_data.end(), payload.begin(), payload.end());
-
-    std::vector<std::uint8_t> frame;
-    write_var_int(frame, static_cast<std::int32_t>(packet_data.size()));
-    frame.insert(frame.end(), packet_data.begin(), packet_data.end());
-    return frame;
-}
-
-bool try_decode_frame(const std::span<const std::uint8_t> input, std::size_t& consumed, EncodedFrame& frame) {
-    consumed = 0;
-    std::int32_t length = 0;
-    std::size_t length_bytes = 0;
-    if (!try_read_var_int(input, 0, length, length_bytes)) {
-        return false;
-    }
-    if (length < 0) {
-        throw std::runtime_error("Negative frame length");
-    }
-
-    const auto payload_size = static_cast<std::size_t>(length);
-    if (input.size() < length_bytes + payload_size) {
-        return false;
-    }
-
-    const auto packet_bytes = input.subspan(length_bytes, payload_size);
-    std::size_t offset = 0;
-    frame.packet_id = read_var_int(packet_bytes, offset);
-    frame.payload.assign(packet_bytes.begin() + static_cast<std::ptrdiff_t>(offset), packet_bytes.end());
-    consumed = length_bytes + payload_size;
-    return true;
-}
-
-// ===== Fixed-Size Integer Types (Big-Endian) =====
-
-void write_byte(std::vector<std::uint8_t>& out, std::int8_t value) {
-    out.push_back(static_cast<std::uint8_t>(value));
-}
-
-void write_ubyte(std::vector<std::uint8_t>& out, std::uint8_t value) {
-    out.push_back(value);
-}
-
-void write_short(std::vector<std::uint8_t>& out, std::int16_t value) {
-    const auto uval = static_cast<std::uint16_t>(value);
-    out.push_back(static_cast<std::uint8_t>((uval >> 8U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>(uval & 0xFFU));
-}
-
-void write_ushort(std::vector<std::uint8_t>& out, std::uint16_t value) {
-    out.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>(value & 0xFFU));
-}
-
-void write_int(std::vector<std::uint8_t>& out, std::int32_t value) {
-    const auto uval = static_cast<std::uint32_t>(value);
-    out.push_back(static_cast<std::uint8_t>((uval >> 24U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>((uval >> 16U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>((uval >> 8U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>(uval & 0xFFU));
-}
-
-void write_uint(std::vector<std::uint8_t>& out, std::uint32_t value) {
-    out.push_back(static_cast<std::uint8_t>((value >> 24U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>((value >> 16U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>((value >> 8U) & 0xFFU));
-    out.push_back(static_cast<std::uint8_t>(value & 0xFFU));
-}
-
-void write_long(std::vector<std::uint8_t>& out, std::int64_t value) {
-    const auto uval = static_cast<std::uint64_t>(value);
-    for (int i = 7; i >= 0; --i) {
-        out.push_back(static_cast<std::uint8_t>((uval >> (i * 8U)) & 0xFFU));
+    Writer w(out);
+    w.write_string(value);
+    if (!w.ok()) {
+        throw EncodeError("codec: string length exceeds protocol limit");
     }
 }
 
-void write_ulong(std::vector<std::uint8_t>& out, std::uint64_t value) {
-    for (int i = 7; i >= 0; --i) {
-        out.push_back(static_cast<std::uint8_t>((value >> (i * 8U)) & 0xFFU));
+void write_bytes(std::vector<std::uint8_t>& out, std::span<const std::uint8_t> value) {
+    Writer w(out);
+    w.write_bytes(value);
+    if (!w.ok()) {
+        throw EncodeError("codec: byte-array length exceeds protocol limit");
     }
 }
-
-// ===== Floating-Point Types (IEEE-754, Big-Endian) =====
-
-void write_float(std::vector<std::uint8_t>& out, float value) {
-    std::uint32_t bits = 0;
-    std::memcpy(&bits, &value, sizeof(float));
-    write_uint(out, bits);
-}
-
-void write_double(std::vector<std::uint8_t>& out, double value) {
-    std::uint64_t bits = 0;
-    std::memcpy(&bits, &value, sizeof(double));
-    write_ulong(out, bits);
-}
-
-// ===== Byte Array Types =====
 
 void write_byte_array(std::vector<std::uint8_t>& out, std::span<const std::uint8_t> value) {
-    write_var_int(out, static_cast<std::int32_t>(value.size()));
-    out.insert(out.end(), value.begin(), value.end());
+    write_bytes(out, value);
 }
 
-// ===== Angle & Rotation =====
-
 void write_angle(std::vector<std::uint8_t>& out, float yaw) {
-    const float normalized = yaw - static_cast<float>(static_cast<int>(yaw));
-    const auto byte_val = static_cast<std::uint8_t>(static_cast<int>(normalized * 256.0f) & 0xFF);
-    out.push_back(byte_val);
+    // Map any real value to [0, 1) before scaling - handles negative and out-of-range yaws.
+    float frac = yaw - static_cast<float>(static_cast<long long>(yaw));
+    if (frac < 0.0f) frac += 1.0f;
+    const auto scaled = static_cast<std::uint8_t>(static_cast<int>(frac * 256.0f) & 0xFF);
+    Writer w(out); w.write_u8(scaled);
 }
 
 void write_rotation(std::vector<std::uint8_t>& out, float yaw, float pitch) {
@@ -269,127 +379,65 @@ void write_rotation(std::vector<std::uint8_t>& out, float yaw, float pitch) {
     write_angle(out, pitch);
 }
 
-// ===== Array Types =====
-
 void write_var_int_array(std::vector<std::uint8_t>& out, std::span<const std::int32_t> values) {
-    write_var_int(out, static_cast<std::int32_t>(values.size()));
-    for (auto v : values) {
-        write_var_int(out, v);
-    }
+    Writer w(out);
+    w.write_var_int(static_cast<std::int32_t>(values.size()));
+    for (auto v : values) w.write_var_int(v);
 }
 
 void write_var_long_array(std::vector<std::uint8_t>& out, std::span<const std::int64_t> values) {
-    write_var_int(out, static_cast<std::int32_t>(values.size()));
-    for (auto v : values) {
-        write_var_long(out, v);
-    }
+    Writer w(out);
+    w.write_var_int(static_cast<std::int32_t>(values.size()));
+    for (auto v : values) w.write_var_long(v);
 }
 
-// ===== Fixed-Size Integer Decoders (Big-Endian) =====
+// --- Decoders (legacy span+offset; throw DecodeError on failure) ------------
 
-std::int8_t read_byte(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 1);
-    return static_cast<std::int8_t>(input[offset++]);
+std::int32_t read_var_int(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) { return r.read_var_int(); });
 }
 
-std::uint8_t read_ubyte(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 1);
-    return input[offset++];
+std::int64_t read_var_long(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) { return r.read_var_long(); });
 }
 
-std::int16_t read_short(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 2);
-    const auto hi = static_cast<std::int16_t>(input[offset]);
-    const auto lo = static_cast<std::int16_t>(input[offset + 1]);
-    offset += 2;
-    return static_cast<std::int16_t>((hi << 8) | lo);
+std::int8_t  read_byte(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i8(); }); }
+std::uint8_t read_ubyte(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_u8(); }); }
+std::int16_t  read_short(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i16_be(); }); }
+std::uint16_t read_ushort(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_u16_be(); }); }
+std::int32_t  read_int(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i32_be(); }); }
+std::uint32_t read_uint(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_u32_be(); }); }
+std::int64_t  read_long(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i64_be(); }); }
+std::uint64_t read_ulong(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_u64_be(); }); }
+
+float  read_float(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_f32_be(); }); }
+double read_double(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_f64_be(); }); }
+
+bool read_bool(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) { return r.read_bool(); });
 }
 
-std::uint16_t read_ushort(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 2);
-    const auto hi = static_cast<std::uint16_t>(input[offset]);
-    const auto lo = static_cast<std::uint16_t>(input[offset + 1]);
-    offset += 2;
-    return static_cast<std::uint16_t>((hi << 8U) | lo);
+std::uint16_t read_u16(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) { return r.read_u16_be(); });
 }
 
-std::int32_t read_int(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 4);
-    std::int32_t value = 0;
-    for (int i = 0; i < 4; ++i) {
-        value = (value << 8) | static_cast<std::int32_t>(input[offset + i]);
-    }
-    offset += 4;
-    return value;
+std::string read_string(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) { return r.read_string(); });
 }
 
-std::uint32_t read_uint(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 4);
-    std::uint32_t value = 0;
-    for (int i = 0; i < 4; ++i) {
-        value = (value << 8) | static_cast<std::uint32_t>(input[offset + i]);
-    }
-    offset += 4;
-    return value;
+std::vector<std::uint8_t> read_bytes(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return with_reader(input, offset, [](Reader& r) {
+        const auto view = r.read_bytes();
+        return std::vector<std::uint8_t>(view.begin(), view.end());
+    });
 }
 
-std::int64_t read_long(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 8);
-    std::int64_t value = 0;
-    for (int i = 0; i < 8; ++i) {
-        value = (value << 8) | static_cast<std::int64_t>(input[offset + i]);
-    }
-    offset += 8;
-    return value;
+std::vector<std::uint8_t> read_byte_array(std::span<const std::uint8_t> input, std::size_t& offset) {
+    return read_bytes(input, offset);
 }
-
-std::uint64_t read_ulong(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 8);
-    std::uint64_t value = 0;
-    for (int i = 0; i < 8; ++i) {
-        value = (value << 8) | static_cast<std::uint64_t>(input[offset + i]);
-    }
-    offset += 8;
-    return value;
-}
-
-// ===== Floating-Point Decoders (IEEE-754, Big-Endian) =====
-
-float read_float(std::span<const std::uint8_t> input, std::size_t& offset) {
-    const auto bits = read_uint(input, offset);
-    float value = 0.0f;
-    std::memcpy(&value, &bits, sizeof(float));
-    return value;
-}
-
-double read_double(std::span<const std::uint8_t> input, std::size_t& offset) {
-    const auto bits = read_ulong(input, offset);
-    double value = 0.0;
-    std::memcpy(&value, &bits, sizeof(double));
-    return value;
-}
-
-// ===== Byte Array Decoders =====
-
-std::vector<std::uint8_t> read_byte_array(const std::span<const std::uint8_t> input, std::size_t& offset) {
-    const auto length = read_var_int(input, offset);
-    if (length < 0) {
-        throw std::runtime_error("Negative byte array length");
-    }
-    const auto safe_length = static_cast<std::size_t>(length);
-    ensure_available(input, offset, safe_length);
-    std::vector<std::uint8_t> value;
-    value.insert(value.end(), input.begin() + static_cast<std::ptrdiff_t>(offset), input.begin() + static_cast<std::ptrdiff_t>(offset + safe_length));
-    offset += safe_length;
-    return value;
-}
-
-// ===== Angle & Rotation Decoders =====
 
 float read_angle(std::span<const std::uint8_t> input, std::size_t& offset) {
-    ensure_available(input, offset, 1);
-    const auto byte_val = input[offset++];
-    return static_cast<float>(byte_val) / 256.0f;
+    return static_cast<float>(read_ubyte(input, offset)) / 256.0f;
 }
 
 std::pair<float, float> read_rotation(std::span<const std::uint8_t> input, std::size_t& offset) {
@@ -398,193 +446,286 @@ std::pair<float, float> read_rotation(std::span<const std::uint8_t> input, std::
     return {yaw, pitch};
 }
 
-// ===== Array Type Decoders =====
-
 std::vector<std::int32_t> read_var_int_array(std::span<const std::uint8_t> input, std::size_t& offset) {
     const auto count = read_var_int(input, offset);
     if (count < 0) {
-        throw std::runtime_error("Negative var_int array length");
+        throw DecodeError("codec: negative VarInt-array length");
     }
-    std::vector<std::int32_t> values;
-    values.reserve(static_cast<std::size_t>(count));
+    std::vector<std::int32_t> out;
+    out.reserve(static_cast<std::size_t>(count));
     for (std::int32_t i = 0; i < count; ++i) {
-        values.push_back(read_var_int(input, offset));
+        out.push_back(read_var_int(input, offset));
     }
-    return values;
+    return out;
 }
 
 std::vector<std::int64_t> read_var_long_array(std::span<const std::uint8_t> input, std::size_t& offset) {
     const auto count = read_var_int(input, offset);
     if (count < 0) {
-        throw std::runtime_error("Negative var_long array length");
+        throw DecodeError("codec: negative VarLong-array length");
     }
-    std::vector<std::int64_t> values;
-    values.reserve(static_cast<std::size_t>(count));
+    std::vector<std::int64_t> out;
+    out.reserve(static_cast<std::size_t>(count));
     for (std::int32_t i = 0; i < count; ++i) {
-        values.push_back(read_var_long(input, offset));
+        out.push_back(read_var_long(input, offset));
     }
-    return values;
+    return out;
 }
 
-// ===== Compression Support (ZLib) =====
+// ===== Frame encoding / decoding ============================================
 
-// Forward declaration
-inline std::int32_t calculate_var_int_size(std::int32_t value);
+std::vector<std::uint8_t> encode_frame(std::int32_t packet_id, std::span<const std::uint8_t> payload) {
+    // Compute exact byte budget up front; one allocation.
+    const auto id_size = var_int_size(packet_id);
+    const auto body_len = id_size + static_cast<std::int32_t>(payload.size());
+    const auto len_size = var_int_size(body_len);
+
+    std::vector<std::uint8_t> frame;
+    frame.reserve(static_cast<std::size_t>(len_size + body_len));
+
+    Writer w(frame);
+    w.write_var_int(body_len);
+    w.write_var_int(packet_id);
+    w.write_raw(payload);
+    return frame;
+}
+
+bool try_decode_frame(std::span<const std::uint8_t> input,
+                      std::size_t& consumed,
+                      EncodedFrame& frame) {
+    consumed = 0;
+
+    // Step 1: peek the outer length VarInt without committing to the buffer.
+    Reader length_reader(input);
+    const auto length = length_reader.read_var_int();
+    if (length_reader.error() == ReadError::truncated) {
+        // Need more data; not malformed.
+        return false;
+    }
+    if (!length_reader.ok()) {
+        // Overlong VarInt or other structural error - not recoverable
+        // by reading more bytes, but we don't throw here.
+        return false;
+    }
+    if (length < 0 || length > limits::max_packet_length) {
+        return false;
+    }
+
+    const auto length_bytes = length_reader.cursor();
+    const auto payload_size = static_cast<std::size_t>(length);
+
+    if (input.size() < length_bytes + payload_size) {
+        return false; // wait for more data
+    }
+
+    // Step 2: parse inner body (packet_id varint + payload bytes).
+    Reader body_reader(input.subspan(length_bytes, payload_size));
+    const auto packet_id = body_reader.read_var_int();
+    if (!body_reader.ok()) {
+        return false;
+    }
+
+    frame.packet_id = packet_id;
+    const auto body_remaining = body_reader.remaining_bytes();
+    const auto* begin = input.data() + length_bytes + body_reader.cursor();
+    frame.payload.assign(begin, begin + body_remaining);
+    consumed = length_bytes + payload_size;
+    return true;
+}
+
+// ===== Compression (zlib) ===================================================
 
 std::vector<std::uint8_t> compress_packet(std::span<const std::uint8_t> data) {
     if (data.empty()) {
         return {};
     }
-    
-    // Use zlib's compress2 for deflate compression
-    std::vector<std::uint8_t> compressed(data.size() + 16); // Add some buffer
-    uLongf compressed_size = compressed.size();
-    
-    const auto result = compress2(
-        compressed.data(),
-        &compressed_size,
+
+    // compressBound is an upper bound for the deflate output size.
+    const auto bound = ::compressBound(static_cast<uLong>(data.size()));
+    std::vector<std::uint8_t> out(static_cast<std::size_t>(bound));
+    uLongf out_size = bound;
+
+    const auto rc = ::compress2(
+        out.data(),
+        &out_size,
         data.data(),
-        data.size(),
-        Z_DEFAULT_COMPRESSION
-    );
-    
-    if (result != Z_OK) {
-        throw std::runtime_error("Compression failed with zlib error: " + std::to_string(result));
+        static_cast<uLong>(data.size()),
+        Z_DEFAULT_COMPRESSION);
+
+    if (rc != Z_OK) {
+        throw EncodeError("codec: zlib compress2 failed (rc=" + std::to_string(rc) + ")");
     }
-    
-    compressed.resize(compressed_size);
-    return compressed;
+    out.resize(static_cast<std::size_t>(out_size));
+    return out;
 }
 
-std::vector<std::uint8_t> decompress_packet(std::span<const std::uint8_t> compressed_data) {
+std::vector<std::uint8_t> decompress_packet(std::span<const std::uint8_t> compressed_data,
+                                            std::int32_t max_output_length) {
     if (compressed_data.empty()) {
         return {};
     }
-    
-    // Start with an estimate for decompressed size
-    std::vector<std::uint8_t> decompressed(compressed_data.size() * 4);
-    
-    while (true) {
-        uLongf decompressed_size = decompressed.size();
-        const auto result = uncompress(
-            decompressed.data(),
-            &decompressed_size,
-            compressed_data.data(),
-            compressed_data.size()
-        );
-        
-        if (result == Z_OK) {
-            decompressed.resize(decompressed_size);
-            return decompressed;
-        }
-        
-        if (result == Z_BUF_ERROR) {
-            // Buffer too small, double it and try again
-            decompressed.resize(decompressed.size() * 2);
-            continue;
-        }
-        
-        throw std::runtime_error("Decompression failed with zlib error: " + std::to_string(result));
+    if (max_output_length <= 0) {
+        throw DecodeError("codec: decompress_packet called with non-positive max_output_length");
     }
+
+    // Use inflate with growth + ceiling so we can abort on a zip-bomb rather
+    // than letting uncompress() try to size a multi-gigabyte buffer.
+    z_stream stream{};
+    stream.next_in = const_cast<Bytef*>(compressed_data.data());
+    stream.avail_in = static_cast<uInt>(compressed_data.size());
+
+    if (::inflateInit(&stream) != Z_OK) {
+        throw DecodeError("codec: zlib inflateInit failed");
+    }
+
+    std::vector<std::uint8_t> out;
+    // Seed with a reasonable initial capacity bounded by max_output_length.
+    const auto seed = std::min(static_cast<std::size_t>(max_output_length),
+                               compressed_data.size() * 4U + 64U);
+    out.resize(seed);
+
+    std::size_t written = 0;
+    int rc = Z_OK;
+    while (rc != Z_STREAM_END) {
+        if (written == out.size()) {
+            if (out.size() >= static_cast<std::size_t>(max_output_length)) {
+                ::inflateEnd(&stream);
+                throw DecodeError("codec: decompressed payload exceeds limit");
+            }
+            const auto next = std::min(out.size() * 2U,
+                                       static_cast<std::size_t>(max_output_length));
+            out.resize(next);
+        }
+        stream.next_out = out.data() + written;
+        stream.avail_out = static_cast<uInt>(out.size() - written);
+
+        const auto before = stream.avail_out;
+        rc = ::inflate(&stream, Z_NO_FLUSH);
+        written += (before - stream.avail_out);
+
+        if (rc == Z_STREAM_END) break;
+        if (rc == Z_OK || rc == Z_BUF_ERROR) continue;
+
+        ::inflateEnd(&stream);
+        throw DecodeError("codec: zlib inflate failed (rc=" + std::to_string(rc) + ")");
+    }
+    ::inflateEnd(&stream);
+    out.resize(written);
+    return out;
 }
 
-std::vector<std::uint8_t> encode_frame_compressed(
-    const std::int32_t packet_id,
-    const std::span<const std::uint8_t> payload,
-    const std::int32_t compression_threshold) {
-    
+std::vector<std::uint8_t> encode_frame_compressed(std::int32_t packet_id,
+                                                  std::span<const std::uint8_t> payload,
+                                                  std::int32_t compression_threshold) {
     if (compression_threshold < 0) {
-        // No compression
         return encode_frame(packet_id, payload);
     }
-    
-    // Build the packet data (packet_id + payload)
-    std::vector<std::uint8_t> packet_data;
-    write_var_int(packet_data, packet_id);
-    packet_data.insert(packet_data.end(), payload.begin(), payload.end());
-    
-    std::vector<std::uint8_t> frame;
-    
-    if (static_cast<std::int32_t>(packet_data.size()) >= compression_threshold) {
-        // Compress the packet data
-        const auto compressed = compress_packet(packet_data);
-        
-        // Frame format for compressed: frame_length (var_int) + data_length (var_int) + compressed_data
-        // data_length is the length of the original packet data (non-zero indicates compressed)
-        write_var_int(frame, static_cast<std::int32_t>(
-            calculate_var_int_size(static_cast<std::int32_t>(packet_data.size())) + compressed.size()
-        ));
-        write_var_int(frame, static_cast<std::int32_t>(packet_data.size()));
-        frame.insert(frame.end(), compressed.begin(), compressed.end());
-    } else {
-        // Too small to compress, send uncompressed
-        // Frame format: frame_length (var_int) + data_length (var_int, = 0) + packet_data
-        write_var_int(frame, static_cast<std::int32_t>(1 + packet_data.size())); // 1 byte for var_int 0
-        write_var_int(frame, 0); // data_length = 0 means uncompressed
-        frame.insert(frame.end(), packet_data.begin(), packet_data.end());
+
+    // The "uncompressed body" is (varint packet_id || payload bytes).
+    const auto id_size = var_int_size(packet_id);
+    const auto body_len = id_size + static_cast<std::int32_t>(payload.size());
+
+    if (body_len >= compression_threshold) {
+        std::vector<std::uint8_t> body;
+        body.reserve(static_cast<std::size_t>(body_len));
+        Writer body_w(body);
+        body_w.write_var_int(packet_id);
+        body_w.write_raw(payload);
+
+        const auto compressed = compress_packet(body);
+        const auto data_len_field_size = var_int_size(body_len);
+        const auto outer_len = data_len_field_size + static_cast<std::int32_t>(compressed.size());
+
+        std::vector<std::uint8_t> frame;
+        frame.reserve(static_cast<std::size_t>(var_int_size(outer_len) + outer_len));
+        Writer w(frame);
+        w.write_var_int(outer_len);
+        w.write_var_int(body_len);
+        w.write_raw(compressed);
+        return frame;
     }
-    
+
+    // Below threshold: data_length = 0 indicates "this body is not compressed".
+    const auto data_len_field_size = var_int_size(0);
+    const auto outer_len = data_len_field_size + body_len;
+
+    std::vector<std::uint8_t> frame;
+    frame.reserve(static_cast<std::size_t>(var_int_size(outer_len) + outer_len));
+    Writer w(frame);
+    w.write_var_int(outer_len);
+    w.write_var_int(0); // data_length = 0
+    w.write_var_int(packet_id);
+    w.write_raw(payload);
     return frame;
 }
 
-bool try_decode_frame_compressed(
-    const std::span<const std::uint8_t> input,
-    std::size_t& consumed,
-    const std::int32_t compression_threshold,
-    EncodedFrame& frame) {
-    
+bool try_decode_frame_compressed(std::span<const std::uint8_t> input,
+                                 std::size_t& consumed,
+                                 std::int32_t compression_threshold,
+                                 EncodedFrame& frame) {
     if (compression_threshold < 0) {
-        // No compression, use standard decoding
         return try_decode_frame(input, consumed, frame);
     }
-    
     consumed = 0;
-    std::int32_t frame_length = 0;
-    std::size_t length_bytes = 0;
-    
-    if (!try_read_var_int(input, 0, frame_length, length_bytes)) {
+
+    // Outer frame_length VarInt.
+    Reader length_reader(input);
+    const auto frame_length = length_reader.read_var_int();
+    if (length_reader.error() == ReadError::truncated) return false;
+    if (!length_reader.ok()) return false;
+    if (frame_length < 0 || frame_length > limits::max_packet_length) {
         return false;
     }
-    
-    if (frame_length < 0) {
-        throw std::runtime_error("Negative frame length");
-    }
-    
+    const auto length_bytes = length_reader.cursor();
     if (input.size() < length_bytes + static_cast<std::size_t>(frame_length)) {
         return false;
     }
-    
     const auto frame_data = input.subspan(length_bytes, static_cast<std::size_t>(frame_length));
-    std::size_t offset = 0;
-    
-    const auto data_length = read_var_int(frame_data, offset);
-    
-    if (data_length == 0) {
-        // Packet is not compressed
-        const auto packet_data = frame_data.subspan(offset);
-        std::size_t packet_offset = 0;
-        frame.packet_id = read_var_int(packet_data, packet_offset);
-        frame.payload.assign(packet_data.begin() + static_cast<std::ptrdiff_t>(packet_offset), packet_data.end());
-    } else {
-        // Packet is compressed
-        const auto compressed_payload = frame_data.subspan(offset);
-        const auto decompressed = decompress_packet(compressed_payload);
-        std::size_t decomp_offset = 0;
-        frame.packet_id = read_var_int(decompressed, decomp_offset);
-        frame.payload.assign(decompressed.begin() + static_cast<std::ptrdiff_t>(decomp_offset), decompressed.end());
+
+    Reader body_reader(frame_data);
+    const auto data_length = body_reader.read_var_int();
+    if (!body_reader.ok()) {
+        return false;
     }
-    
+
+    if (data_length == 0) {
+        // Uncompressed body: (varint packet_id || payload bytes).
+        const auto packet_id = body_reader.read_var_int();
+        if (!body_reader.ok()) return false;
+        frame.packet_id = packet_id;
+        const auto rem = body_reader.remaining_bytes();
+        const auto* begin = frame_data.data() + body_reader.cursor();
+        frame.payload.assign(begin, begin + rem);
+        consumed = length_bytes + static_cast<std::size_t>(frame_length);
+        return true;
+    }
+
+    if (data_length < 0 || data_length > limits::max_decompressed_length) {
+        return false;
+    }
+
+    // Compressed body. Decompress with the declared data_length as the ceiling.
+    const auto compressed = frame_data.subspan(body_reader.cursor());
+    std::vector<std::uint8_t> decompressed;
+    try {
+        decompressed = decompress_packet(compressed, data_length);
+    } catch (const DecodeError&) {
+        return false;
+    }
+    // Spec says data_length must equal the actual decompressed length.
+    if (static_cast<std::int32_t>(decompressed.size()) != data_length) {
+        return false;
+    }
+
+    Reader inner(decompressed);
+    const auto packet_id = inner.read_var_int();
+    if (!inner.ok()) return false;
+    frame.packet_id = packet_id;
+    const auto rem = inner.remaining_bytes();
+    const auto* begin = decompressed.data() + inner.cursor();
+    frame.payload.assign(begin, begin + rem);
     consumed = length_bytes + static_cast<std::size_t>(frame_length);
     return true;
-}
-
-// Helper: calculate the size of a var_int when encoded
-inline std::int32_t calculate_var_int_size(std::int32_t value) {
-    if ((value & 0xFFFFFF80) == 0) return 1;
-    if ((value & 0xFFFFC000) == 0) return 2;
-    if ((value & 0xFFE00000) == 0) return 3;
-    if ((value & 0xF0000000) == 0) return 4;
-    return 5;
 }
 
 } // namespace kprotocol::codec

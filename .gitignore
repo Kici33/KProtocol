@@ -1,5 +1,19 @@
+# Node-side generator (tools/generate_packets.mjs) deps.
 node_modules/
-generated/
-*.js
 package-lock.json
 package.json
+
+# CMake build trees (any name starting with build).
+build/
+build-*/
+build_*/
+out/
+
+# Editor / IDE.
+.vs/
+.vscode/
+.idea/
+*.swp
+
+# Misc.
+*.log

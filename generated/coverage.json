@@ -1,0 +1,3914 @@
+{
+  "generatedAt": "2026-05-21T08:29:30.022Z",
+  "versions": [
+    {
+      "display": "1.8",
+      "wire": 47,
+      "totalPackets": 112,
+      "fullSchemas": 3,
+      "rawOnly": 109
+    },
+    {
+      "display": "1.12.2",
+      "wire": 340,
+      "totalPackets": 125,
+      "fullSchemas": 2,
+      "rawOnly": 123
+    },
+    {
+      "display": "1.16.5",
+      "wire": 754,
+      "totalPackets": 154,
+      "fullSchemas": 2,
+      "rawOnly": 152
+    },
+    {
+      "display": "1.20.4",
+      "wire": 765,
+      "totalPackets": 203,
+      "fullSchemas": 9,
+      "rawOnly": 194
+    },
+    {
+      "display": "1.21.1",
+      "wire": 767,
+      "totalPackets": 226,
+      "fullSchemas": 10,
+      "rawOnly": 216
+    }
+  ],
+  "keys": [
+    {
+      "key": "configuration.clientbound.add_resource_pack",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 7,
+        "767": 9
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.cookie_request",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 0
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.custom_payload",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 0,
+        "767": 1
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.custom_report_details",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 15
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.disconnect",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 1,
+        "767": 2
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.feature_flags",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 8,
+        "767": 12
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.finish_configuration",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 2,
+        "767": 3
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "configuration.clientbound.keep_alive",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 3,
+        "767": 4
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.ping",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 4,
+        "767": 5
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.registry_data",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 5,
+        "767": 7
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.remove_resource_pack",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 6,
+        "767": 8
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.reset_chat",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 6
+      },
+      "statusByWire": {
+        "767": "ok"
+      }
+    },
+    {
+      "key": "configuration.clientbound.select_known_packs",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 14
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.server_links",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 16
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.store_cookie",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 10
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.tags",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "765": 9,
+        "767": 13
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.clientbound.transfer",
+      "state": "configuration",
+      "direction": "clientbound",
+      "ids": {
+        "767": 11
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.cookie_response",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "767": 1
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.custom_payload",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 1,
+        "767": 2
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.custom_report_details",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "767": 8
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.finish_configuration",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 2,
+        "767": 3
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "configuration.serverbound.keep_alive",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 3,
+        "767": 4
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.pong",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 4,
+        "767": 5
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.resource_pack_receive",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 5,
+        "767": 6
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.select_known_packs",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "767": 7
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.server_links",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "767": 9
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "configuration.serverbound.settings",
+      "state": "configuration",
+      "direction": "serverbound",
+      "ids": {
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "handshaking.serverbound.legacy_server_list_ping",
+      "state": "handshaking",
+      "direction": "serverbound",
+      "ids": {
+        "47": 254,
+        "340": 254,
+        "754": 254,
+        "765": 254,
+        "767": 254
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "handshaking.serverbound.set_protocol",
+      "state": "handshaking",
+      "direction": "serverbound",
+      "ids": {
+        "47": 0,
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.compress",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "47": 3,
+        "340": 3,
+        "754": 3,
+        "765": 3,
+        "767": 3
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.cookie_request",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "767": 5
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.disconnect",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "47": 0,
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.encryption_begin",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "47": 1,
+        "340": 1,
+        "754": 1,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.login_plugin_request",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "754": 4,
+        "765": 4,
+        "767": 4
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.clientbound.success",
+      "state": "login",
+      "direction": "clientbound",
+      "ids": {
+        "47": 2,
+        "340": 2,
+        "754": 2,
+        "765": 2,
+        "767": 2
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.serverbound.cookie_response",
+      "state": "login",
+      "direction": "serverbound",
+      "ids": {
+        "767": 4
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.serverbound.encryption_begin",
+      "state": "login",
+      "direction": "serverbound",
+      "ids": {
+        "47": 1,
+        "340": 1,
+        "754": 1,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "47": "ok",
+        "340": "ok",
+        "754": "ok",
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "login.serverbound.login_acknowledged",
+      "state": "login",
+      "direction": "serverbound",
+      "ids": {
+        "765": 3,
+        "767": 3
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "login.serverbound.login_plugin_response",
+      "state": "login",
+      "direction": "serverbound",
+      "ids": {
+        "754": 2,
+        "765": 2,
+        "767": 2
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "login.serverbound.login_start",
+      "state": "login",
+      "direction": "serverbound",
+      "ids": {
+        "47": 0,
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.abilities",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 57,
+        "340": 44,
+        "754": 48,
+        "765": 54,
+        "767": 56
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.acknowledge_player_digging",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 7,
+        "765": 5,
+        "767": 5
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.action_bar",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 74,
+        "767": 76
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.add_resource_pack",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 68,
+        "767": 70
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.advancements",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 77,
+        "754": 87,
+        "765": 112,
+        "767": 116
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.animation",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 11,
+        "340": 6,
+        "754": 5,
+        "765": 3,
+        "767": 3
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.attach_entity",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 27,
+        "340": 61,
+        "754": 69,
+        "765": 87,
+        "767": 89
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.bed",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 10,
+        "340": 48
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.block_action",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 36,
+        "340": 10,
+        "754": 10,
+        "765": 8,
+        "767": 8
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.block_break_animation",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 37,
+        "340": 8,
+        "754": 8,
+        "765": 6,
+        "767": 6
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.block_change",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 35,
+        "340": 11,
+        "754": 11,
+        "765": 9,
+        "767": 9
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.boss_bar",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 12,
+        "754": 12,
+        "765": 10,
+        "767": 10
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.bundle_delimiter",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.camera",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 67,
+        "340": 57,
+        "754": 62,
+        "765": 80,
+        "767": 82
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.chat",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 2,
+        "340": 15,
+        "754": 14
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.chat_suggestions",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 23,
+        "767": 24
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.chunk_batch_finished",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 12,
+        "767": 12
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.chunk_batch_start",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 13,
+        "767": 13
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "play.clientbound.chunk_biomes",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 14,
+        "767": 14
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.clear_titles",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 15,
+        "767": 15
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.close_window",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 46,
+        "340": 18,
+        "754": 18,
+        "765": 18,
+        "767": 18
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.collect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 13,
+        "340": 75,
+        "754": 85,
+        "765": 108,
+        "767": 111
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.combat_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 66,
+        "340": 45,
+        "754": 49
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.cookie_request",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 22
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.craft_progress_bar",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 49,
+        "340": 21,
+        "754": 20,
+        "765": 20,
+        "767": 20
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.craft_recipe_response",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 43,
+        "754": 47,
+        "765": 53,
+        "767": 55
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.custom_payload",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 63,
+        "340": 24,
+        "754": 23,
+        "765": 24,
+        "767": 25
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.custom_report_details",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 122
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.damage_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 25,
+        "767": 26
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.death_combat_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 58,
+        "767": 60
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.debug_sample",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 27
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.declare_commands",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 16,
+        "765": 17,
+        "767": 17
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.declare_recipes",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 90,
+        "765": 115,
+        "767": 119
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.difficulty",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 65,
+        "340": 13,
+        "754": 13,
+        "765": 11,
+        "767": 11
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.end_combat_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 56,
+        "767": 58
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.enter_combat_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 57,
+        "767": 59
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "play.clientbound.entity",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 20,
+        "340": 37,
+        "754": 42
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_destroy",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 19,
+        "340": 50,
+        "754": 54,
+        "765": 64,
+        "767": 66
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_effect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 29,
+        "340": 79,
+        "754": 89,
+        "765": 114,
+        "767": 118
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_equipment",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 4,
+        "340": 63,
+        "754": 71,
+        "765": 89,
+        "767": 91
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_head_rotation",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 25,
+        "340": 54,
+        "754": 58,
+        "765": 70,
+        "767": 72
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_look",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 22,
+        "340": 40,
+        "754": 41,
+        "765": 46,
+        "767": 48
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_metadata",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 28,
+        "340": 60,
+        "754": 68,
+        "765": 86,
+        "767": 88
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_move_look",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 23,
+        "340": 39,
+        "754": 40,
+        "765": 45,
+        "767": 47
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_sound_effect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 80,
+        "765": 101,
+        "767": 103
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_status",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 26,
+        "340": 27,
+        "754": 26,
+        "765": 29,
+        "767": 31
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_teleport",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 24,
+        "340": 76,
+        "754": 86,
+        "765": 109,
+        "767": 112
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_update_attributes",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 78,
+        "754": 88,
+        "765": 113,
+        "767": 117
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.entity_velocity",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 18,
+        "340": 62,
+        "754": 70,
+        "765": 88,
+        "767": 90
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.experience",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 31,
+        "340": 64,
+        "754": 72,
+        "765": 90,
+        "767": 92
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.explosion",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 39,
+        "340": 28,
+        "754": 27,
+        "765": 30,
+        "767": 32
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.face_player",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 51,
+        "765": 61,
+        "767": 63
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.game_state_change",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 43,
+        "340": 30,
+        "754": 29,
+        "765": 32,
+        "767": 34
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.held_item_slot",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 9,
+        "340": 58,
+        "754": 63,
+        "765": 81,
+        "767": 83
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.hide_message",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 26,
+        "767": 28
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.hurt_animation",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 34,
+        "767": 36
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.initialize_world_border",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 35,
+        "767": 37
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.keep_alive",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 0,
+        "340": 31,
+        "754": 31,
+        "765": 36,
+        "767": 38
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.kick_disconnect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 64,
+        "340": 26,
+        "754": 25,
+        "765": 27,
+        "767": 29
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.login",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 1,
+        "340": 35,
+        "754": 36,
+        "765": 41,
+        "767": 43
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.map",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 52,
+        "340": 36,
+        "754": 37,
+        "765": 42,
+        "767": 44
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.map_chunk",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 33,
+        "340": 32,
+        "754": 32,
+        "765": 37,
+        "767": 39
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.map_chunk_bulk",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 38
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.multi_block_change",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 34,
+        "340": 16,
+        "754": 59,
+        "765": 71,
+        "767": 73
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.named_entity_spawn",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 12,
+        "340": 5,
+        "754": 4
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.named_sound_effect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 41,
+        "340": 25,
+        "754": 24
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.nbt_query_response",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 84,
+        "765": 107,
+        "767": 110
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.open_book",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 44,
+        "765": 48,
+        "767": 50
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.open_horse_window",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 30,
+        "765": 33,
+        "767": 35
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.open_sign_entity",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 54,
+        "340": 42,
+        "754": 46,
+        "765": 50,
+        "767": 52
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.open_window",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 45,
+        "340": 19,
+        "754": 45,
+        "765": 49,
+        "767": 51
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.ping",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 51,
+        "767": 53
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.ping_response",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 52,
+        "767": 54
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.player_chat",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 55,
+        "767": 57
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.player_info",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 56,
+        "340": 46,
+        "754": 50,
+        "765": 60,
+        "767": 62
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.player_remove",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 59,
+        "767": 61
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.playerlist_header",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 71,
+        "340": 74,
+        "754": 83,
+        "765": 106,
+        "767": 109
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.position",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 8,
+        "340": 47,
+        "754": 52,
+        "765": 62,
+        "767": 64
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.profileless_chat",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 28,
+        "767": 30
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.rel_entity_move",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 21,
+        "340": 38,
+        "754": 39,
+        "765": 44,
+        "767": 46
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.remove_entity_effect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 30,
+        "340": 51,
+        "754": 55,
+        "765": 65,
+        "767": 67
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.remove_resource_pack",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 67,
+        "767": 69
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.reset_score",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 66,
+        "767": 68
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.resource_pack_send",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 72,
+        "340": 52,
+        "754": 56
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.respawn",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 7,
+        "340": 53,
+        "754": 57,
+        "765": 69,
+        "767": 71
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.scoreboard_display_objective",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 61,
+        "340": 59,
+        "754": 67,
+        "765": 85,
+        "767": 87
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.scoreboard_objective",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 59,
+        "340": 66,
+        "754": 74,
+        "765": 92,
+        "767": 94
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.scoreboard_score",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 60,
+        "340": 69,
+        "754": 77,
+        "765": 95,
+        "767": 97
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.scoreboard_team",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 62
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.select_advancement_tab",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 55,
+        "754": 60,
+        "765": 72,
+        "767": 74
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.server_data",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 73,
+        "767": 75
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.server_links",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 123
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_compression",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 70
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_cooldown",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 23,
+        "754": 22,
+        "765": 22,
+        "767": 23
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_passengers",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 67,
+        "754": 75,
+        "765": 93,
+        "767": 95
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_projectile_power",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 121
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_slot",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 47,
+        "340": 22,
+        "754": 21,
+        "765": 21,
+        "767": 21
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_ticking_state",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 110,
+        "767": 113
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_title_subtitle",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 97,
+        "767": 99
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_title_text",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 99,
+        "767": 101
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.set_title_time",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 100,
+        "767": 102
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.simulation_distance",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 96,
+        "767": 98
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.sound_effect",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 73,
+        "754": 81,
+        "765": 102,
+        "767": 104
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_entity",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 14,
+        "340": 0,
+        "754": 0,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_entity_experience_orb",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 17,
+        "340": 1,
+        "754": 1,
+        "765": 2,
+        "767": 2
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_entity_living",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 15,
+        "340": 3,
+        "754": 2
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_entity_painting",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 16,
+        "340": 4,
+        "754": 3
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_entity_weather",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 44,
+        "340": 2
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.spawn_position",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 5,
+        "340": 70,
+        "754": 66,
+        "765": 84,
+        "767": 86
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.start_configuration",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 103,
+        "767": 105
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "play.clientbound.statistics",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 55,
+        "340": 7,
+        "754": 6,
+        "765": 4,
+        "767": 4
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.step_tick",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 111,
+        "767": 114
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.stop_sound",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 82,
+        "765": 104,
+        "767": 106
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.store_cookie",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 107
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.system_chat",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 105,
+        "767": 108
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.tab_complete",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 58,
+        "340": 14,
+        "754": 15,
+        "765": 16,
+        "767": 16
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.tags",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 91,
+        "765": 116,
+        "767": 120
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.teams",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 68,
+        "754": 76,
+        "765": 94,
+        "767": 96
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.tile_entity_data",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 53,
+        "340": 9,
+        "754": 9,
+        "765": 7,
+        "767": 7
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.title",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 69,
+        "340": 72,
+        "754": 79
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.trade_list",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 38,
+        "765": 43,
+        "767": 45
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.transaction",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 50,
+        "340": 17,
+        "754": 17
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.transfer",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "767": 115
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.unload_chunk",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 29,
+        "754": 28,
+        "765": 31,
+        "767": 33
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.unlock_recipes",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 49,
+        "754": 53,
+        "765": 63,
+        "767": 65
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_attributes",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 32
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_entity_nbt",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 73
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_health",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 6,
+        "340": 65,
+        "754": 73,
+        "765": 91,
+        "767": 93
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_light",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 35,
+        "765": 40,
+        "767": 42
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_sign",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 51
+      },
+      "statusByWire": {
+        "47": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_time",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 3,
+        "340": 71,
+        "754": 78,
+        "765": 98,
+        "767": 100
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_view_distance",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 65,
+        "765": 83,
+        "767": 85
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.update_view_position",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "754": 64,
+        "765": 82,
+        "767": 84
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.vehicle_move",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "340": 41,
+        "754": 43,
+        "765": 47,
+        "767": 49
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.window_items",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 48,
+        "340": 20,
+        "754": 19,
+        "765": 19,
+        "767": 19
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 68,
+        "340": 56,
+        "754": 61
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border_center",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 75,
+        "767": 77
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border_lerp_size",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 76,
+        "767": 78
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border_size",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 77,
+        "767": 79
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border_warning_delay",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 78,
+        "767": 80
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_border_warning_reach",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "765": 79,
+        "767": 81
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_event",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 40,
+        "340": 33,
+        "754": 33,
+        "765": 38,
+        "767": 40
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.clientbound.world_particles",
+      "state": "play",
+      "direction": "clientbound",
+      "ids": {
+        "47": 42,
+        "340": 34,
+        "754": 34,
+        "765": 39,
+        "767": 41
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.abilities",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 19,
+        "340": 19,
+        "754": 26,
+        "765": 32,
+        "767": 35
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.advancement_tab",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 25,
+        "754": 34,
+        "765": 41,
+        "767": 44
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.arm_animation",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 10,
+        "340": 29,
+        "754": 44,
+        "765": 51,
+        "767": 54
+      },
+      "statusByWire": {
+        "47": "ok",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.block_dig",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 7,
+        "340": 20,
+        "754": 27,
+        "765": 33,
+        "767": 36
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.block_place",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 8,
+        "340": 31,
+        "754": 46,
+        "765": 53,
+        "767": 56
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chat",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 1,
+        "340": 2,
+        "754": 3
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chat_command",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 4,
+        "767": 4
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chat_command_signed",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "767": 5
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chat_message",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 5,
+        "767": 6
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chat_session_update",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 6,
+        "767": 7
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.chunk_batch_received",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 7,
+        "767": 8
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.client_command",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 22,
+        "340": 3,
+        "754": 4,
+        "765": 8,
+        "767": 9
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.close_window",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 13,
+        "340": 8,
+        "754": 10,
+        "765": 14,
+        "767": 15
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.configuration_acknowledged",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 11,
+        "767": 12
+      },
+      "statusByWire": {
+        "765": "ok",
+        "767": "ok"
+      }
+    },
+    {
+      "key": "play.serverbound.cookie_response",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "767": 17
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.craft_recipe_request",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 18,
+        "754": 25,
+        "765": 31,
+        "767": 34
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.crafting_book_data",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 23
+      },
+      "statusByWire": {
+        "340": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.custom_payload",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 23,
+        "340": 9,
+        "754": 11,
+        "765": 16,
+        "767": 18
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.debug_sample_subscription",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "767": 19
+      },
+      "statusByWire": {
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.displayed_recipe",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 31,
+        "765": 38,
+        "767": 41
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.edit_book",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 12,
+        "765": 17,
+        "767": 20
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.enchant_item",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 17,
+        "340": 6,
+        "754": 8,
+        "765": 12,
+        "767": 13
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.entity_action",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 11,
+        "340": 21,
+        "754": 28,
+        "765": 34,
+        "767": 37
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.flying",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 3,
+        "340": 12,
+        "754": 21,
+        "765": 26,
+        "767": 29
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.generate_structure",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 15,
+        "765": 20,
+        "767": 23
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.held_item_slot",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 9,
+        "340": 26,
+        "754": 37,
+        "765": 44,
+        "767": 47
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.keep_alive",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 0,
+        "340": 11,
+        "754": 16,
+        "765": 21,
+        "767": 24
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.lock_difficulty",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 17,
+        "765": 22,
+        "767": 25
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.look",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 5,
+        "340": 15,
+        "754": 20,
+        "765": 25,
+        "767": 28
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.message_acknowledgement",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 3,
+        "767": 3
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.name_item",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 32,
+        "765": 39,
+        "767": 42
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.pick_item",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 24,
+        "765": 29,
+        "767": 32
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.ping_request",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 30,
+        "767": 33
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.pong",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 36,
+        "767": 39
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.position",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 4,
+        "340": 13,
+        "754": 18,
+        "765": 23,
+        "767": 26
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.position_look",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 6,
+        "340": 14,
+        "754": 19,
+        "765": 24,
+        "767": 27
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.query_block_nbt",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 1,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.query_entity_nbt",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 13,
+        "765": 18,
+        "767": 21
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.recipe_book",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 30,
+        "765": 37,
+        "767": 40
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.resource_pack_receive",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 25,
+        "340": 24,
+        "754": 33,
+        "765": 40,
+        "767": 43
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.select_trade",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 35,
+        "765": 42,
+        "767": 45
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.set_beacon_effect",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 36,
+        "765": 43,
+        "767": 46
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.set_creative_slot",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 16,
+        "340": 27,
+        "754": 40,
+        "765": 47,
+        "767": 50
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.set_difficulty",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 2,
+        "765": 2,
+        "767": 2
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.set_slot_state",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "765": 15,
+        "767": 16
+      },
+      "statusByWire": {
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.settings",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 21,
+        "340": 4,
+        "754": 5,
+        "765": 9,
+        "767": 10
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.spectate",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 24,
+        "340": 30,
+        "754": 45,
+        "765": 52,
+        "767": 55
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.steer_boat",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 17,
+        "754": 23,
+        "765": 28,
+        "767": 31
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.steer_vehicle",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 12,
+        "340": 22,
+        "754": 29,
+        "765": 35,
+        "767": 38
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.tab_complete",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 20,
+        "340": 1,
+        "754": 6,
+        "765": 10,
+        "767": 11
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.teleport_confirm",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.transaction",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 15,
+        "340": 5,
+        "754": 7
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.update_command_block",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 38,
+        "765": 45,
+        "767": 48
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.update_command_block_minecart",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 39,
+        "765": 46,
+        "767": 49
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.update_jigsaw_block",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 41,
+        "765": 48,
+        "767": 51
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.update_sign",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 18,
+        "340": 28,
+        "754": 43,
+        "765": 50,
+        "767": 53
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.update_structure_block",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "754": 42,
+        "765": 49,
+        "767": 52
+      },
+      "statusByWire": {
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.use_entity",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 2,
+        "340": 10,
+        "754": 14,
+        "765": 19,
+        "767": 22
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.use_item",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 32,
+        "754": 47,
+        "765": 54,
+        "767": 57
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.vehicle_move",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "340": 16,
+        "754": 22,
+        "765": 27,
+        "767": 30
+      },
+      "statusByWire": {
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "play.serverbound.window_click",
+      "state": "play",
+      "direction": "serverbound",
+      "ids": {
+        "47": 14,
+        "340": 7,
+        "754": 9,
+        "765": 13,
+        "767": 14
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "status.clientbound.ping",
+      "state": "status",
+      "direction": "clientbound",
+      "ids": {
+        "47": 1,
+        "340": 1,
+        "754": 1,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "status.clientbound.server_info",
+      "state": "status",
+      "direction": "clientbound",
+      "ids": {
+        "47": 0,
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "status.serverbound.ping",
+      "state": "status",
+      "direction": "serverbound",
+      "ids": {
+        "47": 1,
+        "340": 1,
+        "754": 1,
+        "765": 1,
+        "767": 1
+      },
+      "statusByWire": {
+        "47": "rawOnly",
+        "340": "rawOnly",
+        "754": "rawOnly",
+        "765": "rawOnly",
+        "767": "rawOnly"
+      }
+    },
+    {
+      "key": "status.serverbound.ping_start",
+      "state": "status",
+      "direction": "serverbound",
+      "ids": {
+        "47": 0,
+        "340": 0,
+        "754": 0,
+        "765": 0,
+        "767": 0
+      },
+      "statusByWire": {
+        "47": "ok",
+        "340": "ok",
+        "754": "ok",
+        "765": "ok",
+        "767": "ok"
+      }
+    }
+  ]
+}

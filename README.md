@@ -18,27 +18,40 @@ This repository currently ships a **baseline packet set** (handshake/status/logi
 Prerequisites:
 - CMake 3.21+
 - A C++20 toolchain (MSVC, clang-cl, GCC 10+)
+- zlib (system install or vcpkg)
 - On Windows: Visual Studio or appropriate build tools
 
-Build steps:
-
 ```bash
-# from repo root
 cmake -S . -B build
 cmake --build build --config Release
-# run tests
 ctest --test-dir build --output-on-failure
 ```
 
-If you've generated packet code under `generated/`, CMake will automatically include `generated/registry/register_all_packets.cpp` in the library.
+By default the library compiles the committed multi-version packet catalog under
+`generated/` (248 packet keys across 1.8, 1.12.2, 1.16.5, 1.20.4, 1.21.1).
+Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
+hand-rolled baseline set.
 
-Generating typed packets (best-effort):
+### Regenerating the packet catalog
 
-1. Install generator deps:
-   npm install minecraft-data
-2. Run the generator (v3 attempts to infer typed fields):
-   node generate_packets_v3.js --out generated --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
-3. Inspect `generated/packets/*.hpp` and `generated/registry/register_all_packets.cpp` and refine before building.
+See [GENERATE.md](GENERATE.md) for full details. Quick version:
+
+```bash
+npm install minecraft-data
+node tools/generate_packets.mjs \
+    --out generated \
+    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+```
+
+Or via CMake (requires Node.js on PATH):
+
+```bash
+cmake --build build --target kprotocol_generate_packets
+```
+
+Coverage stats land in `generated/coverage.json`. At the baseline versions
+most packets are emitted as opaque `rest_buffer` blobs today; fully typed
+schemas grow as compound field support is added in later waves.
 
 
 Second project (consumer) quickstart
@@ -65,9 +78,14 @@ cmake --build build --config Release
 ## Architecture
 
 1. `kprotocol::PacketRegistry`
-   - Stores universal packet definitions.
-   - Maps `(version, state, direction, packetId)` -> `packet key`.
-   - Encodes/decodes packet fields using a schema.
+   - Stores **PacketSchema** entries: one logical packet key with per-version
+     wire IDs and per-version field layouts.
+   - Version-aware lookup picks the highest declared field set `<=` the
+     requested protocol version.
+   - Encodes/decodes using typed `FieldType` values (VarInt, UUID,
+     Position, `rest_buffer` for opaque blobs, …).
+   - Legacy `PacketDefinition` registration is still supported and is
+     lifted into a schema automatically.
 
 2. `kprotocol::PacketTranslator`
    - Registers transforms for `(packet key, fromVersion, toVersion)`.
@@ -97,6 +115,9 @@ Each packet class carries strongly-typed fields and exposes:
 kprotocol::PacketRegistry registry;
 kprotocol::PacketTranslator translator;
 kprotocol::register_baseline_packets(registry, translator);
+#ifdef KPROTOCOL_GENERATED
+kprotocol::register_generated_packets(registry);  // 248 keys from minecraft-data
+#endif
 
 kprotocol::MinecraftServer server(registry, translator);
 class MyListener : public kprotocol::ProtocolListener {
@@ -117,6 +138,22 @@ server.start(25565, kprotocol::ProtocolVersion::v1_21_1);
 ```
 
 ## Adding a new packet
+
+Prefer `PacketSchema` when the wire layout differs by version:
+
+```cpp
+kprotocol::PacketSchema schema;
+schema.key = "play.clientbound.my_packet";
+schema.state = kprotocol::PacketState::play;
+schema.direction = kprotocol::PacketDirection::clientbound;
+schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x42;
+schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+    {"message", kprotocol::FieldType::string},
+};
+registry.register_schema(std::move(schema));
+```
+
+For a single layout across all versions, `register_definition` still works:
 
 ```cpp
 registry.register_definition(kprotocol::PacketDefinition{
