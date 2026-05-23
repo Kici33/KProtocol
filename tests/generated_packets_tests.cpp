@@ -1,0 +1,143 @@
+// Wave 2: smoke-test the committed generated/ packet catalog.
+//
+// This test only runs when the generator output is compiled in (the default
+// for in-tree builds). It verifies that:
+//   - register_generated_packets() succeeds and populates the registry
+//   - the auto-generated key constants in kprotocol/generated/packet_keys.hpp
+//     line up with real schema entries
+//   - the well-known login.serverbound.encryption_begin packet round-trips
+//     through the encode/decode pipeline
+//   - all baseline versions have at least one schema registered
+
+#include "kprotocol/codec.hpp"
+#include "kprotocol/generated.hpp"
+#include "kprotocol/packet.hpp"
+#include "kprotocol/registry.hpp"
+#include "kprotocol/version.hpp"
+
+#include "kprotocol/generated/packet_keys.hpp"
+
+#include <array>
+#include <cassert>
+#include <cstdint>
+#include <iostream>
+#include <string>
+#include <vector>
+
+namespace {
+
+constexpr std::array<kprotocol::ProtocolVersion, 5> kBaselineVersions = {
+    kprotocol::ProtocolVersion::v1_8,
+    kprotocol::ProtocolVersion::v1_12_2,
+    kprotocol::ProtocolVersion::v1_16_5,
+    kprotocol::ProtocolVersion::v1_20_4,
+    kprotocol::ProtocolVersion::v1_21_1,
+};
+
+void test_register_generated_populates_registry() {
+    std::cout << "  register_generated_packets() registers >100 packet keys... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::register_generated_packets(registry);
+    assert(registry.size() > 100);
+    std::cout << "ok (" << registry.size() << " keys)\n";
+}
+
+void test_generated_key_constants_resolve() {
+    std::cout << "  generated::packet_keys::login_serverbound_encryption_begin resolves... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::register_generated_packets(registry);
+
+    const auto key = kprotocol::generated::packet_keys::login_serverbound_encryption_begin;
+    const auto* schema = registry.schema_for(key);
+    assert(schema != nullptr);
+    assert(schema->state == kprotocol::PacketState::login);
+    assert(schema->direction == kprotocol::PacketDirection::serverbound);
+    std::cout << "ok\n";
+}
+
+void test_encryption_begin_roundtrip_at_1_20_4() {
+    std::cout << "  login.serverbound.encryption_begin round-trips at v1.20.4... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::register_generated_packets(registry);
+
+    kprotocol::Packet p;
+    p.key = std::string(kprotocol::generated::packet_keys::login_serverbound_encryption_begin);
+    p.state = kprotocol::PacketState::login;
+    p.direction = kprotocol::PacketDirection::serverbound;
+    p.fields["sharedSecret"] = std::vector<std::uint8_t>{0xAA, 0xBB, 0xCC, 0xDD};
+    p.fields["verifyToken"]  = std::vector<std::uint8_t>{0x01, 0x02, 0x03};
+
+    const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
+    kprotocol::codec::EncodedFrame frame;
+    std::size_t consumed = 0;
+    assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+    const auto decoded = registry.decode_packet(
+        frame, kprotocol::ProtocolVersion::v1_20_4,
+        kprotocol::PacketState::login, kprotocol::PacketDirection::serverbound);
+    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("sharedSecret"))
+           == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC, 0xDD}));
+    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("verifyToken"))
+           == std::vector<std::uint8_t>({0x01, 0x02, 0x03}));
+    std::cout << "ok\n";
+}
+
+void test_every_baseline_version_has_at_least_one_schema() {
+    std::cout << "  every baseline version has registered ids... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::register_generated_packets(registry);
+
+    // Cross-check a packet that exists at every baseline version. handshake's
+    // set_protocol (id 0x00 in handshaking.serverbound) is the canonical
+    // "always present" packet.
+    for (auto v : kBaselineVersions) {
+        const auto* schema = registry.schema_for(
+            v, kprotocol::PacketState::handshaking,
+            kprotocol::PacketDirection::serverbound, 0x00);
+        assert(schema != nullptr);
+        (void)v;
+    }
+    std::cout << "ok\n";
+}
+
+void test_rest_buffer_packet_roundtrips_opaque() {
+    std::cout << "  rest_buffer-shaped packet round-trips as opaque blob... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::register_generated_packets(registry);
+
+    // play.clientbound.collect is rest_buffer-only at every baseline version
+    // (it has compound fields the generator can't model yet). We confirm the
+    // raw payload round-trips byte-exact.
+    const std::string key = "play.clientbound.collect";
+    const auto* schema = registry.schema_for(key);
+    assert(schema != nullptr);
+
+    kprotocol::Packet p;
+    p.key = key;
+    p.state = kprotocol::PacketState::play;
+    p.direction = kprotocol::PacketDirection::clientbound;
+    const std::vector<std::uint8_t> opaque = {0x10, 0x20, 0x30, 0x40, 0x50};
+    p.fields["raw"] = opaque;
+
+    const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
+    kprotocol::codec::EncodedFrame frame;
+    std::size_t consumed = 0;
+    assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+    const auto decoded = registry.decode_packet(
+        frame, kprotocol::ProtocolVersion::v1_20_4,
+        kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
+    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("raw")) == opaque);
+    std::cout << "ok\n";
+}
+
+} // namespace
+
+int main() {
+    std::cout << "generated_packets_tests:\n";
+    test_register_generated_populates_registry();
+    test_generated_key_constants_resolve();
+    test_encryption_begin_roundtrip_at_1_20_4();
+    test_every_baseline_version_has_at_least_one_schema();
+    test_rest_buffer_packet_roundtrips_opaque();
+    std::cout << "All generated-packet smoke tests passed.\n";
+    return 0;
+}

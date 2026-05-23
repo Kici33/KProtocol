@@ -1,0 +1,549 @@
+#!/usr/bin/env node
+// SPDX-License-Identifier: MIT
+//
+// kprotocol multi-version packet catalog generator.
+//
+// Reads PrismarineJS/minecraft-data (`npm install minecraft-data`) for one or
+// more Minecraft Java Edition versions and emits a C++ source tree that
+// registers PacketSchema entries with kprotocol::PacketRegistry.
+//
+// Usage:
+//   node tools/generate_packets.mjs \
+//     --out generated \
+//     --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+//
+// Outputs (relative to --out):
+//   include/kprotocol/generated/packet_keys.hpp   -- one constexpr per packet
+//   registry/register_all_packets.cpp             -- registry registration body
+//   coverage.json                                 -- per-version coverage stats
+//
+// Mapping strategy:
+//   - All primitive minecraft-data types map to a kprotocol FieldType.
+//   - Packets containing only mappable primitives are emitted with a full
+//     field set per version.
+//   - Packets containing any compound/unsupported field are emitted with a
+//     single `rest_buffer` field named "raw" so the packet can still round-
+//     trip as an opaque blob. They are flagged "rawOnly" in coverage.json.
+//   - Packets that lack a body at all (empty container) are emitted with no
+//     fields.
+
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
+import process from 'node:process';
+
+// ---------------------------------------------------------------------------
+// Arg parsing
+// ---------------------------------------------------------------------------
+
+function parseArgs(argv) {
+    const args = { out: 'generated', versions: [] };
+    for (let i = 0; i < argv.length; ++i) {
+        const a = argv[i];
+        if (a === '--out')           args.out = argv[++i];
+        else if (a === '--versions') args.versions = argv[++i].split(',').map(s => s.trim()).filter(Boolean);
+        else if (a === '--help' || a === '-h') {
+            console.log('Usage: node tools/generate_packets.mjs --out <dir> --versions v1,v2,...');
+            process.exit(0);
+        } else {
+            console.error(`Unknown argument: ${a}`);
+            process.exit(2);
+        }
+    }
+    if (args.versions.length === 0) {
+        console.error('No --versions supplied.');
+        process.exit(2);
+    }
+    return args;
+}
+
+// ---------------------------------------------------------------------------
+// Wire-version table: must mirror KPROTOCOL_FOR_EACH_KNOWN_VERSION in
+// include/kprotocol/version.hpp. Update both at once when adding a new
+// supported version. The "wire" number is what we emit as the int32 key.
+// ---------------------------------------------------------------------------
+
+const VERSION_TABLE = [
+    { display: '1.8',    wire: 47,  enumerator: 'v1_8' },
+    { display: '1.9',    wire: 107, enumerator: 'v1_9' },
+    { display: '1.9.2',  wire: 109, enumerator: 'v1_9_2' },
+    { display: '1.9.4',  wire: 110, enumerator: 'v1_9_4' },
+    { display: '1.10',   wire: 210, enumerator: 'v1_10' },
+    { display: '1.11',   wire: 315, enumerator: 'v1_11' },
+    { display: '1.11.2', wire: 316, enumerator: 'v1_11_2' },
+    { display: '1.12',   wire: 335, enumerator: 'v1_12' },
+    { display: '1.12.1', wire: 338, enumerator: 'v1_12_1' },
+    { display: '1.12.2', wire: 340, enumerator: 'v1_12_2' },
+    { display: '1.13',   wire: 393, enumerator: 'v1_13' },
+    { display: '1.13.2', wire: 404, enumerator: 'v1_13_2' },
+    { display: '1.14',   wire: 477, enumerator: 'v1_14' },
+    { display: '1.14.4', wire: 498, enumerator: 'v1_14_4' },
+    { display: '1.15',   wire: 573, enumerator: 'v1_15' },
+    { display: '1.15.2', wire: 578, enumerator: 'v1_15_2' },
+    { display: '1.16',   wire: 735, enumerator: 'v1_16' },
+    { display: '1.16.2', wire: 751, enumerator: 'v1_16_2' },
+    { display: '1.16.5', wire: 754, enumerator: 'v1_16_5' },
+    { display: '1.17',   wire: 755, enumerator: 'v1_17' },
+    { display: '1.17.1', wire: 756, enumerator: 'v1_17_1' },
+    { display: '1.18',   wire: 757, enumerator: 'v1_18' },
+    { display: '1.18.2', wire: 758, enumerator: 'v1_18_2' },
+    { display: '1.19',   wire: 759, enumerator: 'v1_19' },
+    { display: '1.19.2', wire: 760, enumerator: 'v1_19_2' },
+    { display: '1.19.3', wire: 761, enumerator: 'v1_19_3' },
+    { display: '1.19.4', wire: 762, enumerator: 'v1_19_4' },
+    { display: '1.20',   wire: 763, enumerator: 'v1_20' },
+    { display: '1.20.2', wire: 764, enumerator: 'v1_20_2' },
+    { display: '1.20.4', wire: 765, enumerator: 'v1_20_4' },
+    { display: '1.20.5', wire: 766, enumerator: 'v1_20_5' },
+    { display: '1.21',   wire: 767, enumerator: 'v1_21_1' }, // 1.21 & 1.21.1 share wire 767
+    { display: '1.21.1', wire: 767, enumerator: 'v1_21_1' },
+    { display: '1.21.3', wire: 768, enumerator: 'v1_21_3' },
+    { display: '1.21.4', wire: 769, enumerator: 'v1_21_4' },
+    { display: '1.21.5', wire: 770, enumerator: 'v1_21_5' },
+];
+
+function findVersion(display) {
+    return VERSION_TABLE.find(v => v.display === display);
+}
+
+// ---------------------------------------------------------------------------
+// Type mapping. Keys are minecraft-data primitive type names.
+// ---------------------------------------------------------------------------
+
+const PRIMITIVE_MAP = {
+    'varint':     'var_int',
+    'varlong':    'var_long',
+    'bool':       'boolean',
+    'string':     'string',
+    'u8':         'u8',
+    'i8':         'i8',
+    'u16':        'u16_be',
+    'i16':        'i16_be',
+    'u32':        'u32_be',
+    'i32':        'i32_be',
+    'u64':        'u64_be',
+    'i64':        'i64_be',
+    'f32':        'f32_be',
+    'f64':        'f64_be',
+    'UUID':       'uuid',
+    'position':   'position',
+    'restBuffer': 'rest_buffer',
+};
+
+// Fields whose name collides with C++ keywords or our own struct fields. We
+// remap them to a safe alternative so users can interact via Packet.fields.
+const FIELD_NAME_REMAP = {
+    'default': 'default_value',
+    'class':   'class_name',
+    'new':     'new_value',
+    'private': 'private_field',
+};
+
+function sanitizeFieldName(name) {
+    return FIELD_NAME_REMAP[name] || name;
+}
+
+// ---------------------------------------------------------------------------
+// minecraft-data introspection
+// ---------------------------------------------------------------------------
+
+// Resolve a type reference within the protocol JSON. minecraft-data nests its
+// type aliases inside the state container as well as the global "types" map.
+// We follow chained aliases (`{name: type}`) until we hit either a primitive
+// string or a compound array ([kind, params]).
+function resolveType(type, stateTypes, globalTypes) {
+    let cur = type;
+    const seen = new Set();
+    while (typeof cur === 'string') {
+        if (seen.has(cur)) return cur; // cycle - bail
+        seen.add(cur);
+        if (Object.prototype.hasOwnProperty.call(stateTypes, cur)) {
+            cur = stateTypes[cur];
+            continue;
+        }
+        if (Object.prototype.hasOwnProperty.call(globalTypes, cur)) {
+            cur = globalTypes[cur];
+            continue;
+        }
+        return cur;
+    }
+    return cur;
+}
+
+// Map a (possibly resolved) field type to a kprotocol FieldType enumerator.
+// Returns { ok: true, fieldType } on success, or { ok: false, reason } if the
+// type is compound / unsupported.
+function mapFieldType(type, stateTypes, globalTypes) {
+    const resolved = resolveType(type, stateTypes, globalTypes);
+
+    if (typeof resolved === 'string') {
+        const mapped = PRIMITIVE_MAP[resolved];
+        if (mapped) return { ok: true, fieldType: mapped };
+        return { ok: false, reason: `unmapped primitive: ${resolved}` };
+    }
+
+    if (Array.isArray(resolved)) {
+        const [kind] = resolved;
+        // Buffer with a count - emit as length-prefixed byte_array if the
+        // count type is varint (which matches our byte_array on the wire).
+        if (kind === 'buffer') {
+            const params = resolved[1] || {};
+            if (params.countType === 'varint') {
+                return { ok: true, fieldType: 'byte_array' };
+            }
+            return { ok: false, reason: `unsupported buffer countType: ${params.countType}` };
+        }
+        if (kind === 'restBuffer') {
+            return { ok: true, fieldType: 'rest_buffer' };
+        }
+        return { ok: false, reason: `compound type: ${kind}` };
+    }
+
+    return { ok: false, reason: 'unknown type shape' };
+}
+
+// Extract per-packet schemas from a single state/direction.
+// Returns an array of { wireName, fields:[{name, type}], status, reason? }.
+function extractDirection(directionEntry, globalTypes) {
+    const result = [];
+    const stateTypes = directionEntry?.types || {};
+
+    // The packet-id mapper lives at "packet". If absent, this direction has
+    // no packets in this version.
+    const packetWrapper = stateTypes.packet;
+    if (!Array.isArray(packetWrapper) || packetWrapper[0] !== 'container') {
+        return result;
+    }
+    const nameField = (packetWrapper[1] || []).find(f => f.name === 'name');
+    if (!nameField || !Array.isArray(nameField.type) || nameField.type[0] !== 'mapper') {
+        return result;
+    }
+    const mapper = nameField.type[1];
+    const mappings = mapper.mappings || {};
+
+    for (const [hexId, wireName] of Object.entries(mappings)) {
+        const id = Number.parseInt(hexId, 16);
+        if (!Number.isFinite(id)) {
+            continue;
+        }
+
+        const containerName = `packet_${wireName}`;
+        const container = stateTypes[containerName];
+        if (!Array.isArray(container)) {
+            // minecraft-data has a mapper entry for this packet but no typed
+            // schema. Default to opaque rest_buffer so the packet still
+            // round-trips byte-exact; flag for the coverage report.
+            result.push({
+                wireName, id,
+                fields: [{ name: 'raw', type: 'rest_buffer' }],
+                status: 'rawOnly', reason: 'minecraft-data has no packet schema',
+            });
+            continue;
+        }
+        if (container[0] === 'container') {
+            const containerFields = container[1] || [];
+            const fields = [];
+            let rawOnly = false;
+            let reason = '';
+            for (const fieldEntry of containerFields) {
+                const fname = sanitizeFieldName(fieldEntry.name);
+                const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
+                if (!mapped.ok) {
+                    rawOnly = true;
+                    reason = `field ${fieldEntry.name}: ${mapped.reason}`;
+                    break;
+                }
+                fields.push({ name: fname, type: mapped.fieldType });
+            }
+            if (rawOnly) {
+                result.push({
+                    wireName, id,
+                    fields: [{ name: 'raw', type: 'rest_buffer' }],
+                    status: 'rawOnly', reason,
+                });
+            } else {
+                result.push({ wireName, id, fields, status: 'ok' });
+            }
+        } else {
+            // Top-level type is not a container - we wrap it as raw.
+            result.push({
+                wireName, id,
+                fields: [{ name: 'raw', type: 'rest_buffer' }],
+                status: 'rawOnly', reason: `top-level type is ${container[0]}`,
+            });
+        }
+    }
+    return result;
+}
+
+// minecraft-data uses "toServer" / "toClient" - map to our enums.
+const DIRECTION_MAP = {
+    toServer: 'serverbound',
+    toClient: 'clientbound',
+};
+
+const STATE_MAP = {
+    handshaking:   'handshaking',
+    status:        'status',
+    login:         'login',
+    play:          'play',
+    configuration: 'configuration',
+};
+
+// ---------------------------------------------------------------------------
+// Aggregation: walk all (version, state, direction, packet) tuples and produce
+// a key-centric map suitable for emitting one register_schema call per key.
+//
+// Key format: "<state>.<direction>.<wireName>"
+//
+// PacketSchema:
+//   key: string
+//   state, direction
+//   field_sets: Map<wire, Field[]>
+//   ids:        Map<wire, id>
+//   coverage:   Map<wire, "ok"|"rawOnly">
+// ---------------------------------------------------------------------------
+
+function aggregateAcrossVersions(perVersion) {
+    const byKey = new Map();
+    for (const { display, wire, packets } of perVersion) {
+        for (const pkt of packets) {
+            const key = `${pkt.state}.${pkt.direction}.${pkt.wireName}`;
+            let schema = byKey.get(key);
+            if (!schema) {
+                schema = {
+                    key,
+                    state: pkt.state,
+                    direction: pkt.direction,
+                    wireName: pkt.wireName,
+                    fieldSets: new Map(),
+                    ids: new Map(),
+                    coverage: new Map(),
+                };
+                byKey.set(key, schema);
+            }
+            schema.ids.set(wire, pkt.id);
+            schema.coverage.set(wire, pkt.status);
+            schema.fieldSets.set(wire, pkt.fields);
+            schema.displayByWire ??= new Map();
+            schema.displayByWire.set(wire, display);
+        }
+    }
+    return byKey;
+}
+
+// Two field arrays are "equal" iff they have the same length and matching
+// (name, type) pairs.
+function fieldsEqual(a, b) {
+    if (a.length !== b.length) return false;
+    for (let i = 0; i < a.length; ++i) {
+        if (a[i].name !== b[i].name || a[i].type !== b[i].type) return false;
+    }
+    return true;
+}
+
+// Collapse adjacent versions that share an identical field set. The output is
+// a sparse Map<wire, fields> where each entry marks the start of a contiguous
+// run; the registry uses upper_bound to pick the entry for any version >=
+// that key.
+function collapseFieldSets(fieldSets) {
+    const ordered = [...fieldSets.entries()].sort((a, b) => a[0] - b[0]);
+    const collapsed = new Map();
+    let prev = null;
+    for (const [wire, fields] of ordered) {
+        if (prev === null || !fieldsEqual(prev, fields)) {
+            collapsed.set(wire, fields);
+            prev = fields;
+        }
+    }
+    return collapsed;
+}
+
+// ---------------------------------------------------------------------------
+// C++ emission
+// ---------------------------------------------------------------------------
+
+function cppIdentForKey(key) {
+    return key.replace(/[^A-Za-z0-9]/g, '_');
+}
+
+function cppStringLiteral(s) {
+    return `"${s.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+}
+
+function emitPacketKeysHeader(schemas) {
+    const sorted = [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key));
+    const lines = [
+        '// AUTOGENERATED FILE. DO NOT EDIT BY HAND.',
+        '// Regenerate with `node tools/generate_packets.mjs --out generated --versions ...`.',
+        '#pragma once',
+        '',
+        '#include <string_view>',
+        '',
+        'namespace kprotocol::generated::packet_keys {',
+        '',
+    ];
+    for (const s of sorted) {
+        lines.push(`inline constexpr std::string_view ${cppIdentForKey(s.key)} = ${cppStringLiteral(s.key)};`);
+    }
+    lines.push('', '} // namespace kprotocol::generated::packet_keys', '');
+    return lines.join('\n');
+}
+
+function emitFieldsLiteral(fields, indent) {
+    if (fields.length === 0) return '{}';
+    const pad = ' '.repeat(indent);
+    const inner = fields.map(f =>
+        `${pad}    {${cppStringLiteral(f.name)}, kprotocol::FieldType::${f.type}}`
+    ).join(',\n');
+    return `{\n${inner}\n${pad}}`;
+}
+
+function emitSchemasSource(schemas) {
+    const sorted = [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key));
+    const lines = [
+        '// AUTOGENERATED FILE. DO NOT EDIT BY HAND.',
+        '// Regenerate with `node tools/generate_packets.mjs --out generated --versions ...`.',
+        '#include "kprotocol/generated.hpp"',
+        '#include "kprotocol/packet.hpp"',
+        '#include "kprotocol/registry.hpp"',
+        '#include "kprotocol/version.hpp"',
+        '',
+        '#include <map>',
+        '#include <vector>',
+        '',
+        'namespace kprotocol {',
+        '',
+        'void register_generated_packets(PacketRegistry& registry) {',
+    ];
+
+    for (const s of sorted) {
+        const collapsedFields = collapseFieldSets(s.fieldSets);
+        lines.push('    {');
+        lines.push('        PacketSchema schema;');
+        lines.push(`        schema.key = ${cppStringLiteral(s.key)};`);
+        lines.push(`        schema.state = PacketState::${s.state};`);
+        lines.push(`        schema.direction = PacketDirection::${s.direction};`);
+
+        // ids
+        const orderedIds = [...s.ids.entries()].sort((a, b) => a[0] - b[0]);
+        for (const [wire, id] of orderedIds) {
+            lines.push(`        schema.ids.emplace(static_cast<ProtocolVersion>(${wire}), ${id});`);
+        }
+        // field sets (collapsed)
+        const orderedFs = [...collapsedFields.entries()].sort((a, b) => a[0] - b[0]);
+        for (const [wire, fields] of orderedFs) {
+            const literal = emitFieldsLiteral(fields, 8);
+            lines.push(`        schema.field_sets.emplace(static_cast<ProtocolVersion>(${wire}), std::vector<FieldSpec>${literal});`);
+        }
+        lines.push('        registry.register_schema(std::move(schema));');
+        lines.push('    }');
+    }
+
+    lines.push('}');
+    lines.push('');
+    lines.push('} // namespace kprotocol');
+    lines.push('');
+    return lines.join('\n');
+}
+
+function emitCoverageJson(perVersion, schemas) {
+    const out = {
+        generatedAt: new Date().toISOString(),
+        versions: [],
+        keys: [],
+    };
+    for (const { display, wire, packets } of perVersion) {
+        const okCount = packets.filter(p => p.status === 'ok').length;
+        const rawCount = packets.filter(p => p.status === 'rawOnly').length;
+        out.versions.push({ display, wire, totalPackets: packets.length, fullSchemas: okCount, rawOnly: rawCount });
+    }
+    for (const schema of [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key))) {
+        const status = {};
+        for (const [wire, st] of schema.coverage.entries()) {
+            status[wire] = st;
+        }
+        out.keys.push({
+            key: schema.key,
+            state: schema.state,
+            direction: schema.direction,
+            ids: Object.fromEntries(schema.ids),
+            statusByWire: status,
+        });
+    }
+    return JSON.stringify(out, null, 2);
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+async function main() {
+    const args = parseArgs(process.argv.slice(2));
+
+    let mcd;
+    try {
+        mcd = (await import('minecraft-data')).default;
+    } catch (err) {
+        console.error('Failed to import minecraft-data. Did you `npm install minecraft-data`?');
+        console.error(err.message);
+        process.exit(3);
+    }
+
+    const perVersion = [];
+    for (const display of args.versions) {
+        const vinfo = findVersion(display);
+        if (!vinfo) {
+            console.error(`Version "${display}" is not in kprotocol's known-version table. ` +
+                          `Add it to KPROTOCOL_FOR_EACH_KNOWN_VERSION first.`);
+            process.exit(4);
+        }
+        const inst = mcd(display);
+        if (!inst || !inst.protocol) {
+            console.error(`minecraft-data has no protocol for "${display}".`);
+            process.exit(5);
+        }
+        const protocol = inst.protocol;
+        const globalTypes = protocol.types || {};
+
+        const packets = [];
+        for (const [stateName, stateEntry] of Object.entries(protocol)) {
+            if (!STATE_MAP[stateName]) continue;
+            for (const [dirName, dirEntry] of Object.entries(stateEntry || {})) {
+                if (!DIRECTION_MAP[dirName]) continue;
+                const extracted = extractDirection(dirEntry, globalTypes);
+                for (const pkt of extracted) {
+                    packets.push({
+                        ...pkt,
+                        state: STATE_MAP[stateName],
+                        direction: DIRECTION_MAP[dirName],
+                    });
+                }
+            }
+        }
+        perVersion.push({ display, wire: vinfo.wire, packets });
+        const okCount = packets.filter(p => p.status === 'ok').length;
+        console.log(`  ${display.padEnd(8)} wire=${String(vinfo.wire).padStart(3)} packets=${packets.length} (${okCount} full, ${packets.length - okCount} raw)`);
+    }
+
+    const schemas = aggregateAcrossVersions(perVersion);
+
+    await fs.mkdir(path.join(args.out, 'include', 'kprotocol', 'generated'), { recursive: true });
+    await fs.mkdir(path.join(args.out, 'registry'), { recursive: true });
+
+    await fs.writeFile(
+        path.join(args.out, 'include', 'kprotocol', 'generated', 'packet_keys.hpp'),
+        emitPacketKeysHeader(schemas));
+    await fs.writeFile(
+        path.join(args.out, 'registry', 'register_all_packets.cpp'),
+        emitSchemasSource(schemas));
+    await fs.writeFile(
+        path.join(args.out, 'coverage.json'),
+        emitCoverageJson(perVersion, schemas));
+
+    console.log(`Wrote ${schemas.size} packet keys to ${args.out}.`);
+}
+
+main().catch(err => {
+    console.error(err);
+    process.exit(1);
+});

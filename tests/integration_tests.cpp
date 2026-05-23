@@ -5,10 +5,24 @@
 #include "kprotocol/translation_registry.hpp"
 #include "kprotocol/types.hpp"
 
-#include <cassert>
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
 #include <vector>
+
+// Force-active asserts even in NDEBUG builds.
+#ifdef assert
+#undef assert
+#endif
+#define assert(cond)                                                          \
+    do {                                                                       \
+        if (!(cond)) {                                                         \
+            std::fprintf(stderr, "FAIL: %s (%s:%d)\n",                         \
+                         #cond, __FILE__, __LINE__);                           \
+            std::abort();                                                      \
+        }                                                                      \
+    } while (false)
 
 /**
  * Integration test suite for KProtocol.
@@ -175,8 +189,8 @@ int main() {
         const auto source_version = kprotocol::ProtocolVersion::v1_20_4;
         const auto target_version = kprotocol::ProtocolVersion::v1_8;
 
-        // Create a Keep Alive packet (same across all versions)
-        const auto keep_alive = kprotocol::C00KeepAlivePacket{.keep_alive_id = 0xDEADBEEFDEADBEEFULL};
+        // Create a clientbound Keep Alive packet (wire id varies by version, but key is universal)
+        const auto keep_alive = kprotocol::S24KeepAlivePacket{.id = static_cast<std::int64_t>(0xDEADBEEFDEADBEEFULL)};
         const auto keep_alive_pkt = keep_alive.to_packet();
 
         // Encode in 1.20.4
@@ -193,8 +207,8 @@ int main() {
             kprotocol::PacketState::play,
             kprotocol::PacketDirection::clientbound);
 
-        // Translate from 1.20.4 to 1.8
-        const auto translated = translator.translate_packet(
+        // Translate from 1.20.4 to 1.8 (registry-driven id remap; field identity here)
+        const auto translated = translator.translate(
             decoded_1_20_4,
             source_version,
             target_version);
@@ -249,8 +263,8 @@ int main() {
         const bool decoded_ok = kprotocol::codec::try_decode_frame_compressed(
             compressed_frame,
             consumed,
-            frame,
-            compression_threshold);
+            compression_threshold,
+            frame);
         assert(decoded_ok);
 
         std::cout << "  ✓ Uncompressed payload size: " << payload.size() << " bytes\n";
@@ -293,8 +307,7 @@ int main() {
 
         // 6.1: Client sends Login Start
         const auto login_start = kprotocol::C00LoginStartPacket{
-            .player_name = "TestPlayer",
-            .player_uuid = "00000000-0000-0000-0000-000000000000"
+            .username = "TestPlayer"
         };
         const auto login_start_pkt = login_start.to_packet();
         auto encoded = registry.encode_packet(login_start_pkt, kprotocol::ProtocolVersion::v1_21_1);
@@ -312,8 +325,7 @@ int main() {
         // 6.2: Server sends Login Success
         const auto login_success = kprotocol::S02LoginSuccessPacket{
             .uuid = "00000000-0000-0000-0000-000000000000",
-            .username = "TestPlayer",
-            .strict_error_handling = false
+            .username = "TestPlayer"
         };
         const auto login_success_pkt = login_success.to_packet();
         encoded = registry.encode_packet(login_success_pkt, kprotocol::ProtocolVersion::v1_21_1);
@@ -348,11 +360,15 @@ int main() {
             kprotocol::ProtocolVersion::v1_21_1
         };
 
-        const std::int64_t keep_alive_ids[] = {0x1234567890ABCDEFULL, 0xFEDCBA9876543210ULL, 0x0000000000000001ULL};
+        const std::int64_t keep_alive_ids[] = {
+            static_cast<std::int64_t>(0x1234567890ABCDEFULL),
+            static_cast<std::int64_t>(0xFEDCBA9876543210ULL),
+            static_cast<std::int64_t>(0x0000000000000001ULL)
+        };
 
         for (const auto& version : versions) {
             for (const auto& ka_id : keep_alive_ids) {
-                const auto keep_alive = kprotocol::C00KeepAlivePacket{.keep_alive_id = ka_id};
+                const auto keep_alive = kprotocol::S24KeepAlivePacket{.id = ka_id};
                 const auto pkt = keep_alive.to_packet();
                 const auto encoded = registry.encode_packet(pkt, version);
 
@@ -365,8 +381,8 @@ int main() {
                     kprotocol::PacketState::play,
                     kprotocol::PacketDirection::clientbound);
 
-                const auto typed = kprotocol::C00KeepAlivePacket::from_packet(decoded);
-                assert(typed.keep_alive_id == ka_id);
+                const auto typed = kprotocol::S24KeepAlivePacket::from_packet(decoded);
+                assert(typed.id == ka_id);
             }
         }
 
@@ -460,34 +476,32 @@ int main() {
     {
         std::cout << "Test 10: ID translation via TranslationRegistry\n";
 
-        // Test block ID mapping between versions
+        // Test block ID mapping between versions: signature is (from, to, source_id)
         const auto block_id_1_8_to_1_20 = kprotocol::TranslationRegistry::map_block_id(
-            5, // Stone in 1.8
             kprotocol::ProtocolVersion::v1_8,
-            kprotocol::ProtocolVersion::v1_20_4);
-        // Should return a valid mapping (may be identity or semantic equivalent)
+            kprotocol::ProtocolVersion::v1_20_4,
+            5); // Stone in 1.8
         assert(block_id_1_8_to_1_20 >= 0);
 
-        // Test reverse mapping
+        // Reverse mapping
         const auto block_id_1_20_to_1_8 = kprotocol::TranslationRegistry::map_block_id(
-            block_id_1_8_to_1_20,
             kprotocol::ProtocolVersion::v1_20_4,
-            kprotocol::ProtocolVersion::v1_8);
-        // Should map back to original or equivalent
+            kprotocol::ProtocolVersion::v1_8,
+            block_id_1_8_to_1_20);
         assert(block_id_1_20_to_1_8 >= 0);
 
-        // Test item ID mapping
+        // Item ID mapping
         const auto item_id = kprotocol::TranslationRegistry::map_item_id(
-            1, // Stone in 1.8
             kprotocol::ProtocolVersion::v1_8,
-            kprotocol::ProtocolVersion::v1_20_4);
+            kprotocol::ProtocolVersion::v1_20_4,
+            1); // Stone in 1.8
         assert(item_id >= 0);
 
-        // Test entity type mapping
+        // Entity type mapping
         const auto entity_id = kprotocol::TranslationRegistry::map_entity_id(
-            10, // Chicken in 1.8
             kprotocol::ProtocolVersion::v1_8,
-            kprotocol::ProtocolVersion::v1_20_4);
+            kprotocol::ProtocolVersion::v1_20_4,
+            10); // Chicken in 1.8
         assert(entity_id >= 0);
 
         std::cout << "  ✓ Block ID mapping verified (1.8 → 1.20.4 → 1.8)\n";

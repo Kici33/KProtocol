@@ -10,7 +10,7 @@ int main() {
 
     // If generated packets exist, generated.hpp will declare register_generated_packets
 #ifdef KPROTOCOL_GENERATED
-    register_generated_packets(registry);
+    kprotocol::register_generated_packets(registry);
 #endif
 
     std::cout << "kprotocol consumer example: registry has " << registry.size() << " packet definitions\n";

@@ -1,7 +1,9 @@
 #include "kprotocol/server.hpp"
 
-#include "kprotocol/baseline_packets.hpp"
 #include "kprotocol/codec.hpp"
+#include "kprotocol/packets/packet_keys.hpp"
+#include "kprotocol/registry.hpp"
+#include "kprotocol/translation.hpp"
 
 #include <array>
 #include <atomic>
@@ -316,13 +318,22 @@ struct MinecraftServer::Impl {
         shared->socket = invalid_socket;
     }
 
-    void update_handshake_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) const {
+    void update_handshake_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
         if (packet.key != packet_keys::handshake) {
             return;
         }
 
         if (const auto it = packet.fields.find("protocol_version"); it != packet.fields.end()) {
             if (const auto* version_number = std::get_if<std::int32_t>(&it->second); version_number != nullptr) {
+                // Preserve the raw wire number even when the version is not in
+                // the built-in table - the registry keys on int32, so cross-
+                // version translation still works for unknown wires that share
+                // a packet schema with a known one. We do report unknowns
+                // through the error channel so operators can notice early.
+                if (!is_known_protocol(*version_number)) {
+                    emit_error("Client " + shared->remote + " announced unknown protocol "
+                               + name_of(*version_number));
+                }
                 shared->client_version = static_cast<ProtocolVersion>(*version_number);
             }
         }

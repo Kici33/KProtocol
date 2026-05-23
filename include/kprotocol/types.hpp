@@ -12,18 +12,22 @@ struct BlockState {
 };
 
 struct Position {
-    std::int32_t x; // block coordinates
-    std::int32_t y;
-    std::int32_t z;
+    std::int32_t x{}; // block coordinates
+    std::int32_t y{};
+    std::int32_t z{};
 
     // pack/unpack to 64-bit Java position value
     std::int64_t to_long() const noexcept;
     static Position from_long(std::int64_t v) noexcept;
+
+    friend bool operator==(const Position&, const Position&) noexcept = default;
 };
 
 struct UUID {
     std::array<std::uint8_t, 16> bytes{};
     static UUID from_bytes(std::span<const std::uint8_t> data);
+
+    friend bool operator==(const UUID&, const UUID&) noexcept = default;
 };
 
 struct NBTBlob {
