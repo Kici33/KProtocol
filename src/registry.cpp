@@ -1,5 +1,7 @@
 #include "kprotocol/registry.hpp"
 
+#include "kprotocol/types.hpp"
+
 #include <cstring>
 #include <functional>
 #include <stdexcept>
@@ -7,6 +9,20 @@
 namespace kprotocol {
 
 namespace {
+
+bool field_present(const PacketFields& fields, const std::string& optional_if) {
+    if (optional_if.empty()) {
+        return true;
+    }
+    const auto it = fields.find(optional_if);
+    if (it == fields.end()) {
+        return false;
+    }
+    if (const auto* flag = std::get_if<bool>(&it->second); flag != nullptr) {
+        return *flag;
+    }
+    return false;
+}
 
 void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const FieldValue& value) {
     switch (spec.type) {
@@ -71,6 +87,18 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
         out.insert(out.end(), bytes.begin(), bytes.end());
         return;
     }
+    case FieldType::var_int_array:
+        codec::write_var_int_array(out, std::get<std::vector<std::int32_t>>(value));
+        return;
+    case FieldType::var_long_array:
+        codec::write_var_long_array(out, std::get<std::vector<std::int64_t>>(value));
+        return;
+    case FieldType::slot:
+        types::write_slot(out, std::get<types::Slot>(value));
+        return;
+    case FieldType::optional_nbt:
+        types::write_optional_nbt(out, std::get<NBTBlob>(value));
+        return;
     }
     throw std::runtime_error("Unsupported field type in write_field");
 }
@@ -127,6 +155,14 @@ FieldValue read_field(std::span<const std::uint8_t> input, std::size_t& offset, 
         offset = input.size();
         return bytes;
     }
+    case FieldType::var_int_array:
+        return codec::read_var_int_array(input, offset);
+    case FieldType::var_long_array:
+        return codec::read_var_long_array(input, offset);
+    case FieldType::slot:
+        return types::read_slot(input, offset);
+    case FieldType::optional_nbt:
+        return types::read_optional_nbt(input, offset);
     }
     throw std::runtime_error("Unsupported field type in read_field");
 }
@@ -319,7 +355,10 @@ std::optional<std::int32_t> PacketRegistry::packet_id_for(std::string_view key, 
     return std::nullopt;
 }
 
-std::vector<std::uint8_t> PacketRegistry::encode_packet(const Packet& packet, const ProtocolVersion version) const {
+std::vector<std::uint8_t> PacketRegistry::encode_packet(
+    const Packet& packet,
+    const ProtocolVersion version,
+    const std::int32_t compression_threshold) const {
     const auto* schema = schema_for(packet.key);
     if (schema == nullptr) {
         throw std::runtime_error("Unknown packet key: " + packet.key);
@@ -340,6 +379,9 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(const Packet& packet, co
 
     std::vector<std::uint8_t> payload;
     for (const auto& field : *field_set) {
+        if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
+            continue;
+        }
         const auto it = packet.fields.find(field.name);
         if (it == packet.fields.end()) {
             throw std::runtime_error("Missing required packet field: " + field.name);
@@ -347,7 +389,10 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(const Packet& packet, co
         write_field(payload, field, it->second);
     }
 
-    return codec::encode_frame(*packet_id, payload);
+    if (compression_threshold < 0) {
+        return codec::encode_frame(*packet_id, payload);
+    }
+    return codec::encode_frame_compressed(*packet_id, payload, compression_threshold);
 }
 
 Packet PacketRegistry::decode_packet(
@@ -375,6 +420,9 @@ Packet PacketRegistry::decode_packet(
     std::size_t offset = 0;
     const std::span<const std::uint8_t> payload(frame.payload.data(), frame.payload.size());
     for (const auto& field : *field_set) {
+        if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
+            continue;
+        }
         packet.fields.emplace(field.name, read_field(payload, offset, field));
     }
     if (offset != payload.size()) {

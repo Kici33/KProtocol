@@ -67,7 +67,17 @@ enum class FieldType : std::uint8_t {
     // the catalog cannot represent yet, so the packet can still be encoded
     // and decoded round-trip-safely as a blob. Must be the last field in a
     // schema (the decoder takes everything that's left).
-    rest_buffer
+    rest_buffer,
+
+    // Length-prefixed VarInt / VarLong arrays (minecraft-data `array`).
+    var_int_array,
+    var_long_array,
+
+    // Minecraft slot wire layout (present bool + item id + count + optional NBT).
+    slot,
+
+    // Optional NBT prefix byte (0 = absent, else start of root tag bytes).
+    optional_nbt
 };
 
 using PacketKey = std::string;
@@ -87,7 +97,11 @@ using FieldValue = std::variant<
     float,
     double,
     UUID,
-    Position
+    Position,
+    NBTBlob,
+    types::Slot,
+    std::vector<std::int32_t>,
+    std::vector<std::int64_t>
 >;
 
 using PacketFields = std::unordered_map<std::string, FieldValue>;
@@ -95,6 +109,9 @@ using PacketFields = std::unordered_map<std::string, FieldValue>;
 struct FieldSpec {
     std::string name;
     FieldType type{};
+    // When non-empty, this field is omitted on the wire when the named bool
+    // field is false (minecraft-data `option` with a bool prefix).
+    std::string optional_if;
 };
 
 // Legacy single-version definition. Equivalent to a PacketSchema with one

@@ -50,30 +50,41 @@ cmake --build build --target kprotocol_generate_packets
 ```
 
 Coverage stats land in `generated/coverage.json`. At the baseline versions
-most packets are emitted as opaque `rest_buffer` blobs today; fully typed
-schemas grow as compound field support is added in later waves.
+most packets now have full typed schemas (arrays, slots, options, etc.); the
+remainder stay as opaque `rest_buffer` blobs where minecraft-data uses
+switch/NBT/chunk shapes not yet modeled.
 
 
 Second project (consumer) quickstart
 
-1. Create a new CMake project and add this repo as a subdirectory, or build kprotocol as an installed library. Example minimal CMakeLists for consumer:
+**Option A — add_subdirectory (in-tree)**
+
+```cmake
+cmake_minimum_required(VERSION 3.21)
+project(my_server LANGUAGES CXX)
+add_subdirectory(../KProtocol kprotocol_build)
+add_executable(my_server main.cpp)
+target_link_libraries(my_server PRIVATE kprotocol::kprotocol)
+```
+
+**Option B — find_package (installed build)**
+
+```bash
+cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/kprotocol/install
+cmake --build build
+```
 
 ```cmake
 cmake_minimum_required(VERSION 3.21)
 project(kprotocol_consumer LANGUAGES CXX)
-add_executable(example src/main.cpp)
-add_subdirectory(../ cpp-pro_build) # or use find_package if installed
-target_link_libraries(example PRIVATE kprotocol)
+find_package(kprotocol CONFIG REQUIRED)
+add_executable(example main.cpp)
+target_link_libraries(example PRIVATE kprotocol::kprotocol)
 ```
 
-2. In consumer source, include `<kprotocol/kprotocol.hpp>` and link against `kprotocol`.
-
-3. Example run (from consumer root):
-```bash
-cmake -S . -B build
-cmake --build build --config Release
-./build/example
-```
+See `examples/consumer/` for a minimal installed-consumer layout (`main.cpp` +
+`CMakeLists.txt`). After `cmake --install` from the kprotocol build tree, point
+`CMAKE_PREFIX_PATH` at the install prefix and configure that example.
 
 ## Architecture
 
@@ -92,9 +103,9 @@ cmake --build build --config Release
    - Converts packet payloads across versions while preserving universal packet keys.
 
 3. `kprotocol::MinecraftServer`
-   - Accepts TCP clients.
-   - Decodes framed packets to universal packets.
-   - Handles handshake version negotiation/state switching.
+   - Asio + C++20 coroutine TCP runtime (one `io_context`, no thread-per-client).
+   - Accepts TCP clients, decodes framed packets, handles handshake version/state.
+   - Optional compression threshold on `start()` mirrors Minecraft Set Compression.
    - Sends packets translated to each client version.
    - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`, `onError`).
 

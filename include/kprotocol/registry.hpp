@@ -45,7 +45,8 @@ public:
 
     std::optional<std::int32_t> packet_id_for(std::string_view key, ProtocolVersion version) const;
 
-    std::vector<std::uint8_t> encode_packet(const Packet& packet, ProtocolVersion version) const;
+    std::vector<std::uint8_t> encode_packet(const Packet& packet, ProtocolVersion version,
+                                              std::int32_t compression_threshold = -1) const;
     Packet decode_packet(const codec::EncodedFrame& frame, ProtocolVersion version, PacketState state, PacketDirection direction) const;
 
     // Number of registered packet schemas.

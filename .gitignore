@@ -1,7 +1,5 @@
 # Node-side generator (tools/generate_packets.mjs) deps.
 node_modules/
-package-lock.json
-package.json
 
 # CMake build trees (any name starting with build).
 build/

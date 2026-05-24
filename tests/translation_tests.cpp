@@ -120,39 +120,24 @@ int main() {
     // Test 4: TranslationRegistry ID mapping functions
     {
         std::cout << "Test 4: TranslationRegistry ID mapping functions...\n";
-        
-        // Test block ID mapping (identity for now, will be populated later)
-        const auto mapped = kprotocol::TranslationRegistry::map_block_id(
-            kprotocol::ProtocolVersion::v1_20_4,
-            kprotocol::ProtocolVersion::v1_16_5,
-            42
-        );
-        assert(mapped == 42); // Currently identity mapping
-        
-        // Test item ID mapping
-        const auto item_mapped = kprotocol::TranslationRegistry::map_item_id(
-            kprotocol::ProtocolVersion::v1_20_4,
-            kprotocol::ProtocolVersion::v1_16_5,
-            10
-        );
-        assert(item_mapped == 10); // Currently identity mapping
-        
-        // Test entity ID mapping
+
+        kprotocol::PacketTranslator bootstrap;
+        kprotocol::TranslationRegistry::initialize_all(bootstrap);
+
         const auto entity_mapped = kprotocol::TranslationRegistry::map_entity_id(
             kprotocol::ProtocolVersion::v1_20_4,
             kprotocol::ProtocolVersion::v1_16_5,
-            5
+            120
         );
-        assert(entity_mapped == 5); // Currently identity mapping
-        
-        // Test particle ID mapping
-        const auto particle_mapped = kprotocol::TranslationRegistry::map_particle_id(
+        assert(entity_mapped == 102); // zombie
+
+        const auto block_mapped = kprotocol::TranslationRegistry::map_block_id(
             kprotocol::ProtocolVersion::v1_20_4,
             kprotocol::ProtocolVersion::v1_16_5,
-            3
+            21
         );
-        assert(particle_mapped == 3); // Currently identity mapping
-        
+        assert(block_mapped == 20); // dark_oak_planks
+
         std::cout << "  ✓ TranslationRegistry ID mapping functions work\n";
     }
     
@@ -162,13 +147,47 @@ int main() {
         
         kprotocol::PacketTranslator translator;
         
-        // Initialize should not throw
         kprotocol::TranslationRegistry::initialize_all(translator);
-        
-        // Calling again should be idempotent
         kprotocol::TranslationRegistry::initialize_all(translator);
         
         std::cout << "  ✓ TranslationRegistry initialization works\n";
+    }
+
+    // Test 6: Cross-version block_change roundtrip via registered rule
+    {
+        std::cout << "Test 6: block_change cross-version translation...\n";
+
+        kprotocol::PacketTranslator translator;
+        kprotocol::TranslationRegistry::initialize_all(translator);
+
+        kprotocol::PacketFields fields;
+        fields["location"] = kprotocol::Position{1, 64, 2};
+        fields["type"] = static_cast<std::int32_t>(21);
+
+        kprotocol::Packet packet{
+            "play.clientbound.block_change",
+            kprotocol::PacketState::play,
+            kprotocol::PacketDirection::clientbound,
+            fields
+        };
+
+        const auto translated = translator.translate(
+            packet,
+            kprotocol::ProtocolVersion::v1_20_4,
+            kprotocol::ProtocolVersion::v1_16_5
+        );
+
+        assert(std::get<std::int32_t>(translated.fields.at("type")) == 20);
+        assert(std::get<kprotocol::Position>(translated.fields.at("location")).x == 1);
+
+        const auto roundtrip = translator.translate(
+            translated,
+            kprotocol::ProtocolVersion::v1_16_5,
+            kprotocol::ProtocolVersion::v1_20_4
+        );
+        assert(std::get<std::int32_t>(roundtrip.fields.at("type")) == 21);
+
+        std::cout << "  ✓ block_change cross-version roundtrip works\n";
     }
     
     std::cout << "\n✅ All translation tests passed!\n";
