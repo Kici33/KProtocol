@@ -6,6 +6,7 @@
 #include "kprotocol/codec.hpp"
 #include "kprotocol/packet.hpp"
 #include "kprotocol/registry.hpp"
+#include "kprotocol/types.hpp"
 #include "kprotocol/version.hpp"
 
 #include <array>
@@ -182,6 +183,50 @@ int main() {
     test_legacy_definition_still_works();
     test_position_packing_known_vector();
     test_rest_buffer_consumes_trailing_bytes();
+
+    std::cout << "  var_int_array round-trip... " << std::flush;
+    {
+        kprotocol::PacketRegistry registry;
+        registry.register_schema(make_schema("test.var_int_array",
+            {{"values", kprotocol::FieldType::var_int_array}}, 0x73));
+        kprotocol::Packet p;
+        p.key = "test.var_int_array";
+        p.state = kState;
+        p.direction = kDir;
+        p.fields["values"] = std::vector<std::int32_t>{1, 2, 300, -4};
+        const auto encoded = registry.encode_packet(p, kVersion);
+        kprotocol::codec::EncodedFrame frame;
+        std::size_t consumed = 0;
+        KPC_CHECK(kprotocol::codec::try_decode_frame(encoded, consumed, frame), "frame decode");
+        const auto decoded = registry.decode_packet(frame, kVersion, kState, kDir);
+        KPC_CHECK((std::get<std::vector<std::int32_t>>(decoded.fields.at("values"))
+                   == std::vector<std::int32_t>{1, 2, 300, -4}), "var_int_array");
+    }
+    std::cout << "ok\n";
+
+    std::cout << "  slot round-trip... " << std::flush;
+    {
+        kprotocol::PacketRegistry registry;
+        registry.register_schema(make_schema("test.slot",
+            {{"stack", kprotocol::FieldType::slot}}, 0x74));
+        kprotocol::types::Slot slot;
+        slot.present = true;
+        slot.item_id = 42;
+        slot.count = 3;
+        kprotocol::Packet p;
+        p.key = "test.slot";
+        p.state = kState;
+        p.direction = kDir;
+        p.fields["stack"] = slot;
+        const auto encoded = registry.encode_packet(p, kVersion);
+        kprotocol::codec::EncodedFrame frame;
+        std::size_t consumed = 0;
+        KPC_CHECK(kprotocol::codec::try_decode_frame(encoded, consumed, frame), "frame decode");
+        const auto decoded = registry.decode_packet(frame, kVersion, kState, kDir);
+        const auto out = std::get<kprotocol::types::Slot>(decoded.fields.at("stack"));
+        KPC_CHECK(out.present && out.item_id == 42 && out.count == 3, "slot fields");
+    }
+    std::cout << "ok\n";
 
     std::cout << "All field-type round-trip tests passed.\n";
     return 0;

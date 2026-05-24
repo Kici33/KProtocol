@@ -127,6 +127,15 @@ const PRIMITIVE_MAP = {
     'UUID':       'uuid',
     'position':   'position',
     'restBuffer': 'rest_buffer',
+    'void':       null, // switch arm with no payload
+};
+
+// Named minecraft-data aliases that map to a single kprotocol FieldType.
+const ALIAS_MAP = {
+    slot: 'slot',
+    Slot: 'slot',
+    anonOptionalNbt: 'optional_nbt',
+    anonymousNbt: 'optional_nbt',
 };
 
 // Fields whose name collides with C++ keywords or our own struct fields. We
@@ -156,6 +165,12 @@ function resolveType(type, stateTypes, globalTypes) {
     while (typeof cur === 'string') {
         if (seen.has(cur)) return cur; // cycle - bail
         seen.add(cur);
+        if (Object.prototype.hasOwnProperty.call(PRIMITIVE_MAP, cur)) {
+            return cur;
+        }
+        if (Object.prototype.hasOwnProperty.call(ALIAS_MAP, cur)) {
+            return cur;
+        }
         if (Object.prototype.hasOwnProperty.call(stateTypes, cur)) {
             cur = stateTypes[cur];
             continue;
@@ -176,7 +191,13 @@ function mapFieldType(type, stateTypes, globalTypes) {
     const resolved = resolveType(type, stateTypes, globalTypes);
 
     if (typeof resolved === 'string') {
+        if (resolved in ALIAS_MAP) {
+            return { ok: true, fieldType: ALIAS_MAP[resolved] };
+        }
         const mapped = PRIMITIVE_MAP[resolved];
+        if (mapped === null) {
+            return { ok: true, fieldType: null, voidField: true };
+        }
         if (mapped) return { ok: true, fieldType: mapped };
         return { ok: false, reason: `unmapped primitive: ${resolved}` };
     }
@@ -195,10 +216,137 @@ function mapFieldType(type, stateTypes, globalTypes) {
         if (kind === 'restBuffer') {
             return { ok: true, fieldType: 'rest_buffer' };
         }
+        if (kind === 'array') {
+            const params = resolved[1] || {};
+            if ((params.countType || 'varint') !== 'varint') {
+                return { ok: false, reason: `unsupported array countType: ${params.countType}` };
+            }
+            const elemMapped = mapFieldType(params.type, stateTypes, globalTypes);
+            if (!elemMapped.ok) {
+                return { ok: false, reason: `array element: ${elemMapped.reason}` };
+            }
+            if (elemMapped.fieldType === 'var_int') {
+                return { ok: true, fieldType: 'var_int_array' };
+            }
+            if (elemMapped.fieldType === 'var_long') {
+                return { ok: true, fieldType: 'var_long_array' };
+            }
+            return { ok: false, reason: `unsupported array element type: ${elemMapped.fieldType}` };
+        }
+        if (kind === 'option') {
+            const params = resolved[1] || {};
+            const innerFields = params.fields || [];
+            if (innerFields.length === 1) {
+                const innerMapped = mapFieldType(innerFields[0], stateTypes, globalTypes);
+                if (innerMapped.ok && innerMapped.fieldType) {
+                    return {
+                        ok: true,
+                        expandOption: true,
+                        innerType: innerMapped.fieldType,
+                    };
+                }
+            }
+            return { ok: false, reason: 'unsupported option shape' };
+        }
+        if (kind === 'container') {
+            return { ok: false, reason: 'nested container field (not flattened)' };
+        }
+        if (kind === 'switch') {
+            return { ok: false, reason: `switch type` };
+        }
         return { ok: false, reason: `compound type: ${kind}` };
     }
 
     return { ok: false, reason: 'unknown type shape' };
+}
+
+function looksLikeSlotContainer(containerFields) {
+    if (!Array.isArray(containerFields) || containerFields.length < 2) {
+        return false;
+    }
+    const presentField = containerFields[0];
+    const switchField = containerFields[1];
+    if (presentField?.name !== 'present' || presentField?.type !== 'bool') {
+        return false;
+    }
+    const switchType = switchField?.type;
+    return Array.isArray(switchType)
+        && switchType[0] === 'switch'
+        && switchType[1]?.compareTo === 'present'
+        && switchType[1]?.fields?.false === 'void';
+}
+
+// Flatten a minecraft-data container field list into kprotocol FieldSpec entries.
+function flattenContainerFields(containerFields, stateTypes, globalTypes) {
+    const fields = [];
+    for (const fieldEntry of containerFields) {
+        const fname = sanitizeFieldName(fieldEntry.name || 'anon');
+        const resolved = resolveType(fieldEntry.type, stateTypes, globalTypes);
+
+        if (typeof resolved === 'string' && ALIAS_MAP[resolved] === 'slot') {
+            fields.push({ name: fname, type: 'slot' });
+            continue;
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'container' && looksLikeSlotContainer(resolved[1])) {
+            fields.push({ name: fname, type: 'slot' });
+            continue;
+        }
+
+        const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
+        if (!mapped.ok) {
+            return { ok: false, reason: `field ${fieldEntry.name}: ${mapped.reason}`, fields: [] };
+        }
+        if (mapped.voidField) {
+            continue;
+        }
+        if (mapped.expandOption) {
+            const presentName = fname + '_present';
+            fields.push({ name: presentName, type: 'boolean' });
+            fields.push({ name: fname, type: mapped.innerType, optional_if: presentName });
+            continue;
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'container' && fieldEntry.anon) {
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            if (!inner.ok) {
+                return inner;
+            }
+            fields.push(...inner.fields);
+            continue;
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'container') {
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            if (!inner.ok) {
+                return { ok: false, reason: `field ${fieldEntry.name}: ${inner.reason}`, fields: [] };
+            }
+            fields.push(...inner.fields);
+            continue;
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'switch') {
+            const params = resolved[1] || {};
+            if (params.compareTo === 'present' && params.fields?.false === 'void') {
+                const trueBranch = params.fields.true;
+                const innerFields = (Array.isArray(trueBranch) && trueBranch[0] === 'container')
+                    ? (trueBranch[1] || [])
+                    : [];
+                for (const inner of innerFields) {
+                    const innerName = sanitizeFieldName(inner.name);
+                    const innerMapped = mapFieldType(inner.type, stateTypes, globalTypes);
+                    if (!innerMapped.ok || !innerMapped.fieldType) {
+                        return { ok: false, reason: `field ${inner.name}: ${innerMapped.reason}`, fields: [] };
+                    }
+                    fields.push({
+                        name: innerName,
+                        type: innerMapped.fieldType,
+                        optional_if: 'present',
+                    });
+                }
+                continue;
+            }
+            return { ok: false, reason: `field ${fieldEntry.name}: unsupported switch`, fields: [] };
+        }
+        fields.push({ name: fname, type: mapped.fieldType });
+    }
+    return { ok: true, fields };
 }
 
 // Extract per-packet schemas from a single state/direction.
@@ -241,27 +389,15 @@ function extractDirection(directionEntry, globalTypes) {
         }
         if (container[0] === 'container') {
             const containerFields = container[1] || [];
-            const fields = [];
-            let rawOnly = false;
-            let reason = '';
-            for (const fieldEntry of containerFields) {
-                const fname = sanitizeFieldName(fieldEntry.name);
-                const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
-                if (!mapped.ok) {
-                    rawOnly = true;
-                    reason = `field ${fieldEntry.name}: ${mapped.reason}`;
-                    break;
-                }
-                fields.push({ name: fname, type: mapped.fieldType });
-            }
-            if (rawOnly) {
+            const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes);
+            if (!flattened.ok) {
                 result.push({
                     wireName, id,
                     fields: [{ name: 'raw', type: 'rest_buffer' }],
-                    status: 'rawOnly', reason,
+                    status: 'rawOnly', reason: flattened.reason,
                 });
             } else {
-                result.push({ wireName, id, fields, status: 'ok' });
+                result.push({ wireName, id, fields: flattened.fields, status: 'ok' });
             }
         } else {
             // Top-level type is not a container - we wrap it as raw.
@@ -336,7 +472,10 @@ function aggregateAcrossVersions(perVersion) {
 function fieldsEqual(a, b) {
     if (a.length !== b.length) return false;
     for (let i = 0; i < a.length; ++i) {
-        if (a[i].name !== b[i].name || a[i].type !== b[i].type) return false;
+        if (a[i].name !== b[i].name || a[i].type !== b[i].type
+            || (a[i].optional_if || '') !== (b[i].optional_if || '')) {
+            return false;
+        }
     }
     return true;
 }
@@ -392,14 +531,41 @@ function emitPacketKeysHeader(schemas) {
 function emitFieldsLiteral(fields, indent) {
     if (fields.length === 0) return '{}';
     const pad = ' '.repeat(indent);
-    const inner = fields.map(f =>
-        `${pad}    {${cppStringLiteral(f.name)}, kprotocol::FieldType::${f.type}}`
-    ).join(',\n');
+    const inner = fields.map(f => {
+        const opt = f.optional_if
+            ? `, ${cppStringLiteral(f.optional_if)}`
+            : '';
+        return `${pad}    {${cppStringLiteral(f.name)}, kprotocol::FieldType::${f.type}${opt}}`;
+    }).join(',\n');
     return `{\n${inner}\n${pad}}`;
+}
+
+function emitSchemaBlock(s, indent) {
+    const pad = ' '.repeat(indent);
+    const collapsedFields = collapseFieldSets(s.fieldSets);
+    const lines = [];
+    lines.push(`${pad}{`);
+    lines.push(`${pad}    PacketSchema schema;`);
+    lines.push(`${pad}    schema.key = ${cppStringLiteral(s.key)};`);
+    lines.push(`${pad}    schema.state = PacketState::${s.state};`);
+    lines.push(`${pad}    schema.direction = PacketDirection::${s.direction};`);
+    const orderedIds = [...s.ids.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [wire, id] of orderedIds) {
+        lines.push(`${pad}    schema.ids.emplace(static_cast<ProtocolVersion>(${wire}), ${id});`);
+    }
+    const orderedFs = [...collapsedFields.entries()].sort((a, b) => a[0] - b[0]);
+    for (const [wire, fields] of orderedFs) {
+        const literal = emitFieldsLiteral(fields, indent + 4);
+        lines.push(`${pad}    schema.field_sets.emplace(static_cast<ProtocolVersion>(${wire}), std::vector<FieldSpec>${literal});`);
+    }
+    lines.push(`${pad}    registry.register_schema(std::move(schema));`);
+    lines.push(`${pad}}`);
+    return lines;
 }
 
 function emitSchemasSource(schemas) {
     const sorted = [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key));
+    const batchSize = 32;
     const lines = [
         '// AUTOGENERATED FILE. DO NOT EDIT BY HAND.',
         '// Regenerate with `node tools/generate_packets.mjs --out generated --versions ...`.',
@@ -413,32 +579,22 @@ function emitSchemasSource(schemas) {
         '',
         'namespace kprotocol {',
         '',
-        'void register_generated_packets(PacketRegistry& registry) {',
     ];
 
-    for (const s of sorted) {
-        const collapsedFields = collapseFieldSets(s.fieldSets);
-        lines.push('    {');
-        lines.push('        PacketSchema schema;');
-        lines.push(`        schema.key = ${cppStringLiteral(s.key)};`);
-        lines.push(`        schema.state = PacketState::${s.state};`);
-        lines.push(`        schema.direction = PacketDirection::${s.direction};`);
-
-        // ids
-        const orderedIds = [...s.ids.entries()].sort((a, b) => a[0] - b[0]);
-        for (const [wire, id] of orderedIds) {
-            lines.push(`        schema.ids.emplace(static_cast<ProtocolVersion>(${wire}), ${id});`);
+    for (let batch = 0; batch * batchSize < sorted.length; ++batch) {
+        const slice = sorted.slice(batch * batchSize, (batch + 1) * batchSize);
+        lines.push(`static void register_generated_packets_batch_${batch}(PacketRegistry& registry) {`);
+        for (const s of slice) {
+            lines.push(...emitSchemaBlock(s, 4));
         }
-        // field sets (collapsed)
-        const orderedFs = [...collapsedFields.entries()].sort((a, b) => a[0] - b[0]);
-        for (const [wire, fields] of orderedFs) {
-            const literal = emitFieldsLiteral(fields, 8);
-            lines.push(`        schema.field_sets.emplace(static_cast<ProtocolVersion>(${wire}), std::vector<FieldSpec>${literal});`);
-        }
-        lines.push('        registry.register_schema(std::move(schema));');
-        lines.push('    }');
+        lines.push('}');
+        lines.push('');
     }
 
+    lines.push('void register_generated_packets(PacketRegistry& registry) {');
+    for (let batch = 0; batch * batchSize < sorted.length; ++batch) {
+        lines.push(`    register_generated_packets_batch_${batch}(registry);`);
+    }
     lines.push('}');
     lines.push('');
     lines.push('} // namespace kprotocol');

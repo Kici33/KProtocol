@@ -18,11 +18,21 @@
 #include "kprotocol/generated/packet_keys.hpp"
 
 #include <array>
-#include <cassert>
 #include <cstdint>
+#include <cstdio>
 #include <iostream>
+#include <stdexcept>
 #include <string>
 #include <vector>
+
+#define KPC_CHECK(cond, msg)                                                  \
+    do {                                                                       \
+        if (!(cond)) {                                                         \
+            std::fprintf(stderr, "FAIL: %s (%s:%d) %s\n", #cond, __FILE__,     \
+                         __LINE__, (msg));                                     \
+            throw std::runtime_error(msg);                                     \
+        }                                                                      \
+    } while (false)
 
 namespace {
 
@@ -38,7 +48,7 @@ void test_register_generated_populates_registry() {
     std::cout << "  register_generated_packets() registers >100 packet keys... ";
     kprotocol::PacketRegistry registry;
     kprotocol::register_generated_packets(registry);
-    assert(registry.size() > 100);
+    KPC_CHECK(registry.size() > 100, "registry size");
     std::cout << "ok (" << registry.size() << " keys)\n";
 }
 
@@ -49,9 +59,9 @@ void test_generated_key_constants_resolve() {
 
     const auto key = kprotocol::generated::packet_keys::login_serverbound_encryption_begin;
     const auto* schema = registry.schema_for(key);
-    assert(schema != nullptr);
-    assert(schema->state == kprotocol::PacketState::login);
-    assert(schema->direction == kprotocol::PacketDirection::serverbound);
+    KPC_CHECK(schema != nullptr, "schema");
+    KPC_CHECK(schema->state == kprotocol::PacketState::login, "state");
+    KPC_CHECK(schema->direction == kprotocol::PacketDirection::serverbound, "direction");
     std::cout << "ok\n";
 }
 
@@ -70,14 +80,15 @@ void test_encryption_begin_roundtrip_at_1_20_4() {
     const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
     kprotocol::codec::EncodedFrame frame;
     std::size_t consumed = 0;
-    assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+    KPC_CHECK(kprotocol::codec::try_decode_frame(encoded, consumed, frame), "frame decode");
+    KPC_CHECK(consumed == encoded.size(), "full frame consumed");
     const auto decoded = registry.decode_packet(
         frame, kprotocol::ProtocolVersion::v1_20_4,
         kprotocol::PacketState::login, kprotocol::PacketDirection::serverbound);
-    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("sharedSecret"))
-           == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC, 0xDD}));
-    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("verifyToken"))
-           == std::vector<std::uint8_t>({0x01, 0x02, 0x03}));
+    KPC_CHECK(std::get<std::vector<std::uint8_t>>(decoded.fields.at("sharedSecret"))
+              == std::vector<std::uint8_t>({0xAA, 0xBB, 0xCC, 0xDD}), "sharedSecret");
+    KPC_CHECK(std::get<std::vector<std::uint8_t>>(decoded.fields.at("verifyToken"))
+              == std::vector<std::uint8_t>({0x01, 0x02, 0x03}), "verifyToken");
     std::cout << "ok\n";
 }
 
@@ -93,7 +104,7 @@ void test_every_baseline_version_has_at_least_one_schema() {
         const auto* schema = registry.schema_for(
             v, kprotocol::PacketState::handshaking,
             kprotocol::PacketDirection::serverbound, 0x00);
-        assert(schema != nullptr);
+        KPC_CHECK(schema != nullptr, "handshake schema");
         (void)v;
     }
     std::cout << "ok\n";
@@ -104,12 +115,9 @@ void test_rest_buffer_packet_roundtrips_opaque() {
     kprotocol::PacketRegistry registry;
     kprotocol::register_generated_packets(registry);
 
-    // play.clientbound.collect is rest_buffer-only at every baseline version
-    // (it has compound fields the generator can't model yet). We confirm the
-    // raw payload round-trips byte-exact.
-    const std::string key = "play.clientbound.collect";
+    const std::string key = "play.clientbound.boss_bar";
     const auto* schema = registry.schema_for(key);
-    assert(schema != nullptr);
+    KPC_CHECK(schema != nullptr, "boss_bar schema");
 
     kprotocol::Packet p;
     p.key = key;
@@ -121,11 +129,11 @@ void test_rest_buffer_packet_roundtrips_opaque() {
     const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
     kprotocol::codec::EncodedFrame frame;
     std::size_t consumed = 0;
-    assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+    KPC_CHECK(kprotocol::codec::try_decode_frame(encoded, consumed, frame), "frame decode");
     const auto decoded = registry.decode_packet(
         frame, kprotocol::ProtocolVersion::v1_20_4,
         kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
-    assert(std::get<std::vector<std::uint8_t>>(decoded.fields.at("raw")) == opaque);
+    KPC_CHECK(std::get<std::vector<std::uint8_t>>(decoded.fields.at("raw")) == opaque, "raw blob");
     std::cout << "ok\n";
 }
 
@@ -133,11 +141,16 @@ void test_rest_buffer_packet_roundtrips_opaque() {
 
 int main() {
     std::cout << "generated_packets_tests:\n";
-    test_register_generated_populates_registry();
-    test_generated_key_constants_resolve();
-    test_encryption_begin_roundtrip_at_1_20_4();
-    test_every_baseline_version_has_at_least_one_schema();
-    test_rest_buffer_packet_roundtrips_opaque();
+    try {
+        test_register_generated_populates_registry();
+        test_generated_key_constants_resolve();
+        test_encryption_begin_roundtrip_at_1_20_4();
+        test_every_baseline_version_has_at_least_one_schema();
+        test_rest_buffer_packet_roundtrips_opaque();
+    } catch (const std::exception& ex) {
+        std::cerr << "EXCEPTION: " << ex.what() << '\n';
+        return 1;
+    }
     std::cout << "All generated-packet smoke tests passed.\n";
     return 0;
 }

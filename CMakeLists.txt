@@ -185,12 +185,17 @@ if(KPROTOCOL_BUILD_TESTS)
         versioned_schema_tests
         generated_packets_tests
         server_smoke_tests
+        server_login_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
         # Tests that reference register_generated_packets need the committed
         # generator output to be compiled in. Skip them if the user opted out.
         if(test_name STREQUAL "generated_packets_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "server_login_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()
@@ -242,6 +247,8 @@ file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/kprotocolConfig.cmake"
 "include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
 include(\"\${CMAKE_CURRENT_LIST_DIR}/kprotocolTargets.cmake\")
+# kprotocol::asio is exported alongside the library targets (standalone Asio).
+# Consumers linking kprotocol::server or kprotocol::kprotocol receive it transitively.
 ")
 
 install(FILES

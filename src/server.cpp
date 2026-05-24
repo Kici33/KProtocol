@@ -162,8 +162,22 @@ struct MinecraftServer::Impl {
                     shared->state = PacketState::status;
                 } else if (*state_id == 2) {
                     shared->state = PacketState::login;
+                } else if (*state_id == 3) {
+                    shared->state = PacketState::configuration;
                 }
             }
+        }
+    }
+
+    void update_session_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
+        update_handshake_state(packet, shared);
+
+        if (packet.key == "login.serverbound.login_acknowledged") {
+            shared->state = PacketState::configuration;
+            return;
+        }
+        if (packet.key == "configuration.serverbound.finish_configuration") {
+            shared->state = PacketState::play;
         }
     }
 
@@ -172,7 +186,7 @@ struct MinecraftServer::Impl {
             Packet packet = registry.decode_packet(
                 frame, shared->client_version.load(), shared->state.load(), PacketDirection::serverbound);
             packet = translator.translate(packet, shared->client_version.load(), internal_version);
-            update_handshake_state(packet, shared);
+            update_session_state(packet, shared);
             const ClientSession session(shared);
             emit_received(session, packet);
             if (packet_handler) {

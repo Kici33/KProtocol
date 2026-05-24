@@ -6,6 +6,118 @@
 
 namespace kprotocol {
 
+namespace {
+
+// Minimal NBT tag skip/read for anonOptionalNbt inside slots. Supports the
+// tag kinds commonly seen on item stacks (compound + nested primitives).
+void skip_nbt_payload(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type);
+
+void skip_nbt_value(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type) {
+    switch (tag_type) {
+    case 0: // TAG_End
+        return;
+    case 1: // TAG_Byte
+        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT byte");
+        offset += 1;
+        return;
+    case 2: // TAG_Short
+        if (offset + 2 > input.size()) throw std::runtime_error("Truncated NBT short");
+        offset += 2;
+        return;
+    case 3: // TAG_Int
+        if (offset + 4 > input.size()) throw std::runtime_error("Truncated NBT int");
+        offset += 4;
+        return;
+    case 4: // TAG_Long
+        if (offset + 8 > input.size()) throw std::runtime_error("Truncated NBT long");
+        offset += 8;
+        return;
+    case 5: // TAG_Float
+        if (offset + 4 > input.size()) throw std::runtime_error("Truncated NBT float");
+        offset += 4;
+        return;
+    case 6: // TAG_Double
+        if (offset + 8 > input.size()) throw std::runtime_error("Truncated NBT double");
+        offset += 8;
+        return;
+    case 7: { // TAG_Byte_Array
+        const auto len = codec::read_int(input, offset);
+        if (len < 0 || static_cast<std::size_t>(len) > input.size() - offset) {
+            throw std::runtime_error("Truncated NBT byte array");
+        }
+        offset += static_cast<std::size_t>(len);
+        return;
+    }
+    case 8: { // TAG_String
+        (void)codec::read_string(input, offset);
+        return;
+    }
+    case 9: { // TAG_List
+        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT list");
+        const auto element_type = input[offset++];
+        const auto len = codec::read_int(input, offset);
+        if (len < 0) throw std::runtime_error("Negative NBT list length");
+        for (std::int32_t i = 0; i < len; ++i) {
+            skip_nbt_value(input, offset, element_type);
+        }
+        return;
+    }
+    case 10: // TAG_Compound
+        skip_nbt_payload(input, offset, tag_type);
+        return;
+    case 11: { // TAG_Int_Array
+        const auto len = codec::read_int(input, offset);
+        if (len < 0 || static_cast<std::size_t>(len) * 4U > input.size() - offset) {
+            throw std::runtime_error("Truncated NBT int array");
+        }
+        offset += static_cast<std::size_t>(len) * 4U;
+        return;
+    }
+    case 12: { // TAG_Long_Array
+        const auto len = codec::read_int(input, offset);
+        if (len < 0 || static_cast<std::size_t>(len) * 8U > input.size() - offset) {
+            throw std::runtime_error("Truncated NBT long array");
+        }
+        offset += static_cast<std::size_t>(len) * 8U;
+        return;
+    }
+    default:
+        throw std::runtime_error("Unsupported NBT tag type");
+    }
+}
+
+void skip_nbt_payload(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type) {
+    if (tag_type != 10) {
+        skip_nbt_value(input, offset, tag_type);
+        return;
+    }
+    while (offset < input.size()) {
+        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT compound");
+        const auto child_type = input[offset++];
+        if (child_type == 0) {
+            return;
+        }
+        (void)codec::read_string(input, offset);
+        skip_nbt_value(input, offset, child_type);
+    }
+    throw std::runtime_error("Unterminated NBT compound");
+}
+
+NBTBlob read_nbt_tag(std::span<const std::uint8_t> input, std::size_t& offset) {
+    if (offset >= input.size()) {
+        throw std::runtime_error("Unexpected end reading NBT tag");
+    }
+    const auto start = offset;
+    const auto tag_type = input[offset++];
+    skip_nbt_payload(input, offset, tag_type);
+    NBTBlob blob;
+    blob.data.insert(blob.data.end(), input.begin() + static_cast<std::ptrdiff_t>(start),
+                     input.begin() + static_cast<std::ptrdiff_t>(offset));
+    return blob;
+}
+
+} // namespace
+
 namespace types {
 
 void write_long(std::vector<std::uint8_t>& out, std::int64_t value) {
@@ -73,44 +185,58 @@ NBTBlob read_nbt(std::span<const std::uint8_t> input, std::size_t& offset) {
     return b;
 }
 
-// Slot encoding: present(bool) + (if present) var_int item_id + byte count + NBT (as bytes with var_int length)
+void write_optional_nbt(std::vector<std::uint8_t>& out, const NBTBlob& nbt) {
+    if (nbt.data.empty()) {
+        out.push_back(0x00);
+        return;
+    }
+    out.insert(out.end(), nbt.data.begin(), nbt.data.end());
+}
+
+NBTBlob read_optional_nbt(std::span<const std::uint8_t> input, std::size_t& offset) {
+    if (offset >= input.size()) {
+        throw std::runtime_error("Unexpected end reading optional NBT");
+    }
+    if (input[offset] == 0x00) {
+        ++offset;
+        return {};
+    }
+    return read_nbt_tag(input, offset);
+}
+
+void write_slot(std::vector<std::uint8_t>& out, const Slot& slot) {
+    codec::write_bool(out, slot.present);
+    if (!slot.present) {
+        return;
+    }
+    codec::write_var_int(out, slot.item_id);
+    codec::write_byte(out, static_cast<std::int8_t>(slot.count));
+    write_optional_nbt(out, slot.nbt);
+}
+
+Slot read_slot(std::span<const std::uint8_t> input, std::size_t& offset) {
+    Slot slot;
+    slot.present = codec::read_bool(input, offset);
+    if (!slot.present) {
+        return slot;
+    }
+    slot.item_id = codec::read_var_int(input, offset);
+    slot.count = codec::read_byte(input, offset);
+    slot.nbt = read_optional_nbt(input, offset);
+    return slot;
+}
+
+// Slot encoding: present(bool) + (if present) var_int item_id + byte count + optional NBT
 std::vector<std::uint8_t> slot_to_bytes(const Slot& slot) {
     std::vector<std::uint8_t> out;
-    // present flag
-    out.push_back(static_cast<std::uint8_t>(slot.present ? 0x01 : 0x00));
-    if (!slot.present) return out;
-    // item id as VarInt
-    codec::write_var_int(out, slot.item_id);
-    // count as signed byte
-    out.push_back(static_cast<std::uint8_t>(slot.count & 0xFF));
-    // nbt: write length-prefixed bytes (VarInt length + raw bytes)
-    codec::write_var_int(out, static_cast<std::int32_t>(slot.nbt.data.size()));
-    out.insert(out.end(), slot.nbt.data.begin(), slot.nbt.data.end());
+    write_slot(out, slot);
     return out;
 }
 
 Slot slot_from_bytes(const std::vector<std::uint8_t>& blob) {
-    Slot s;
     std::size_t offset = 0;
     const std::span<const std::uint8_t> input(blob.data(), blob.size());
-    if (input.size() == 0) {
-        s.present = false;
-        return s;
-    }
-    s.present = input[offset++] != 0;
-    if (!s.present) return s;
-    // read var_int item id
-    s.item_id = codec::read_var_int(input, offset);
-    // read count (signed byte)
-    if (offset >= input.size()) throw std::runtime_error("Unexpected end reading slot count");
-    s.count = static_cast<std::int32_t>(static_cast<int8_t>(input[offset++]));
-    // read nbt length
-    const auto nbt_len = codec::read_var_int(input, offset);
-    if (nbt_len < 0) throw std::runtime_error("Negative NBT length");
-    if (static_cast<std::size_t>(nbt_len) > input.size() - offset) throw std::runtime_error("Truncated NBT in slot");
-    s.nbt.data.insert(s.nbt.data.end(), input.begin() + static_cast<std::ptrdiff_t>(offset), input.begin() + static_cast<std::ptrdiff_t>(offset + static_cast<std::size_t>(nbt_len)));
-    offset += static_cast<std::size_t>(nbt_len);
-    return s;
+    return read_slot(input, offset);
 }
 
 } // namespace types
