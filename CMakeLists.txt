@@ -15,7 +15,7 @@ if(BUILD_EXAMPLE)
     set(KPROTOCOL_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 endif()
 
-set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5"
+set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11"
     CACHE STRING
     "Comma-separated Minecraft versions to pass to tools/generate_packets.mjs (used by the kprotocol_generate_packets target)")
 
@@ -195,6 +195,7 @@ if(KPROTOCOL_BUILD_TESTS)
         varint_property_tests
         frame_malformed_tests
         version_tests
+        version_range_tests
         decompression_bomb_tests
         field_types_tests
         versioned_schema_tests
@@ -212,6 +213,10 @@ if(KPROTOCOL_BUILD_TESTS)
         # Tests that reference register_generated_packets need the committed
         # generator output to be compiled in. Skip them if the user opted out.
         if(test_name STREQUAL "generated_packets_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "version_range_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

@@ -46,4 +46,18 @@ std::string name_of(ProtocolVersion version) {
     return name_of(protocol_number(version));
 }
 
+ProtocolVersion catalog_anchor_for(const std::int32_t wire) noexcept {
+    std::int32_t anchor_wire = protocol_number(ProtocolVersion::v1_8);
+    if (wire < anchor_wire) {
+        return static_cast<ProtocolVersion>(wire);
+    }
+#define KPROTOCOL_X(name, known_wire, display) \
+    if (known_wire <= wire && known_wire >= anchor_wire) { \
+        anchor_wire = known_wire; \
+    }
+    KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
+#undef KPROTOCOL_X
+    return static_cast<ProtocolVersion>(anchor_wire);
+}
+
 } // namespace kprotocol

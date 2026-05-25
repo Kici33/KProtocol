@@ -49,7 +49,11 @@ namespace kprotocol {
     X(v1_21_1,  767, "1.21.1")              \
     X(v1_21_3,  768, "1.21.3")              \
     X(v1_21_4,  769, "1.21.4")              \
-    X(v1_21_5,  770, "1.21.5")
+    X(v1_21_5,  770, "1.21.5")              \
+    X(v1_21_6,  771, "1.21.6")              \
+    X(v1_21_7,  772, "1.21.7")              \
+    X(v1_21_9,  773, "1.21.9")              \
+    X(v1_21_11, 774, "1.21.11")
 
 enum class ProtocolVersion : std::int32_t {
 #define KPROTOCOL_X(name, wire, display) name = wire,
@@ -73,5 +77,13 @@ constexpr std::int32_t protocol_number(const ProtocolVersion version) noexcept {
 // so logs remain useful.
 [[nodiscard]] std::string name_of(ProtocolVersion version);
 [[nodiscard]] std::string name_of(std::int32_t wire);
+
+// Highest wire number compiled into the generated packet catalog.
+[[nodiscard]] constexpr ProtocolVersion latest_catalog_version() noexcept {
+    return ProtocolVersion::v1_21_11;
+}
+
+// Map a client wire number to the nearest catalog anchor (largest known wire <= wire).
+[[nodiscard]] ProtocolVersion catalog_anchor_for(std::int32_t wire) noexcept;
 
 } // namespace kprotocol

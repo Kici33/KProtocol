@@ -27,6 +27,8 @@ void test_known_wires_round_trip() {
     // Newly added versions are reachable.
     assert(kprotocol::protocol_number(kprotocol::ProtocolVersion::v1_19_4) == 762);
     assert(kprotocol::protocol_number(kprotocol::ProtocolVersion::v1_21_5) == 770);
+    assert(kprotocol::protocol_number(kprotocol::ProtocolVersion::v1_21_11) == 774);
+    assert(kprotocol::protocol_number(kprotocol::latest_catalog_version()) == 774);
 
     std::cout << "ok\n";
 }
@@ -74,6 +76,14 @@ void test_enum_preserves_wire_for_unknown_cast() {
     std::cout << "ok\n";
 }
 
+void test_catalog_anchor_for() {
+    std::cout << "  catalog_anchor_for picks nearest compiled anchor... ";
+    assert(kprotocol::catalog_anchor_for(47) == kprotocol::ProtocolVersion::v1_8);
+    assert(kprotocol::catalog_anchor_for(754) == kprotocol::ProtocolVersion::v1_16_5);
+    assert(kprotocol::catalog_anchor_for(775) == kprotocol::ProtocolVersion::v1_21_11);
+    std::cout << "ok\n";
+}
+
 } // namespace
 
 int main() {
@@ -84,6 +94,7 @@ int main() {
     test_name_of_known();
     test_name_of_unknown_is_stable();
     test_enum_preserves_wire_for_unknown_cast();
+    test_catalog_anchor_for();
     std::cout << "All version-table tests passed.\n";
     return 0;
 }

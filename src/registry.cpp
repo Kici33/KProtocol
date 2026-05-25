@@ -1,6 +1,7 @@
 #include "kprotocol/registry.hpp"
 
 #include "kprotocol/types.hpp"
+#include "kprotocol/version.hpp"
 
 #include <cstring>
 #include <functional>
@@ -286,14 +287,24 @@ const PacketSchema* PacketRegistry::schema_for(
     const std::int32_t packet_id) const noexcept {
     const IdLookupKey lookup_key{version, state, direction, packet_id};
     const auto id_it = handle_by_id_.find(lookup_key);
-    if (id_it == handle_by_id_.end()) {
-        return nullptr;
+    if (id_it != handle_by_id_.end()) {
+        const auto def_it = schemas_by_handle_.find(id_it->second);
+        if (def_it != schemas_by_handle_.end()) {
+            return &def_it->second;
+        }
     }
-    const auto def_it = schemas_by_handle_.find(id_it->second);
-    if (def_it == schemas_by_handle_.end()) {
-        return nullptr;
+    const auto anchor = catalog_anchor_for(protocol_number(version));
+    if (protocol_number(anchor) != protocol_number(version)) {
+        const IdLookupKey anchored{anchor, state, direction, packet_id};
+        const auto anchored_it = handle_by_id_.find(anchored);
+        if (anchored_it != handle_by_id_.end()) {
+            const auto def_it = schemas_by_handle_.find(anchored_it->second);
+            if (def_it != schemas_by_handle_.end()) {
+                return &def_it->second;
+            }
+        }
     }
-    return &def_it->second;
+    return nullptr;
 }
 
 const std::vector<FieldSpec>* PacketRegistry::fields_for(
@@ -352,7 +363,12 @@ std::optional<std::int32_t> PacketRegistry::packet_id_for(std::string_view key, 
     if (id_it != schema->ids.end()) {
         return id_it->second;
     }
-    return std::nullopt;
+    const auto it = schema->ids.upper_bound(version);
+    if (it == schema->ids.begin()) {
+        return std::nullopt;
+    }
+    --it;
+    return it->second;
 }
 
 std::vector<std::uint8_t> PacketRegistry::encode_packet(

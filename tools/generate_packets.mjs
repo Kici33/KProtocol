@@ -99,6 +99,12 @@ const VERSION_TABLE = [
     { display: '1.21.3', wire: 768, enumerator: 'v1_21_3' },
     { display: '1.21.4', wire: 769, enumerator: 'v1_21_4' },
     { display: '1.21.5', wire: 770, enumerator: 'v1_21_5' },
+    { display: '1.21.6', wire: 771, enumerator: 'v1_21_6' },
+    { display: '1.21.7', wire: 772, enumerator: 'v1_21_7' },
+    { display: '1.21.8', wire: 772, enumerator: 'v1_21_7' },
+    { display: '1.21.9', wire: 773, enumerator: 'v1_21_9' },
+    { display: '1.21.10', wire: 773, enumerator: 'v1_21_9' },
+    { display: '1.21.11', wire: 774, enumerator: 'v1_21_11' },
 ];
 
 function findVersion(display) {

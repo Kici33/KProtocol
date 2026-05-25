@@ -4,7 +4,7 @@ import { promises as fs } from 'node:fs';
 import path from 'node:path';
 import process from 'node:process';
 
-const VERSIONS = ['1.8', '1.16.5', '1.21.1'];
+const VERSIONS = ['1.8', '1.16.5', '1.21.1', '1.21.11'];
 
 async function main() {
     const mcd = (await import('minecraft-data')).default;

@@ -28,7 +28,9 @@ ctest --test-dir build --output-on-failure
 ```
 
 By default the library compiles the committed multi-version packet catalog under
-`generated/` (271 packet keys across 13 versions from 1.8 through 1.21.5).
+`generated/` (packet keys across 17 anchor versions from 1.8 through 1.21.11,
+wire 47–774). Unknown future client wires (e.g. 1.26 when minecraft-data adds it)
+resolve to the nearest compiled catalog anchor until you regenerate.
 Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
 hand-rolled baseline set.
 
@@ -40,7 +42,7 @@ See [GENERATE.md](GENERATE.md) for full details. Quick version:
 npm install minecraft-data
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.16.5,1.17,1.18,1.19,1.20,1.20.2,1.20.4,1.20.5,1.21.1,1.21.3,1.21.5
+    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11
 ```
 
 Or via CMake (requires Node.js on PATH):

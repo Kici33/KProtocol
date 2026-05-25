@@ -77,6 +77,10 @@ constexpr ProtocolVersion kCatalogVersions[] = {
     ProtocolVersion::v1_21_1,
     ProtocolVersion::v1_21_4,
     ProtocolVersion::v1_21_5,
+    ProtocolVersion::v1_21_6,
+    ProtocolVersion::v1_21_7,
+    ProtocolVersion::v1_21_9,
+    ProtocolVersion::v1_21_11,
 };
 
 } // namespace

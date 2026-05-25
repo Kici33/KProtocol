@@ -5,7 +5,9 @@ import path from 'node:path';
 import process from 'node:process';
 
 const VERSIONS = [
-    '1.8', '1.12.2', '1.16.5', '1.20.4', '1.21.1',
+    '1.8', '1.12.2', '1.13', '1.14', '1.16.5', '1.17', '1.18', '1.19',
+    '1.20.2', '1.20.4', '1.21.1', '1.21.4', '1.21.5', '1.21.6', '1.21.7',
+    '1.21.9', '1.21.11',
 ];
 
 function defaultStateIdByName(inst) {
