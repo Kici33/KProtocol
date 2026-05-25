@@ -140,6 +140,7 @@ endif()
 add_library(kprotocol_server
     src/server.cpp
     src/client_ui.cpp
+    src/play_demo.cpp
 )
 target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
@@ -168,6 +169,8 @@ add_library(kprotocol::kprotocol ALIAS kprotocol)
 if(KPROTOCOL_BUILD_EXAMPLES)
     add_executable(kprotocol_example examples/minimal_server.cpp)
     target_link_libraries(kprotocol_example PRIVATE kprotocol::kprotocol)
+    add_executable(kprotocol_play_demo examples/play_demo_server.cpp)
+    target_link_libraries(kprotocol_play_demo PRIVATE kprotocol::kprotocol)
 endif()
 
 # ============================================================================
@@ -191,6 +194,7 @@ if(KPROTOCOL_BUILD_TESTS)
         server_smoke_tests
         server_login_tests
         gameplay_integration_tests
+        server_play_demo_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -205,6 +209,10 @@ if(KPROTOCOL_BUILD_TESTS)
             continue()
         endif()
         if(test_name STREQUAL "gameplay_integration_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "server_play_demo_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

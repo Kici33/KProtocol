@@ -16,3 +16,4 @@
 #include "kprotocol/packets/play/S23BlockChangePacket.hpp"
 #include "kprotocol/packets/play/S45TitlePacket.hpp"
 #include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"
+#include "kprotocol/play_demo.hpp"

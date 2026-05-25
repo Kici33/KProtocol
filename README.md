@@ -86,6 +86,21 @@ See `examples/consumer/` for a minimal installed-consumer layout (`main.cpp` +
 `CMakeLists.txt`). After `cmake --install` from the kprotocol build tree, point
 `CMAKE_PREFIX_PATH` at the install prefix and configure that example.
 
+### Play demo server
+
+`examples/play_demo_server.cpp` is the reference play-state server. It accepts
+any supported client version, completes offline login, and sends title, action
+bar, scoreboard, block change, and entity metadata using the internal version
+(1.21.1) with automatic wire translation:
+
+```bash
+cmake -S . -B build -DKPROTOCOL_BUILD_EXAMPLES=ON
+cmake --build build --target kprotocol_play_demo
+./build/kprotocol_play_demo   # listens on 25565
+```
+
+Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
+
 ## Architecture
 
 1. `kprotocol::PacketRegistry`
