@@ -55,6 +55,7 @@ add_library(kprotocol::codec ALIAS kprotocol_codec)
 # ============================================================================
 add_library(kprotocol_core
     src/types.cpp
+    src/text_component.cpp
     src/registry.cpp
     src/translation.cpp
     src/translation_registry.cpp
@@ -77,6 +78,7 @@ add_library(kprotocol::core ALIAS kprotocol_core)
 add_library(kprotocol_packets
     src/baseline_packets.cpp
     src/initialize.cpp
+    src/runtime.cpp
 )
 target_link_libraries(kprotocol_packets PUBLIC kprotocol_core)
 
@@ -146,6 +148,7 @@ add_library(kprotocol_server
     src/server.cpp
     src/client_ui.cpp
     src/play_demo.cpp
+    src/protocol_server.cpp
 )
 target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
@@ -201,6 +204,7 @@ if(KPROTOCOL_BUILD_TESTS)
         gameplay_integration_tests
         server_play_demo_tests
         blocks_metadata_tests
+        easy_use_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -223,6 +227,10 @@ if(KPROTOCOL_BUILD_TESTS)
             continue()
         endif()
         if(test_name STREQUAL "blocks_metadata_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "easy_use_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

@@ -36,4 +36,11 @@ bool send_block_change(
     const Position& location,
     BlockState block);
 
+// Same as above, resolving block_name via BlockRegistry at internal_version.
+bool send_block_change(
+    const ClientSession& client,
+    ProtocolVersion internal_version,
+    const Position& location,
+    const std::string& block_name);
+
 } // namespace kprotocol

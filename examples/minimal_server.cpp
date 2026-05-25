@@ -17,18 +17,14 @@ public:
 };
 
 int main() {
-    kprotocol::PacketRegistry registry;
-    kprotocol::PacketTranslator translator;
-    kprotocol::initialize(registry, translator);
+    kprotocol::ProtocolServer app;
+    app.server().add_listener(std::make_shared<LoggingProtocolListener>());
 
-    kprotocol::MinecraftServer server(registry, translator);
-    server.add_listener(std::make_shared<LoggingProtocolListener>());
-
-    server.on_error([](const std::string& error) {
+    app.server().on_error([](const std::string& error) {
         std::cerr << "[KProtocol] " << error << '\n';
     });
 
-    server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
+    app.server().on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
         if (packet.key == kprotocol::packet_keys::status_request) {
             const auto response = kprotocol::S00StatusResponsePacket{
                 .json_response = R"({"version":{"name":"KProtocol","protocol":767},"players":{"max":100,"online":0},"description":{"text":"KProtocol Server"}})"
@@ -41,13 +37,13 @@ int main() {
         }
     });
 
-    if (!server.start(25565, kprotocol::ProtocolVersion::v1_21_1)) {
+    if (!app.server().start(25565, kprotocol::ProtocolVersion::v1_21_1)) {
         std::cerr << "Failed to start server\n";
         return 1;
     }
 
     std::cout << "Server running on port 25565\n";
-    while (server.running()) {
+    while (app.server().running()) {
         std::this_thread::sleep_for(std::chrono::seconds(1));
     }
     return 0;

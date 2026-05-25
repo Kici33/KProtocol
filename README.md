@@ -40,7 +40,7 @@ See [GENERATE.md](GENERATE.md) for full details. Quick version:
 npm install minecraft-data
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+    --versions 1.8,1.12.2,1.16.5,1.17,1.18,1.19,1.20,1.20.2,1.20.4,1.20.5,1.21.1,1.21.3,1.21.5
 ```
 
 Or via CMake (requires Node.js on PATH):
@@ -135,29 +135,48 @@ Each packet class carries strongly-typed fields and exposes:
 
 ## Quick start
 
+One include, one object — no manual registry wiring:
+
 ```cpp
 #include "kprotocol/kprotocol.hpp"
 
-kprotocol::PacketRegistry registry;
-kprotocol::PacketTranslator translator;
-kprotocol::initialize(registry, translator);
+kprotocol::ProtocolServer app;
 
-kprotocol::MinecraftServer server(registry, translator);
-class MyListener : public kprotocol::ProtocolListener {
-public:
-    void onPacketReceived(const kprotocol::ClientSession&, const kprotocol::Packet& packet) override {
-        // inspect all inbound packets
-    }
-};
-
-server.add_listener(std::make_shared<MyListener>());
-server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
+app.server().on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
     if (packet.key == kprotocol::packet_keys::ping_request) {
         const auto ping = kprotocol::C01PingRequestPacket::from_packet(packet);
         client.send_packet(kprotocol::S01PongResponsePacket{.payload = ping.payload}.to_packet());
     }
 });
-server.start(25565, kprotocol::ProtocolVersion::v1_21_1);
+
+app.server().start(25565, kprotocol::ProtocolVersion::v1_21_1);
+```
+
+Cross-version UI and blocks without touching wire details:
+
+```cpp
+kprotocol::send_title(client, {
+    .title = "Welcome",
+    .subtitle = "KProtocol",
+});
+
+kprotocol::send_action_bar(client, "Hello!");
+kprotocol::send_scoreboard_display(client, "myobj", 1); // sidebar
+kprotocol::send_block_change(client, kprotocol::ProtocolVersion::v1_21_1,
+    kprotocol::Position{.x = 0, .y = 64, .z = 0}, "stone");
+```
+
+Typed play packets live under `kprotocol/packets/play/`; include them all with
+`kprotocol/packets/play/play_packets.hpp`. For encode-only work without a server,
+use `kprotocol::ProtocolRuntime` instead of `ProtocolServer`.
+
+Lower-level manual setup is still available:
+
+```cpp
+kprotocol::PacketRegistry registry;
+kprotocol::PacketTranslator translator;
+kprotocol::initialize(registry, translator);
+kprotocol::MinecraftServer server(registry, translator);
 ```
 
 ## Adding a new packet
