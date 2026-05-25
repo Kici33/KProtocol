@@ -60,6 +60,11 @@ add_library(kprotocol_core
     src/translation_registry.cpp
     src/translation_mappings_data.cpp
     src/entity_metadata.cpp
+    src/blocks.cpp
+    src/block_registry.cpp
+    src/metadata_registry.cpp
+    src/block_registry_data.cpp
+    src/metadata_registry_data.cpp
 )
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
 kprotocol_apply_warnings(kprotocol_core)
@@ -195,6 +200,7 @@ if(KPROTOCOL_BUILD_TESTS)
         server_login_tests
         gameplay_integration_tests
         server_play_demo_tests
+        blocks_metadata_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -213,6 +219,10 @@ if(KPROTOCOL_BUILD_TESTS)
             continue()
         endif()
         if(test_name STREQUAL "server_play_demo_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "blocks_metadata_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

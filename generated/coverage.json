@@ -1,96 +1,96 @@
 {
-  "generatedAt": "2026-05-25T09:48:36.614Z",
+  "generatedAt": "2026-05-25T10:29:38.039Z",
   "versions": [
     {
       "display": "1.8",
       "wire": 47,
       "totalPackets": 112,
-      "fullSchemas": 91,
-      "rawOnly": 21
+      "fullSchemas": 98,
+      "rawOnly": 14
     },
     {
       "display": "1.12.2",
       "wire": 340,
       "totalPackets": 125,
-      "fullSchemas": 100,
-      "rawOnly": 25
+      "fullSchemas": 105,
+      "rawOnly": 20
     },
     {
       "display": "1.13",
       "wire": 393,
       "totalPackets": 143,
-      "fullSchemas": 112,
-      "rawOnly": 31
+      "fullSchemas": 119,
+      "rawOnly": 24
     },
     {
       "display": "1.14",
       "wire": 477,
       "totalPackets": 152,
-      "fullSchemas": 121,
-      "rawOnly": 31
+      "fullSchemas": 128,
+      "rawOnly": 24
     },
     {
       "display": "1.16.5",
       "wire": 754,
       "totalPackets": 154,
-      "fullSchemas": 121,
-      "rawOnly": 33
+      "fullSchemas": 129,
+      "rawOnly": 25
     },
     {
       "display": "1.17",
       "wire": 755,
       "totalPackets": 165,
-      "fullSchemas": 130,
-      "rawOnly": 35
+      "fullSchemas": 139,
+      "rawOnly": 26
     },
     {
       "display": "1.18",
       "wire": 757,
       "totalPackets": 166,
-      "fullSchemas": 130,
-      "rawOnly": 36
+      "fullSchemas": 139,
+      "rawOnly": 27
     },
     {
       "display": "1.19",
       "wire": 759,
       "totalPackets": 169,
-      "fullSchemas": 126,
-      "rawOnly": 43
+      "fullSchemas": 136,
+      "rawOnly": 33
     },
     {
       "display": "1.20.2",
       "wire": 764,
       "totalPackets": 197,
-      "fullSchemas": 146,
-      "rawOnly": 51
+      "fullSchemas": 154,
+      "rawOnly": 43
     },
     {
       "display": "1.20.4",
       "wire": 765,
       "totalPackets": 203,
-      "fullSchemas": 149,
-      "rawOnly": 54
+      "fullSchemas": 156,
+      "rawOnly": 47
     },
     {
       "display": "1.21.1",
       "wire": 767,
       "totalPackets": 226,
-      "fullSchemas": 149,
-      "rawOnly": 77
+      "fullSchemas": 154,
+      "rawOnly": 72
     },
     {
       "display": "1.21.4",
       "wire": 769,
       "totalPackets": 237,
-      "fullSchemas": 153,
-      "rawOnly": 84
+      "fullSchemas": 158,
+      "rawOnly": 79
     },
     {
       "display": "1.21.5",
       "wire": 770,
       "totalPackets": 239,
-      "fullSchemas": 151,
-      "rawOnly": 88
+      "fullSchemas": 155,
+      "rawOnly": 84
     }
   ],
   "keys": [
@@ -374,11 +374,11 @@
         "770": 13
       },
       "statusByWire": {
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "767": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly"
+        "764": "ok",
+        "765": "ok",
+        "767": "ok",
+        "769": "ok",
+        "770": "ok"
       }
     },
     {
@@ -2329,15 +2329,15 @@
         "770": 124
       },
       "statusByWire": {
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
+        "340": "ok",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
         "767": "rawOnly",
         "769": "rawOnly",
         "770": "rawOnly"
@@ -2433,15 +2433,15 @@
         "770": 32
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
+        "47": "ok",
+        "340": "ok",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
         "765": "rawOnly",
         "767": "rawOnly",
         "769": "rawOnly",
@@ -2795,7 +2795,7 @@
         "47": 38
       },
       "statusByWire": {
-        "47": "rawOnly"
+        "47": "ok"
       }
     },
     {
@@ -2831,19 +2831,19 @@
         "770": 77
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "767": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly"
+        "47": "ok",
+        "340": "ok",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
+        "767": "ok",
+        "769": "ok",
+        "770": "ok"
       }
     },
     {
@@ -2914,12 +2914,12 @@
         "770": 116
       },
       "statusByWire": {
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
         "764": "ok",
         "765": "ok",
         "767": "ok",
@@ -3470,9 +3470,9 @@
         "340": "ok",
         "393": "ok",
         "477": "ok",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
         "759": "rawOnly",
         "764": "rawOnly",
         "765": "rawOnly",
@@ -4196,19 +4196,19 @@
         "770": 3
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "767": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly"
+        "47": "ok",
+        "340": "ok",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
+        "767": "ok",
+        "769": "ok",
+        "770": "ok"
       }
     },
     {
@@ -4361,17 +4361,17 @@
         "770": 127
       },
       "statusByWire": {
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "767": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly"
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
+        "767": "ok",
+        "769": "ok",
+        "770": "ok"
       }
     },
     {
@@ -4438,14 +4438,14 @@
         "770": 6
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "477": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
+        "47": "ok",
+        "340": "ok",
+        "393": "ok",
+        "477": "ok",
+        "754": "ok",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
         "764": "ok",
         "765": "ok",
         "767": "ok",
@@ -4493,9 +4493,9 @@
         "754": "rawOnly",
         "755": "rawOnly",
         "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
         "767": "rawOnly",
         "769": "rawOnly",
         "770": "rawOnly"
@@ -4605,7 +4605,7 @@
         "47": 32
       },
       "statusByWire": {
-        "47": "rawOnly"
+        "47": "ok"
       }
     },
     {
@@ -4616,7 +4616,7 @@
         "47": 73
       },
       "statusByWire": {
-        "47": "rawOnly"
+        "47": "ok"
       }
     },
     {
@@ -5278,7 +5278,7 @@
         "770": 5
       },
       "statusByWire": {
-        "759": "rawOnly",
+        "759": "ok",
         "764": "rawOnly",
         "765": "rawOnly",
         "767": "ok",
@@ -6959,13 +6959,13 @@
         "393": "ok",
         "477": "ok",
         "754": "ok",
-        "755": "rawOnly",
-        "757": "rawOnly",
-        "759": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "767": "rawOnly",
-        "769": "rawOnly",
+        "755": "ok",
+        "757": "ok",
+        "759": "ok",
+        "764": "ok",
+        "765": "ok",
+        "767": "ok",
+        "769": "ok",
         "770": "rawOnly"
       }
     },

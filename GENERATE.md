@@ -88,7 +88,9 @@ Regenerate from minecraft-data (by block name bridge):
 ```bash
 node tools/generate_translation_mappings.mjs
 node tools/embed_translation_mappings.mjs
+node tools/embed_block_registry.mjs
+node tools/embed_metadata_registry.mjs
 ```
 
-The embedded copy in `src/translation_mappings_data.cpp` is loaded automatically
-when `kprotocol::initialize()` runs.
+The embedded copies in `src/*_data.cpp` are loaded automatically when
+`kprotocol::initialize()` runs.

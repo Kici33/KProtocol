@@ -136,6 +136,8 @@ const ALIAS_MAP = {
     Slot: 'slot',
     anonOptionalNbt: 'optional_nbt',
     anonymousNbt: 'optional_nbt',
+    optionalNbt: 'optional_nbt',
+    nbt: 'optional_nbt',
     entityMetadata: 'rest_buffer',
 };
 
@@ -189,11 +191,18 @@ function resolveType(type, stateTypes, globalTypes) {
 // Returns { ok: true, fieldType } on success, or { ok: false, reason } if the
 // type is compound / unsupported.
 function mapFieldType(type, stateTypes, globalTypes) {
+    if (typeof type === 'string' && Object.prototype.hasOwnProperty.call(ALIAS_MAP, type)) {
+        return { ok: true, fieldType: ALIAS_MAP[type] };
+    }
+
     const resolved = resolveType(type, stateTypes, globalTypes);
 
     if (typeof resolved === 'string') {
         if (resolved in ALIAS_MAP) {
             return { ok: true, fieldType: ALIAS_MAP[resolved] };
+        }
+        if (typeof type === 'string' && resolved === 'native' && type in ALIAS_MAP) {
+            return { ok: true, fieldType: ALIAS_MAP[type] };
         }
         const mapped = PRIMITIVE_MAP[resolved];
         if (mapped === null) {
@@ -232,6 +241,9 @@ function mapFieldType(type, stateTypes, globalTypes) {
             if (elemMapped.fieldType === 'var_long') {
                 return { ok: true, fieldType: 'var_long_array' };
             }
+            if (elemMapped.fieldType === 'byte_array') {
+                return { ok: true, fieldType: 'byte_array' };
+            }
             return { ok: false, reason: `unsupported array element type: ${elemMapped.fieldType}` };
         }
         if (kind === 'option') {
@@ -248,6 +260,9 @@ function mapFieldType(type, stateTypes, globalTypes) {
                 }
             }
             return { ok: false, reason: 'unsupported option shape' };
+        }
+        if (kind === 'bitfield') {
+            return { ok: true, fieldType: 'u64_be' };
         }
         if (kind === 'container') {
             return { ok: false, reason: 'nested container field (not flattened)' };
@@ -301,6 +316,17 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
         if (Array.isArray(resolved) && resolved[0] === 'container' && looksLikeSlotContainer(resolved[1])) {
             fields.push({ name: fname, type: 'slot' });
             continue;
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'array') {
+            const params = resolved[1] || {};
+            const elemResolved = resolveType(params.type, stateTypes, globalTypes);
+            if (Array.isArray(elemResolved) && elemResolved[0] === 'container') {
+                const inner = flattenContainerFields(elemResolved[1] || [], stateTypes, globalTypes, false);
+                if (inner.ok && inner.fields.length > 0) {
+                    fields.push({ name: fname, type: 'byte_array' });
+                    continue;
+                }
+            }
         }
 
         const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
