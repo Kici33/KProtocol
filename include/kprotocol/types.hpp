@@ -55,7 +55,7 @@ void write_uuid(std::vector<std::uint8_t>& out, const UUID& u);
 UUID read_uuid(std::span<const std::uint8_t> input, std::size_t& offset);
 
 void write_nbt(std::vector<std::uint8_t>& out, const NBTBlob& nbt);
-NBTBlob read_nbt(std::span<const std::uint8_t>& input, std::size_t& offset);
+NBTBlob read_nbt(std::span<const std::uint8_t> input, std::size_t& offset);
 
 void write_slot(std::vector<std::uint8_t>& out, const Slot& slot);
 Slot read_slot(std::span<const std::uint8_t> input, std::size_t& offset);

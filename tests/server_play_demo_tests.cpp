@@ -1,6 +1,7 @@
 // End-to-end play demo: after login, server sends block/title/scoreboard/metadata
 // to 1.8 (wire 47) and 1.21.1 (wire 767) clients from one internal version.
 
+#include "kprotocol/baseline_packets.hpp"
 #include "kprotocol/codec.hpp"
 #include "kprotocol/initialize.hpp"
 #include "kprotocol/packets/packet_keys.hpp"

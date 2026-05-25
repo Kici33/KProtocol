@@ -5,6 +5,7 @@
 #include "kprotocol/initialize.hpp"
 #include "kprotocol/packets/play/S23BlockChangePacket.hpp"
 #include "kprotocol/packets/play/S45TitlePacket.hpp"
+#include "kprotocol/packets/play/S60SetTitleTextPacket.hpp"
 #include "kprotocol/packets/play/S55ActionBarPacket.hpp"
 #include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"
 #include "kprotocol/packets/play/S3CScoreboardScorePacket.hpp"

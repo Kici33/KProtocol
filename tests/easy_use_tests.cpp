@@ -39,7 +39,7 @@ void test_protocol_runtime() {
     KPC_CHECK(runtime.registry.size() > 200, "registry populated");
     KPC_CHECK(
         runtime.registry.packet_id_for(
-            generated::packet_keys::play_clientbound_set_title_text,
+            kprotocol::generated::packet_keys::play_clientbound_set_title_text,
             kprotocol::ProtocolVersion::v1_21_1)
             .has_value(),
         "catalog lookup");
