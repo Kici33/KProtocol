@@ -61,7 +61,7 @@ bool send_play_demo(const ClientSession& client, const ProtocolVersion internal_
         return false;
     }
 
-    static constexpr ScoreboardLine kDemoLines[] = {
+    static const ScoreboardLine kDemoLines[] = {
         {.entry = "Player", .value = 10},
         {.entry = "KProtocol", .value = 100},
     };
