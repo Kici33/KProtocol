@@ -38,7 +38,7 @@ void test_block_registry() {
     std::cout << "  block registry stone lookup... ";
     const auto id = kprotocol::BlockRegistry::default_state_id(kprotocol::ProtocolVersion::v1_8, "stone");
     KPC_CHECK(id.has_value(), "stone id");
-    KPC_CHECK(*id == 1, "stone default on 1.8");
+    KPC_CHECK(*id == 16, "stone default on 1.8");
     std::cout << "ok\n";
 }
 
@@ -138,10 +138,10 @@ void test_entity_metadata_typed_decode() {
 void test_block_state_translation() {
     std::cout << "  block state translation 1.8 -> 1.21.1... ";
     const auto translated = kprotocol::BlockRegistry::translate(
-        kprotocol::BlockState{1},
+        kprotocol::BlockState{16},
         kprotocol::ProtocolVersion::v1_8,
         kprotocol::ProtocolVersion::v1_21_1);
-    KPC_CHECK(translated.id == 0, "stone remapped");
+    KPC_CHECK(translated.id == 1, "stone remapped");
     std::cout << "ok\n";
 }
 

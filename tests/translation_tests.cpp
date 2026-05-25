@@ -134,9 +134,9 @@ int main() {
         const auto cross_era = kprotocol::TranslationRegistry::map_block_id(
             kprotocol::ProtocolVersion::v1_8,
             kprotocol::ProtocolVersion::v1_21_1,
-            1
+            16
         );
-        assert(cross_era == 0); // stone default state id shifted
+        assert(cross_era == 1); // stone default state on 1.8 -> 1.21.1
 
         std::cout << "  ✓ TranslationRegistry ID mapping functions work\n";
     }

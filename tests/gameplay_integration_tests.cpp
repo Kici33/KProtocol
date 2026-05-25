@@ -68,8 +68,8 @@ void test_block_id_translation_1_8_to_1_21() {
     const auto mapped = kprotocol::TranslationRegistry::map_block_id(
         kprotocol::ProtocolVersion::v1_8,
         kprotocol::ProtocolVersion::v1_21_1,
-        1);
-    KPC_CHECK(mapped == 0, "stone default state remapped for 1.21.1");
+        16);
+    KPC_CHECK(mapped == 1, "stone default state remapped for 1.21.1");
     std::cout << "ok (id=" << mapped << ")\n";
 }
 
@@ -198,14 +198,14 @@ void test_initialize_wires_translations() {
     packet.state = kprotocol::PacketState::play;
     packet.direction = kprotocol::PacketDirection::clientbound;
     packet.fields["location"] = kprotocol::Position{};
-    packet.fields["type"] = static_cast<std::int32_t>(1);
+    packet.fields["type"] = static_cast<std::int32_t>(16);
 
     const auto translated = translator.translate(
         packet,
         kprotocol::ProtocolVersion::v1_8,
         kprotocol::ProtocolVersion::v1_21_1);
     const auto& type = std::get<std::int32_t>(translated.fields.at("type"));
-    KPC_CHECK(type == 0, "block id should translate to stone default on 1.21.1");
+    KPC_CHECK(type == 1, "block id should translate to stone default on 1.21.1");
     std::cout << "ok\n";
 }
 

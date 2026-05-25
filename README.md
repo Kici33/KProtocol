@@ -161,6 +161,11 @@ kprotocol::send_title(client, {
 });
 
 kprotocol::send_action_bar(client, "Hello!");
+kprotocol::clear_title(client);
+kprotocol::send_scoreboard_objective(client, "sidebar", "Scores");
+kprotocol::send_scoreboard_score(client, "Player", "sidebar", 10);
+kprotocol::send_scoreboard_display(client, "sidebar", 1);
+// Or in one call:
 kprotocol::send_scoreboard_sidebar(client, "myobj", "Scores", {
     {.entry = "Player", .value = 10},
 }, 1);
@@ -168,9 +173,13 @@ kprotocol::send_block_change(client, kprotocol::ProtocolVersion::v1_21_1,
     kprotocol::Position{.x = 0, .y = 64, .z = 0}, "stone");
 ```
 
-Typed play packets live under `kprotocol/packets/play/`; include them all with
-`kprotocol/packets/play/play_packets.hpp`. For encode-only work without a server,
-use `kprotocol::ProtocolRuntime` instead of `ProtocolServer`.
+Title, action bar, and scoreboard helpers pick the correct wire shape per client
+version (legacy `title`/`chat` on 1.8–1.16.5, split title + `action_bar` from
+1.17+, NBT text components from 1.20.4+). Typed packet classes are in
+`kprotocol/packets/play/play_packets.hpp` (`S45TitlePacket`, `S55ActionBarPacket`,
+`S3BScoreboardObjectivePacket`, `S3CScoreboardScorePacket`, etc.). For
+encode-only work without a server, use `kprotocol::ProtocolRuntime` instead of
+`ProtocolServer`.
 
 Lower-level manual setup is still available:
 

@@ -202,6 +202,7 @@ void run_modern_client_flow(
     finish.direction = kprotocol::PacketDirection::serverbound;
     write_packet(socket, registry, finish, version);
 
+    inbound.clear();
     const auto keys = collect_play_keys(socket, registry, version);
     KPC_CHECK(keys.contains("play.clientbound.block_change"), "block_change");
     KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard display");
