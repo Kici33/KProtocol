@@ -15,7 +15,7 @@ if(BUILD_EXAMPLE)
     set(KPROTOCOL_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 endif()
 
-set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.16.5,1.20.4,1.21.1"
+set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5"
     CACHE STRING
     "Comma-separated Minecraft versions to pass to tools/generate_packets.mjs (used by the kprotocol_generate_packets target)")
 
@@ -58,6 +58,8 @@ add_library(kprotocol_core
     src/registry.cpp
     src/translation.cpp
     src/translation_registry.cpp
+    src/translation_mappings_data.cpp
+    src/entity_metadata.cpp
 )
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
 kprotocol_apply_warnings(kprotocol_core)
@@ -69,6 +71,7 @@ add_library(kprotocol::core ALIAS kprotocol_core)
 # ============================================================================
 add_library(kprotocol_packets
     src/baseline_packets.cpp
+    src/initialize.cpp
 )
 target_link_libraries(kprotocol_packets PUBLIC kprotocol_core)
 
@@ -136,6 +139,7 @@ endif()
 # ============================================================================
 add_library(kprotocol_server
     src/server.cpp
+    src/client_ui.cpp
 )
 target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
@@ -186,6 +190,7 @@ if(KPROTOCOL_BUILD_TESTS)
         generated_packets_tests
         server_smoke_tests
         server_login_tests
+        gameplay_integration_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -196,6 +201,10 @@ if(KPROTOCOL_BUILD_TESTS)
             continue()
         endif()
         if(test_name STREQUAL "server_login_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "gameplay_integration_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

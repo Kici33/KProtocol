@@ -54,8 +54,16 @@ bool ClientSession::send_packet(const Packet& packet) const {
     translated = shared_->translator->translate(
         translated, shared_->internal_version, shared_->client_version.load());
 
+    return send_packet_direct(translated, shared_->client_version.load());
+}
+
+bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersion encode_version) const {
+    if (!valid()) {
+        return false;
+    }
+
     const auto encoded = shared_->registry->encode_packet(
-        translated, shared_->client_version.load(), shared_->compression_threshold);
+        packet, encode_version, shared_->compression_threshold);
 
     std::lock_guard lock(shared_->send_mutex);
     asio::error_code ec;
@@ -64,7 +72,7 @@ bool ClientSession::send_packet(const Packet& packet) const {
         return false;
     }
     if (shared_->sent_event) {
-        shared_->sent_event(ClientSession(shared_), translated);
+        shared_->sent_event(ClientSession(shared_), packet);
     }
     return true;
 }

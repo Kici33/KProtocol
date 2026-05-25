@@ -1,11 +1,18 @@
 #pragma once
 
 #include "kprotocol/baseline_packets.hpp"
+#include "kprotocol/client_ui.hpp"
 #include "kprotocol/codec.hpp"
+#include "kprotocol/entity_metadata.hpp"
+#include "kprotocol/initialize.hpp"
 #include "kprotocol/packet.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/server.hpp"
 #include "kprotocol/translation.hpp"
+#include "kprotocol/translation_registry.hpp"
 #include "kprotocol/version.hpp"
 #include "kprotocol/types.hpp"
 #include "kprotocol/generated.hpp"
+#include "kprotocol/packets/play/S23BlockChangePacket.hpp"
+#include "kprotocol/packets/play/S45TitlePacket.hpp"
+#include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"

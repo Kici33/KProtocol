@@ -6,7 +6,7 @@
 int main() {
     kprotocol::PacketRegistry registry;
     kprotocol::PacketTranslator translator;
-    kprotocol::register_baseline_packets(registry, translator);
+    kprotocol::initialize(registry, translator);
 #ifdef KPROTOCOL_HAS_GENERATED_CATALOG
     kprotocol::register_generated_packets(registry);
 #endif

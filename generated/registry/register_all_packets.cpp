@@ -18,6 +18,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 9);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -29,6 +31,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -39,9 +43,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.custom_payload";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"channel", kprotocol::FieldType::string},
             {"data", kprotocol::FieldType::rest_buffer}
         });
@@ -53,6 +60,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 15);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -63,8 +72,14 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.disconnect";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
+            {"reason", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"reason", kprotocol::FieldType::optional_nbt}
         });
@@ -75,9 +90,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.feature_flags";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 12);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 12);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -87,9 +105,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.finish_configuration";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -97,9 +118,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.keep_alive";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"keepAliveId", kprotocol::FieldType::i64_be}
         });
         registry.register_schema(std::move(schema));
@@ -109,9 +133,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.ping";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 5);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 5);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i32_be}
         });
         registry.register_schema(std::move(schema));
@@ -121,9 +148,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.registry_data";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 7);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 7);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"codec", kprotocol::FieldType::optional_nbt}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
@@ -138,6 +168,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 8);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -149,7 +181,20 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 6);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{});
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "configuration.clientbound.resource_pack_send";
+        schema.state = PacketState::configuration;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 6);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -158,6 +203,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 14);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -169,6 +216,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 16);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -180,6 +229,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 10);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -190,9 +241,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.clientbound.tags";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 13);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 13);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -203,6 +257,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 11);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -214,6 +270,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -224,9 +282,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.custom_payload";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"channel", kprotocol::FieldType::string},
             {"data", kprotocol::FieldType::rest_buffer}
         });
@@ -238,6 +299,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 8);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -248,9 +311,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.finish_configuration";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -258,9 +324,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.keep_alive";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"keepAliveId", kprotocol::FieldType::i64_be}
         });
         registry.register_schema(std::move(schema));
@@ -270,9 +339,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.pong";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 5);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 5);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i32_be}
         });
         registry.register_schema(std::move(schema));
@@ -282,8 +354,14 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.resource_pack_receive";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 6);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
+            {"result", kprotocol::FieldType::var_int}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"uuid", kprotocol::FieldType::uuid},
             {"result", kprotocol::FieldType::var_int}
@@ -296,6 +374,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 7);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -307,6 +387,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 9);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -317,9 +399,12 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.key = "configuration.serverbound.settings";
         schema.state = PacketState::configuration;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"locale", kprotocol::FieldType::string},
             {"viewDistance", kprotocol::FieldType::i8},
             {"chatFlags", kprotocol::FieldType::var_int},
@@ -341,9 +426,17 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 254);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 254);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 254);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 254);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 254);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 254);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"payload", kprotocol::FieldType::u8}
         });
@@ -356,9 +449,17 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"protocolVersion", kprotocol::FieldType::var_int},
             {"serverHost", kprotocol::FieldType::string},
@@ -374,9 +475,17 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"threshold", kprotocol::FieldType::var_int}
         });
@@ -388,23 +497,10 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.state = PacketState::login;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 5);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
-        });
-        registry.register_schema(std::move(schema));
-    }
-    {
-        PacketSchema schema;
-        schema.key = "login.clientbound.disconnect";
-        schema.state = PacketState::login;
-        schema.direction = PacketDirection::clientbound;
-        schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
-        schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
-        schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
-        schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
-        schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"reason", kprotocol::FieldType::string}
         });
         registry.register_schema(std::move(schema));
     }
@@ -413,14 +509,45 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
 static void register_generated_packets_batch_1(PacketRegistry& registry) {
     {
         PacketSchema schema;
+        schema.key = "login.clientbound.disconnect";
+        schema.state = PacketState::login;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
+            {"reason", kprotocol::FieldType::string}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "login.clientbound.encryption_begin";
         schema.state = PacketState::login;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"serverId", kprotocol::FieldType::string},
             {"publicKey", kprotocol::FieldType::byte_array},
@@ -439,10 +566,18 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "login.clientbound.login_plugin_request";
         schema.state = PacketState::login;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"messageId", kprotocol::FieldType::var_int},
             {"channel", kprotocol::FieldType::string},
             {"data", kprotocol::FieldType::rest_buffer}
@@ -456,9 +591,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"uuid", kprotocol::FieldType::string},
             {"username", kprotocol::FieldType::string}
@@ -467,7 +610,7 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
             {"uuid", kprotocol::FieldType::uuid},
             {"username", kprotocol::FieldType::string}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -478,6 +621,8 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.state = PacketState::login;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -490,10 +635,25 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
+            {"sharedSecret", kprotocol::FieldType::byte_array},
+            {"verifyToken", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"sharedSecret", kprotocol::FieldType::byte_array},
             {"verifyToken", kprotocol::FieldType::byte_array}
         });
@@ -504,9 +664,12 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "login.serverbound.login_acknowledged";
         schema.state = PacketState::login;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -514,10 +677,18 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "login.serverbound.login_plugin_response";
         schema.state = PacketState::login;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -529,13 +700,24 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"username", kprotocol::FieldType::string}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"username", kprotocol::FieldType::string},
             {"playerUUID", kprotocol::FieldType::uuid}
         });
@@ -548,9 +730,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 57);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 54);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 54);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 57);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"flags", kprotocol::FieldType::i8},
             {"flyingSpeed", kprotocol::FieldType::f32_be},
@@ -564,15 +754,21 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"block", kprotocol::FieldType::var_int},
             {"status", kprotocol::FieldType::var_int},
             {"successful", kprotocol::FieldType::boolean}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"sequenceId", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -582,8 +778,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.action_bar";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 72);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 74);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 80);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"text", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"text", kprotocol::FieldType::optional_nbt}
         });
@@ -596,6 +801,8 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 68);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 74);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -607,9 +814,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 87);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 98);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 99);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 100);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 108);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 112);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 116);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 123);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 123);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -622,9 +837,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"animation", kprotocol::FieldType::u8}
@@ -638,9 +861,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 68);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 85);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 87);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 94);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 93);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::i32_be},
             {"vehicleId", kprotocol::FieldType::i32_be},
@@ -659,6 +890,7 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 51);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position}
@@ -672,9 +904,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 7);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"byte1", kprotocol::FieldType::u8},
@@ -690,9 +930,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 5);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position},
@@ -707,9 +955,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 8);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"type", kprotocol::FieldType::var_int}
@@ -722,9 +978,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 9);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -735,9 +999,12 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.bundle_delimiter";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -749,9 +1016,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 67);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 62);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 78);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 80);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 86);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"cameraId", kprotocol::FieldType::var_int}
         });
@@ -764,7 +1039,11 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 15);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"message", kprotocol::FieldType::string},
             {"position", kprotocol::FieldType::i8}
@@ -778,12 +1057,26 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
     }
     {
         PacketSchema schema;
+        schema.key = "play.clientbound.chat_preview";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 12);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "play.clientbound.chat_suggestions";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 24);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 23);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -793,9 +1086,12 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.chunk_batch_finished";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 12);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 11);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"batchSize", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -805,9 +1101,12 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.chunk_batch_start";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 13);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 12);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -815,9 +1114,12 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.chunk_biomes";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 14);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 13);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -827,9 +1129,15 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.key = "play.clientbound.clear_titles";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 15);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 14);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"reset", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
@@ -841,11 +1149,22 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 17);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -856,9 +1175,17 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 85);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 96);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 97);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 98);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 106);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 108);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 111);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 118);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 117);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"collectedEntityId", kprotocol::FieldType::var_int},
             {"collectorEntityId", kprotocol::FieldType::var_int}
@@ -870,6 +1197,9 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_2(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.combat_event";
@@ -877,6 +1207,8 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 66);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 49);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
@@ -889,14 +1221,13 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 21);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_2(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.craft_progress_bar";
@@ -904,11 +1235,24 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 19);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
+            {"property", kprotocol::FieldType::i16_be},
+            {"value", kprotocol::FieldType::i16_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
             {"property", kprotocol::FieldType::i16_be},
             {"value", kprotocol::FieldType::i16_be}
         });
@@ -920,20 +1264,31 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 56);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"recipe", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"recipe", kprotocol::FieldType::string}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
             {"recipe", kprotocol::FieldType::string}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -944,9 +1299,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 63);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 24);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"channel", kprotocol::FieldType::string},
             {"data", kprotocol::FieldType::rest_buffer}
@@ -959,6 +1322,8 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 122);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 129);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 129);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -969,9 +1334,12 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.damage_event";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 26);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 25);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -981,8 +1349,23 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.death_combat_event";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 58);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 58);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 61);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"playerId", kprotocol::FieldType::var_int},
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"message", kprotocol::FieldType::string}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
+            {"playerId", kprotocol::FieldType::var_int},
+            {"message", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"playerId", kprotocol::FieldType::var_int},
             {"message", kprotocol::FieldType::optional_nbt}
@@ -995,6 +1378,8 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 26);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1005,10 +1390,18 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.declare_commands";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 17);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 16);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1018,11 +1411,30 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.declare_recipes";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 90);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 101);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 102);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 103);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 111);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 115);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 119);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 126);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 126);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.destroy_entity";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 58);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1033,13 +1445,21 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 65);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 10);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"difficulty", kprotocol::FieldType::u8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"difficulty", kprotocol::FieldType::u8},
             {"difficultyLocked", kprotocol::FieldType::boolean}
         });
@@ -1050,9 +1470,19 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.end_combat_event";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 56);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 56);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 58);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 59);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"duration", kprotocol::FieldType::var_int},
+            {"entityId", kprotocol::FieldType::i32_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"duration", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -1062,9 +1492,15 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.enter_combat_event";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 57);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 57);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 59);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 60);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -1074,6 +1510,8 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 42);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int}
@@ -1087,9 +1525,16 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 55);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 64);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 64);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 70);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityIds", kprotocol::FieldType::var_int_array}
         });
@@ -1102,9 +1547,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 89);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 100);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 101);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 102);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 110);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 114);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 118);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 125);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 125);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"effectId", kprotocol::FieldType::i8},
@@ -1119,7 +1572,7 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
             {"duration", kprotocol::FieldType::var_int},
             {"hideParticles", kprotocol::FieldType::i8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
@@ -1138,9 +1591,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 70);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 87);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 89);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 96);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 95);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"slot", kprotocol::FieldType::i16_be},
@@ -1163,9 +1624,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 59);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 68);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 70);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 76);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"headYaw", kprotocol::FieldType::i8}
@@ -1179,9 +1648,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 49);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"yaw", kprotocol::FieldType::i8},
@@ -1197,11 +1674,20 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 67);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 84);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 86);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 93);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 92);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"entityId", kprotocol::FieldType::var_int},
+            {"metadata", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1212,9 +1698,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 47);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"dX", kprotocol::FieldType::i8},
@@ -1240,17 +1734,32 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.entity_sound_effect";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 80);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 92);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 92);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 99);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 101);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 103);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 110);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 109);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"soundId", kprotocol::FieldType::var_int},
             {"soundCategory", kprotocol::FieldType::var_int},
             {"entityId", kprotocol::FieldType::var_int},
             {"volume", kprotocol::FieldType::f32_be},
             {"pitch", kprotocol::FieldType::f32_be}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"soundId", kprotocol::FieldType::var_int},
+            {"soundCategory", kprotocol::FieldType::var_int},
+            {"entityId", kprotocol::FieldType::var_int},
+            {"volume", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"seed", kprotocol::FieldType::i64_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1262,9 +1771,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 30);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::i32_be},
             {"entityStatus", kprotocol::FieldType::i8}
@@ -1278,9 +1795,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 86);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 97);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 98);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 99);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 107);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 109);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 112);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 119);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 118);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"x", kprotocol::FieldType::i32_be},
@@ -1307,9 +1832,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 88);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 99);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 100);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 101);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 109);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 113);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 117);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 124);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 124);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1322,9 +1855,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 69);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 86);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 88);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 95);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 94);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1337,9 +1878,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 71);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 88);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 90);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 92);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 97);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 96);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"experienceBar", kprotocol::FieldType::f32_be},
             {"level", kprotocol::FieldType::var_int},
@@ -1354,9 +1903,17 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 32);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1367,10 +1924,18 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.face_player";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 61);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 61);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 63);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 64);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1382,15 +1947,26 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 34);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"reason", kprotocol::FieldType::u8},
             {"gameMode", kprotocol::FieldType::f32_be}
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_3(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.held_item_slot";
@@ -1398,11 +1974,22 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 63);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 79);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 81);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 99);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 98);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"slot", kprotocol::FieldType::i8}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"slot", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1411,9 +1998,12 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.hide_message";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 28);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 27);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1423,25 +2013,41 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.key = "play.clientbound.hurt_animation";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 36);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 36);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"yaw", kprotocol::FieldType::f32_be}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_3(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.initialize_world_border";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 37);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 37);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"oldDiameter", kprotocol::FieldType::f64_be},
+            {"newDiameter", kprotocol::FieldType::f64_be},
+            {"speed", kprotocol::FieldType::var_long},
+            {"portalTeleportBoundary", kprotocol::FieldType::var_int},
+            {"warningBlocks", kprotocol::FieldType::var_int},
+            {"warningTime", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be},
             {"oldDiameter", kprotocol::FieldType::f64_be},
@@ -1460,9 +2066,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 38);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"keepAliveId", kprotocol::FieldType::var_int}
         });
@@ -1478,9 +2092,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 64);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 28);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"reason", kprotocol::FieldType::string}
         });
@@ -1496,9 +2118,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 43);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::i32_be},
             {"gameMode", kprotocol::FieldType::u8},
@@ -1517,6 +2147,15 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"levelType", kprotocol::FieldType::string},
             {"reducedDebugInfo", kprotocol::FieldType::boolean}
         });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"dimension", kprotocol::FieldType::i32_be},
+            {"maxPlayers", kprotocol::FieldType::u8},
+            {"levelType", kprotocol::FieldType::string},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1529,9 +2168,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 44);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1544,9 +2191,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 39);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::i32_be},
             {"z", kprotocol::FieldType::i32_be},
@@ -1572,14 +2227,34 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
     }
     {
         PacketSchema schema;
+        schema.key = "play.clientbound.move_minecart";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 48);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "play.clientbound.multi_block_change";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 69);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 71);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 77);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1592,9 +2267,32 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"entityId", kprotocol::FieldType::var_int},
+            {"playerUUID", kprotocol::FieldType::uuid},
+            {"x", kprotocol::FieldType::i32_be},
+            {"y", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"yaw", kprotocol::FieldType::i8},
+            {"pitch", kprotocol::FieldType::i8},
+            {"currentItem", kprotocol::FieldType::i16_be},
+            {"metadata", kprotocol::FieldType::rest_buffer}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::var_int},
+            {"playerUUID", kprotocol::FieldType::uuid},
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::i8},
+            {"pitch", kprotocol::FieldType::i8},
+            {"metadata", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
@@ -1614,7 +2312,12 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 22);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"soundName", kprotocol::FieldType::string},
             {"x", kprotocol::FieldType::i32_be},
@@ -1632,6 +2335,16 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"volume", kprotocol::FieldType::f32_be},
             {"pitch", kprotocol::FieldType::f32_be}
         });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"soundName", kprotocol::FieldType::string},
+            {"soundCategory", kprotocol::FieldType::var_int},
+            {"x", kprotocol::FieldType::i32_be},
+            {"y", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"volume", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"seed", kprotocol::FieldType::i64_be}
+        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -1639,13 +2352,21 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.nbt_query_response";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 84);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 95);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 96);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 97);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 105);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 107);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 110);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 117);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 116);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"transactionId", kprotocol::FieldType::var_int},
             {"nbt", kprotocol::FieldType::optional_nbt}
         });
@@ -1656,10 +2377,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.open_book";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 50);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 51);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -1669,11 +2397,23 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.open_horse_window";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 35);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 35);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
+            {"nbSlots", kprotocol::FieldType::var_int},
+            {"entityId", kprotocol::FieldType::i32_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
             {"nbSlots", kprotocol::FieldType::var_int},
             {"entityId", kprotocol::FieldType::i32_be}
         });
@@ -1686,13 +2426,21 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 54);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 53);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"isFrontText", kprotocol::FieldType::boolean}
         });
@@ -1705,13 +2453,21 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 52);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::var_int},
             {"inventoryType", kprotocol::FieldType::var_int},
             {"windowTitle", kprotocol::FieldType::string}
@@ -1728,9 +2484,15 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.ping";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 51);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 51);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 53);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 54);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i32_be}
         });
         registry.register_schema(std::move(schema));
@@ -1740,9 +2502,12 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.ping_response";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 54);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 55);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i64_be}
         });
         registry.register_schema(std::move(schema));
@@ -1752,9 +2517,13 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.player_chat";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 55);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 55);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 57);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 58);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1766,9 +2535,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 56);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 51);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 60);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 60);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 63);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1779,10 +2556,26 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.player_remove";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 59);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 59);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 61);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 62);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.player_rotation";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 66);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1793,9 +2586,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 71);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 83);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 94);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 95);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 96);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 104);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 106);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 109);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 116);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 115);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"header", kprotocol::FieldType::string},
             {"footer", kprotocol::FieldType::string}
@@ -1813,9 +2614,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 62);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 62);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 65);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
@@ -1825,6 +2634,25 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"flags", kprotocol::FieldType::i8}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::i8},
+            {"teleportId", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::i8},
+            {"teleportId", kprotocol::FieldType::var_int},
+            {"dismountVehicle", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be},
@@ -1843,10 +2671,56 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.key = "play.clientbound.profileless_chat";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 30);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 29);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.recipe_book_add";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 67);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.recipe_book_remove";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 68);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"recipeIds", kprotocol::FieldType::var_int_array}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.recipe_book_settings";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 69);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"craftingGuiOpen", kprotocol::FieldType::boolean},
+            {"craftingFilteringCraftable", kprotocol::FieldType::boolean},
+            {"smeltingGuiOpen", kprotocol::FieldType::boolean},
+            {"smeltingFilteringCraftable", kprotocol::FieldType::boolean},
+            {"blastGuiOpen", kprotocol::FieldType::boolean},
+            {"blastFilteringCraftable", kprotocol::FieldType::boolean},
+            {"smokerGuiOpen", kprotocol::FieldType::boolean},
+            {"smokerFilteringCraftable", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1857,9 +2731,17 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 46);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"dX", kprotocol::FieldType::i8},
@@ -1876,6 +2758,9 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_4(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.remove_entity_effect";
@@ -1883,14 +2768,22 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 56);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 65);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 65);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 71);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"effectId", kprotocol::FieldType::i8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"effectId", kprotocol::FieldType::var_int}
         });
@@ -1903,6 +2796,8 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 67);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 73);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1915,6 +2810,8 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 66);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 72);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -1927,10 +2824,19 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 72);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 57);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 66);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"url", kprotocol::FieldType::string},
             {"hash", kprotocol::FieldType::string}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1941,12 +2847,25 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 58);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 67);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 69);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 75);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"dimension", kprotocol::FieldType::i32_be},
             {"difficulty", kprotocol::FieldType::u8},
+            {"gamemode", kprotocol::FieldType::u8},
+            {"levelType", kprotocol::FieldType::string}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
+            {"dimension", kprotocol::FieldType::i32_be},
             {"gamemode", kprotocol::FieldType::u8},
             {"levelType", kprotocol::FieldType::string}
         });
@@ -1962,14 +2881,22 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 61);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 66);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 83);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 85);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 92);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 91);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"position", kprotocol::FieldType::i8},
             {"name", kprotocol::FieldType::string}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"position", kprotocol::FieldType::var_int},
             {"name", kprotocol::FieldType::string}
         });
@@ -1982,11 +2909,21 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 59);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 73);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 90);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 92);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 94);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 100);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 99);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"name", kprotocol::FieldType::string},
+            {"action", kprotocol::FieldType::i8},
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1997,17 +2934,31 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 60);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 76);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 93);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 95);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 97);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 104);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 103);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"itemName", kprotocol::FieldType::string},
+            {"action", kprotocol::FieldType::var_int},
+            {"scoreName", kprotocol::FieldType::string},
+            {"tail", kprotocol::FieldType::rest_buffer}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+            {"itemName", kprotocol::FieldType::string},
+            {"scoreName", kprotocol::FieldType::string},
+            {"value", kprotocol::FieldType::var_int},
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_4(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.scoreboard_team";
@@ -2021,13 +2972,33 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
     }
     {
         PacketSchema schema;
+        schema.key = "play.clientbound.sculk_vibration_signal";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 5);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "play.clientbound.select_advancement_tab";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 60);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 62);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 70);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 72);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 79);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 78);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2038,9 +3009,13 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.server_data";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 63);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 71);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 73);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 75);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 80);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 79);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2051,6 +3026,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 123);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 130);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 130);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2073,12 +3050,36 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 22);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"itemID", kprotocol::FieldType::var_int},
             {"cooldownTicks", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"cooldownGroup", kprotocol::FieldType::string},
+            {"cooldownTicks", kprotocol::FieldType::var_int}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.set_cursor_item";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 89);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"contents", kprotocol::FieldType::slot}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2088,12 +3089,33 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 74);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 91);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 93);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 95);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 101);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 100);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"passengers", kprotocol::FieldType::var_int_array}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.set_player_inventory";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 102);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 101);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"slotId", kprotocol::FieldType::var_int},
+            {"contents", kprotocol::FieldType::slot}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2103,6 +3125,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 121);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 128);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 128);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::var_int},
             {"accelerationPower", kprotocol::FieldType::f64_be}
@@ -2116,15 +3140,23 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 20);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"slot", kprotocol::FieldType::i16_be},
             {"item", kprotocol::FieldType::slot}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(757), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"stateId", kprotocol::FieldType::var_int},
             {"slot", kprotocol::FieldType::i16_be},
@@ -2132,6 +3164,12 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"slot", kprotocol::FieldType::i16_be},
+            {"item", kprotocol::FieldType::slot}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
             {"stateId", kprotocol::FieldType::var_int},
             {"slot", kprotocol::FieldType::i16_be},
             {"item", kprotocol::FieldType::slot}
@@ -2145,6 +3183,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 110);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 113);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 120);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 120);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"tick_rate", kprotocol::FieldType::f32_be},
             {"is_frozen", kprotocol::FieldType::boolean}
@@ -2156,8 +3196,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.set_title_subtitle";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 95);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 97);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 99);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 106);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 105);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"text", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"text", kprotocol::FieldType::optional_nbt}
         });
@@ -2168,8 +3217,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.set_title_text";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 97);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 99);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 101);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 108);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 107);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"text", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"text", kprotocol::FieldType::optional_nbt}
         });
@@ -2180,9 +3238,15 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.set_title_time";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 90);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 98);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 100);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 102);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 109);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 108);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"fadeIn", kprotocol::FieldType::i32_be},
             {"stay", kprotocol::FieldType::i32_be},
             {"fadeOut", kprotocol::FieldType::i32_be}
@@ -2191,12 +3255,28 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
     }
     {
         PacketSchema schema;
+        schema.key = "play.clientbound.should_display_chat_preview";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 75);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"should_display_chat_preview", kprotocol::FieldType::boolean}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "play.clientbound.simulation_distance";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 87);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 94);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 96);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 98);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 105);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 104);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(757), std::vector<FieldSpec>{
             {"distance", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -2207,9 +3287,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 77);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 81);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 81);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 92);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 93);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 93);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 100);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 102);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 104);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 111);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 110);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"soundId", kprotocol::FieldType::var_int},
             {"soundCategory", kprotocol::FieldType::var_int},
@@ -2219,7 +3307,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"volume", kprotocol::FieldType::f32_be},
             {"pitch", kprotocol::FieldType::f32_be}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"soundId", kprotocol::FieldType::var_int},
+            {"soundCategory", kprotocol::FieldType::var_int},
+            {"x", kprotocol::FieldType::i32_be},
+            {"y", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"volume", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"seed", kprotocol::FieldType::i64_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2231,9 +3329,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2246,9 +3352,16 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"x", kprotocol::FieldType::i32_be},
@@ -2272,7 +3385,11 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2285,7 +3402,11 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 3);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"title", kprotocol::FieldType::string},
@@ -2299,7 +3420,7 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"location", kprotocol::FieldType::position},
             {"direction", kprotocol::FieldType::u8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"entityUUID", kprotocol::FieldType::uuid},
             {"title", kprotocol::FieldType::var_int},
@@ -2315,6 +3436,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 2);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"type", kprotocol::FieldType::i8},
@@ -2331,6 +3454,9 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_5(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.spawn_position";
@@ -2338,13 +3464,21 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 77);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 82);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 84);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 90);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"angle", kprotocol::FieldType::f32_be}
         });
@@ -2355,9 +3489,12 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.start_configuration";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 101);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 103);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 105);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 112);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 111);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -2367,9 +3504,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 55);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2382,6 +3527,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 111);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 114);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 121);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 121);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"tick_steps", kprotocol::FieldType::var_int}
         });
@@ -2392,10 +3539,18 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.stop_sound";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 82);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 93);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 94);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 94);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 102);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 104);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 106);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 113);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 112);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2406,8 +3561,31 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 107);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 114);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 113);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.sync_entity_position";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 31);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::var_int},
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"dx", kprotocol::FieldType::f64_be},
+            {"dy", kprotocol::FieldType::f64_be},
+            {"dz", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"onGround", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2416,8 +3594,20 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.system_chat";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 95);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 103);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 105);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 108);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 115);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 114);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"content", kprotocol::FieldType::string},
+            {"type", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
+            {"content", kprotocol::FieldType::string},
+            {"isActionBar", kprotocol::FieldType::boolean}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"content", kprotocol::FieldType::optional_nbt},
             {"isActionBar", kprotocol::FieldType::boolean}
@@ -2431,9 +3621,17 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 58);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 15);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2444,10 +3642,18 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.key = "play.clientbound.tags";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 91);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 91);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 102);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 103);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 104);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 112);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 116);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 120);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 127);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 127);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2458,10 +3664,31 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 75);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 76);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 92);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 94);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 96);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 103);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 102);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
+            {"team", kprotocol::FieldType::string},
+            {"mode", kprotocol::FieldType::i8},
+            {"tail", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.clientbound.test_instance_block_status";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 119);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(770), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2473,13 +3700,21 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 6);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"action", kprotocol::FieldType::var_int},
             {"nbtData", kprotocol::FieldType::optional_nbt}
@@ -2493,24 +3728,31 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 69);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 75);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 79);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 79);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"action", kprotocol::FieldType::var_int},
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_5(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.trade_list";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 45);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 45);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2522,6 +3764,8 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 17);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
@@ -2536,6 +3780,8 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 115);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 122);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 122);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2547,14 +3793,22 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 33);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"chunkX", kprotocol::FieldType::i32_be},
             {"chunkZ", kprotocol::FieldType::i32_be}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"chunkZ", kprotocol::FieldType::i32_be},
             {"chunkX", kprotocol::FieldType::i32_be}
         });
@@ -2566,7 +3820,13 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 54);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 63);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 63);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 65);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
@@ -2603,9 +3863,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 72);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 89);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 91);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 93);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 98);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 97);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"health", kprotocol::FieldType::f32_be},
             {"food", kprotocol::FieldType::var_int},
@@ -2618,9 +3886,25 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.update_light";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 42);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
+            {"chunkX", kprotocol::FieldType::var_int},
+            {"chunkZ", kprotocol::FieldType::var_int},
+            {"skyLightMask", kprotocol::FieldType::var_int},
+            {"blockLightMask", kprotocol::FieldType::var_int},
+            {"emptySkyLightMask", kprotocol::FieldType::var_int},
+            {"emptyBlockLightMask", kprotocol::FieldType::var_int},
+            {"data", kprotocol::FieldType::rest_buffer}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"chunkX", kprotocol::FieldType::var_int},
             {"chunkZ", kprotocol::FieldType::var_int},
@@ -2631,7 +3915,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"emptyBlockLightMask", kprotocol::FieldType::var_int},
             {"data", kprotocol::FieldType::rest_buffer}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -2658,12 +3942,25 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 71);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 78);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 78);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 96);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 98);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 100);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 107);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 106);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"age", kprotocol::FieldType::i64_be},
             {"time", kprotocol::FieldType::i64_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"age", kprotocol::FieldType::i64_be},
+            {"time", kprotocol::FieldType::i64_be},
+            {"tickDayTime", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2672,10 +3969,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.update_view_distance";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 65);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 74);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 81);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 83);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 85);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 89);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 88);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"viewDistance", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -2685,10 +3989,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.update_view_position";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 64);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 64);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 73);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 72);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 80);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 82);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 84);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 88);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 87);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"chunkX", kprotocol::FieldType::var_int},
             {"chunkZ", kprotocol::FieldType::var_int}
         });
@@ -2700,9 +4011,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 50);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
@@ -2719,9 +4038,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 18);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2734,6 +4061,8 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 68);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 61);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 61);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
@@ -2745,9 +4074,15 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.world_border_center";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 65);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 73);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 75);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 77);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 82);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 81);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be}
         });
@@ -2758,23 +4093,43 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.world_border_lerp_size";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 66);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 74);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 76);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 78);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 83);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 82);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"oldDiameter", kprotocol::FieldType::f64_be},
+            {"newDiameter", kprotocol::FieldType::f64_be},
+            {"speed", kprotocol::FieldType::var_long}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"oldDiameter", kprotocol::FieldType::f64_be},
             {"newDiameter", kprotocol::FieldType::f64_be},
             {"speed", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_6(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.clientbound.world_border_size";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 67);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 75);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 77);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 79);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 84);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 83);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"diameter", kprotocol::FieldType::f64_be}
         });
         registry.register_schema(std::move(schema));
@@ -2784,9 +4139,15 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.world_border_warning_delay";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 68);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 76);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 78);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 80);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 85);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 84);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"warningTime", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -2796,9 +4157,15 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.clientbound.world_border_warning_reach";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::clientbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 70);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 69);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 77);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 79);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 81);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 86);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 85);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"warningBlocks", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -2810,9 +4177,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 40);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"effectId", kprotocol::FieldType::i32_be},
             {"location", kprotocol::FieldType::position},
@@ -2828,9 +4203,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 41);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2843,9 +4226,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 38);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"flags", kprotocol::FieldType::i8},
             {"flyingSpeed", kprotocol::FieldType::f32_be},
@@ -2862,9 +4253,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 48);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -2877,9 +4276,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 51);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 58);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 59);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{});
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int}
@@ -2893,15 +4300,23 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 32);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 39);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"status", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position},
             {"face", kprotocol::FieldType::i8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"status", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position},
             {"face", kprotocol::FieldType::i8},
@@ -2916,9 +4331,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 48);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 60);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 62);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"direction", kprotocol::FieldType::i8},
@@ -2935,7 +4358,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"cursorY", kprotocol::FieldType::f32_be},
             {"cursorZ", kprotocol::FieldType::f32_be}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position},
             {"direction", kprotocol::FieldType::var_int},
@@ -2944,7 +4367,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"cursorZ", kprotocol::FieldType::f32_be},
             {"insideBlock", kprotocol::FieldType::boolean}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position},
             {"direction", kprotocol::FieldType::var_int},
@@ -2952,6 +4375,17 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"cursorY", kprotocol::FieldType::f32_be},
             {"cursorZ", kprotocol::FieldType::f32_be},
             {"insideBlock", kprotocol::FieldType::boolean},
+            {"sequence", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"hand", kprotocol::FieldType::var_int},
+            {"location", kprotocol::FieldType::position},
+            {"direction", kprotocol::FieldType::var_int},
+            {"cursorX", kprotocol::FieldType::f32_be},
+            {"cursorY", kprotocol::FieldType::f32_be},
+            {"cursorZ", kprotocol::FieldType::f32_be},
+            {"insideBlock", kprotocol::FieldType::boolean},
+            {"worldBorderHit", kprotocol::FieldType::boolean},
             {"sequence", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -2963,7 +4397,11 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 3);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"message", kprotocol::FieldType::string}
         });
@@ -2974,9 +4412,13 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.serverbound.chat_command";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 4);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 5);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
@@ -2990,6 +4432,8 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 6);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -3000,24 +4444,47 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.key = "play.serverbound.chat_message";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 6);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 7);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"message", kprotocol::FieldType::string},
+            {"timestamp", kprotocol::FieldType::i64_be},
+            {"salt", kprotocol::FieldType::i64_be},
+            {"signature", kprotocol::FieldType::byte_array},
+            {"signedPreview", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_6(PacketRegistry& registry) {
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.chat_preview";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 5);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
+            {"query", kprotocol::FieldType::i32_be},
+            {"message", kprotocol::FieldType::string}
+        });
+        registry.register_schema(std::move(schema));
+    }
     {
         PacketSchema schema;
         schema.key = "play.serverbound.chat_session_update";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 7);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 8);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"sessionUUID", kprotocol::FieldType::uuid},
             {"expireTime", kprotocol::FieldType::i64_be},
             {"publicKey", kprotocol::FieldType::byte_array},
@@ -3030,9 +4497,12 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.chunk_batch_received";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 8);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 9);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"chunksPerTick", kprotocol::FieldType::f32_be}
         });
         registry.register_schema(std::move(schema));
@@ -3044,9 +4514,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 10);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"payload", kprotocol::FieldType::var_int}
         });
@@ -3062,11 +4540,22 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 17);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3075,9 +4564,12 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.configuration_acknowledged";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 12);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{});
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 14);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -3086,6 +4578,8 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 19);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -3097,15 +4591,23 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 37);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"recipe", kprotocol::FieldType::var_int},
             {"makeAll", kprotocol::FieldType::boolean}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"recipe", kprotocol::FieldType::string},
             {"makeAll", kprotocol::FieldType::boolean}
@@ -3113,6 +4615,11 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
             {"recipe", kprotocol::FieldType::string},
+            {"makeAll", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
+            {"recipeId", kprotocol::FieldType::var_int},
             {"makeAll", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
@@ -3123,6 +4630,8 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 29);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -3135,9 +4644,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 20);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"channel", kprotocol::FieldType::string},
             {"data", kprotocol::FieldType::rest_buffer}
@@ -3150,6 +4667,8 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 21);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"type", kprotocol::FieldType::var_int}
         });
@@ -3161,10 +4680,19 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 45);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"recipeId", kprotocol::FieldType::string}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"recipeId", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3173,15 +4701,27 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.edit_book";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 20);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 22);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
+            {"new_book", kprotocol::FieldType::slot},
+            {"signing", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"new_book", kprotocol::FieldType::slot},
             {"signing", kprotocol::FieldType::boolean},
             {"hand", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(757), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -3193,15 +4733,27 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 8);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 15);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
             {"enchantment", kprotocol::FieldType::i8}
         });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(767), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
+            {"enchantment", kprotocol::FieldType::i8}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
             {"enchantment", kprotocol::FieldType::i8}
         });
         registry.register_schema(std::move(schema));
@@ -3213,9 +4765,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 11);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 40);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"actionId", kprotocol::FieldType::var_int},
@@ -3230,11 +4790,22 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 31);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"onGround", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3244,8 +4815,14 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 25);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"levels", kprotocol::FieldType::var_int},
@@ -3260,14 +4837,25 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 51);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"slotId", kprotocol::FieldType::i16_be}
         });
         registry.register_schema(std::move(schema));
     }
+}
+
+static void register_generated_packets_batch_7(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.serverbound.keep_alive";
@@ -3275,9 +4863,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 26);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"keepAliveId", kprotocol::FieldType::var_int}
         });
@@ -3291,10 +4887,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.lock_difficulty";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 25);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 27);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"locked", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
@@ -3306,13 +4909,24 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 30);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"yaw", kprotocol::FieldType::f32_be},
             {"pitch", kprotocol::FieldType::f32_be},
             {"onGround", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3321,9 +4935,12 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.message_acknowledgement";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 3);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 3);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 4);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"count", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
@@ -3333,10 +4950,18 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.name_item";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 42);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 46);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 46);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"name", kprotocol::FieldType::string}
         });
         registry.register_schema(std::move(schema));
@@ -3346,11 +4971,43 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.pick_item";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 25);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 32);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"slot", kprotocol::FieldType::var_int}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.pick_item_from_block";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 34);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"position", kprotocol::FieldType::position},
+            {"includeData", kprotocol::FieldType::boolean}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.pick_item_from_entity";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 35);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::var_int},
+            {"includeData", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3359,11 +5016,36 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.ping_request";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 29);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 30);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 33);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 36);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i64_be}
         });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.player_input";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 41);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.player_loaded";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 42);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -3371,9 +5053,15 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.pong";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 39);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 43);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::i32_be}
         });
         registry.register_schema(std::move(schema));
@@ -3385,14 +5073,25 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 4);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 28);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be},
             {"onGround", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3403,9 +5102,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 23);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 29);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
@@ -3414,6 +5121,9 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
             {"pitch", kprotocol::FieldType::f32_be},
             {"onGround", kprotocol::FieldType::boolean}
         });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -3421,10 +5131,18 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.query_block_nbt";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"transactionId", kprotocol::FieldType::var_int},
             {"location", kprotocol::FieldType::position}
         });
@@ -3435,10 +5153,18 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.key = "play.serverbound.query_entity_nbt";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 17);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 21);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 23);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"transactionId", kprotocol::FieldType::var_int},
             {"entityId", kprotocol::FieldType::var_int}
         });
@@ -3450,8 +5176,14 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 44);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"bookId", kprotocol::FieldType::var_int},
             {"bookOpen", kprotocol::FieldType::boolean},
@@ -3466,9 +5198,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 25);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 31);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 47);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"hash", kprotocol::FieldType::string},
             {"result", kprotocol::FieldType::var_int}
@@ -3484,33 +5224,59 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
     }
     {
         PacketSchema schema;
+        schema.key = "play.serverbound.select_bundle_item";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 2);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"slotId", kprotocol::FieldType::var_int},
+            {"selectedItemIndex", kprotocol::FieldType::var_int}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
         schema.key = "play.serverbound.select_trade";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 33);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 45);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 49);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"slot", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
-}
-
-static void register_generated_packets_batch_7(PacketRegistry& registry) {
     {
         PacketSchema schema;
         schema.key = "play.serverbound.set_beacon_effect";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 42);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 46);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 50);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"primary_effect", kprotocol::FieldType::var_int},
             {"secondary_effect", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -3522,12 +5288,23 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 16);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 27);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 36);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 38);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 50);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 54);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 54);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"slot", kprotocol::FieldType::i16_be},
             {"item", kprotocol::FieldType::slot}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(770), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3536,10 +5313,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.key = "play.serverbound.set_difficulty";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 2);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 2);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 3);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 3);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
             {"newDifficulty", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
@@ -3551,10 +5335,25 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 18);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 18);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
             {"slot_id", kprotocol::FieldType::var_int},
             {"window_id", kprotocol::FieldType::var_int},
             {"state", kprotocol::FieldType::boolean}
+        });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.set_test_block";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 57);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(770), std::vector<FieldSpec>{
+            {"position", kprotocol::FieldType::position},
+            {"mode", kprotocol::FieldType::var_int},
+            {"message", kprotocol::FieldType::string}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3565,9 +5364,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 4);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 5);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 12);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 12);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"locale", kprotocol::FieldType::string},
             {"viewDistance", kprotocol::FieldType::i8},
@@ -3583,7 +5390,16 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"skinParts", kprotocol::FieldType::u8},
             {"mainHand", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
+            {"locale", kprotocol::FieldType::string},
+            {"viewDistance", kprotocol::FieldType::i8},
+            {"chatFlags", kprotocol::FieldType::var_int},
+            {"chatColors", kprotocol::FieldType::boolean},
+            {"skinParts", kprotocol::FieldType::u8},
+            {"mainHand", kprotocol::FieldType::var_int},
+            {"disableTextFiltering", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(757), std::vector<FieldSpec>{
             {"locale", kprotocol::FieldType::string},
             {"viewDistance", kprotocol::FieldType::i8},
             {"chatFlags", kprotocol::FieldType::var_int},
@@ -3605,9 +5421,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 24);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 43);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 51);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 52);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 59);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 61);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"target", kprotocol::FieldType::uuid}
         });
@@ -3619,9 +5443,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 17);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 20);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 22);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 31);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 33);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 33);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"leftPaddle", kprotocol::FieldType::boolean},
             {"rightPaddle", kprotocol::FieldType::boolean}
@@ -3635,7 +5467,13 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 12);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 26);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 28);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 29);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 34);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 35);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 38);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
@@ -3652,13 +5490,21 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 20);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 6);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 10);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 13);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"transactionId", kprotocol::FieldType::var_int},
             {"text", kprotocol::FieldType::string}
         });
@@ -3670,12 +5516,44 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"teleportId", kprotocol::FieldType::var_int}
         });
+        registry.register_schema(std::move(schema));
+    }
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.test_instance_block_action";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 60);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(770), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        registry.register_schema(std::move(schema));
+    }
+}
+
+static void register_generated_packets_batch_8(PacketRegistry& registry) {
+    {
+        PacketSchema schema;
+        schema.key = "play.serverbound.tick_end";
+        schema.state = PacketState::play;
+        schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 11);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 11);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
     {
@@ -3685,6 +5563,8 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 15);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 5);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 6);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 7);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 7);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::i8},
@@ -3698,10 +5578,18 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.key = "play.serverbound.update_command_block";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 34);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 36);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 40);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 44);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 48);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 52);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 52);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"command", kprotocol::FieldType::string},
             {"mode", kprotocol::FieldType::var_int},
@@ -3714,10 +5602,18 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.key = "play.serverbound.update_command_block_minecart";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 35);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 37);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 39);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 46);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 49);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 53);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
             {"command", kprotocol::FieldType::string},
             {"track_output", kprotocol::FieldType::boolean}
@@ -3729,9 +5625,22 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.key = "play.serverbound.update_jigsaw_block";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 39);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 41);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 47);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 51);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 55);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 55);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(477), std::vector<FieldSpec>{
+            {"location", kprotocol::FieldType::position},
+            {"attachmentType", kprotocol::FieldType::string},
+            {"targetPool", kprotocol::FieldType::string},
+            {"finalState", kprotocol::FieldType::string}
+        });
         schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"name", kprotocol::FieldType::string},
@@ -3759,9 +5668,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 28);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 38);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 41);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 43);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 45);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 50);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 53);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 58);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"text1", kprotocol::FieldType::string},
@@ -3769,7 +5686,7 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"text3", kprotocol::FieldType::string},
             {"text4", kprotocol::FieldType::string}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(764), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"isFrontText", kprotocol::FieldType::boolean},
             {"text1", kprotocol::FieldType::string},
@@ -3784,10 +5701,18 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.key = "play.serverbound.update_structure_block";
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 37);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 40);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 44);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 48);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 49);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 52);
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(754), std::vector<FieldSpec>{
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 56);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 56);
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(393), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"action", kprotocol::FieldType::var_int},
             {"mode", kprotocol::FieldType::var_int},
@@ -3805,7 +5730,7 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"seed", kprotocol::FieldType::var_long},
             {"flags", kprotocol::FieldType::u8}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"location", kprotocol::FieldType::position},
             {"action", kprotocol::FieldType::var_int},
             {"mode", kprotocol::FieldType::var_int},
@@ -3823,6 +5748,9 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"seed", kprotocol::FieldType::var_int},
             {"flags", kprotocol::FieldType::u8}
         });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(770), std::vector<FieldSpec>{
+            {"raw", kprotocol::FieldType::rest_buffer}
+        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -3832,9 +5760,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 2);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 13);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 15);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 18);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 19);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 24);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 24);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
@@ -3846,13 +5782,21 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 42);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 45);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 47);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 49);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 53);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 54);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 57);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 61);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 63);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(759), std::vector<FieldSpec>{
             {"hand", kprotocol::FieldType::var_int},
             {"sequence", kprotocol::FieldType::var_int}
         });
@@ -3867,15 +5811,31 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.state = PacketState::play;
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 19);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 21);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 22);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 21);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 23);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 26);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 27);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 30);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 32);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 32);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(340), std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
             {"y", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be},
             {"yaw", kprotocol::FieldType::f32_be},
             {"pitch", kprotocol::FieldType::f32_be}
+        });
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(769), std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"onGround", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3886,9 +5846,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 14);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 7);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 9);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 9);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 8);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 10);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 13);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 14);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 16);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 16);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
             {"slot", kprotocol::FieldType::i16_be},
@@ -3897,7 +5865,7 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"mode", kprotocol::FieldType::i8},
             {"item", kprotocol::FieldType::slot}
         });
-        schema.field_sets.emplace(static_cast<ProtocolVersion>(765), std::vector<FieldSpec>{
+        schema.field_sets.emplace(static_cast<ProtocolVersion>(755), std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -3909,9 +5877,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"time", kprotocol::FieldType::i64_be}
         });
@@ -3924,9 +5900,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"response", kprotocol::FieldType::string}
         });
@@ -3939,9 +5923,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 1);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 1);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 1);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{
             {"time", kprotocol::FieldType::i64_be}
         });
@@ -3954,9 +5946,17 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.direction = PacketDirection::serverbound;
         schema.ids.emplace(static_cast<ProtocolVersion>(47), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(340), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(393), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(477), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(754), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(755), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(757), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(759), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(764), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(765), 0);
         schema.ids.emplace(static_cast<ProtocolVersion>(767), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(769), 0);
+        schema.ids.emplace(static_cast<ProtocolVersion>(770), 0);
         schema.field_sets.emplace(static_cast<ProtocolVersion>(47), std::vector<FieldSpec>{});
         registry.register_schema(std::move(schema));
     }
@@ -3971,6 +5971,7 @@ void register_generated_packets(PacketRegistry& registry) {
     register_generated_packets_batch_5(registry);
     register_generated_packets_batch_6(registry);
     register_generated_packets_batch_7(registry);
+    register_generated_packets_batch_8(registry);
 }
 
 } // namespace kprotocol

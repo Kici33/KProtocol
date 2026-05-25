@@ -34,7 +34,7 @@ npm install minecraft-data
 #    include/kprotocol/version.hpp).
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5
 ```
 
 The CMake build exposes a convenience target that performs the same step:
@@ -79,3 +79,16 @@ symbol is unavailable.
 The upstream data is MIT-licensed by PrismarineJS. The generator script
 itself (`tools/generate_packets.mjs`) is part of kprotocol and follows the
 project license.
+
+## Block ID translation tables
+
+Block state remapping tables live in `tools/translation_mappings.json`.
+Regenerate from minecraft-data (by block name bridge):
+
+```bash
+node tools/generate_translation_mappings.mjs
+node tools/embed_translation_mappings.mjs
+```
+
+The embedded copy in `src/translation_mappings_data.cpp` is loaded automatically
+when `kprotocol::initialize()` runs.

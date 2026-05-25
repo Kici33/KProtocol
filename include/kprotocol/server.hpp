@@ -29,6 +29,9 @@ public:
     ClientSession() = default;
 
     bool send_packet(const Packet& packet) const;
+    // Encode and send without internal→client translation (packet fields must
+    // match encode_version schema).
+    bool send_packet_direct(const Packet& packet, ProtocolVersion encode_version) const;
     ProtocolVersion protocol_version() const;
     PacketState state() const;
     void set_state(PacketState state) const;

@@ -136,6 +136,7 @@ const ALIAS_MAP = {
     Slot: 'slot',
     anonOptionalNbt: 'optional_nbt',
     anonymousNbt: 'optional_nbt',
+    entityMetadata: 'rest_buffer',
 };
 
 // Fields whose name collides with C++ keywords or our own struct fields. We
@@ -252,7 +253,10 @@ function mapFieldType(type, stateTypes, globalTypes) {
             return { ok: false, reason: 'nested container field (not flattened)' };
         }
         if (kind === 'switch') {
-            return { ok: false, reason: `switch type` };
+            return { ok: false, reason: `switch type`, isSwitch: true };
+        }
+        if (kind === 'entityMetadataLoop') {
+            return { ok: true, fieldType: 'rest_buffer' };
         }
         return { ok: false, reason: `compound type: ${kind}` };
     }
@@ -277,7 +281,10 @@ function looksLikeSlotContainer(containerFields) {
 }
 
 // Flatten a minecraft-data container field list into kprotocol FieldSpec entries.
-function flattenContainerFields(containerFields, stateTypes, globalTypes) {
+// When `tailOnComplex` is true, fields that cannot be flattened (action switches,
+// nested containers, etc.) are represented as a single trailing `rest_buffer` named
+// `tail` so the packet can still round-trip.
+function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOnComplex = false) {
     const fields = [];
     for (const fieldEntry of containerFields) {
         const fname = sanitizeFieldName(fieldEntry.name || 'anon');
@@ -287,6 +294,10 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
             fields.push({ name: fname, type: 'slot' });
             continue;
         }
+        if (typeof resolved === 'string' && ALIAS_MAP[resolved] === 'rest_buffer') {
+            fields.push({ name: fname, type: 'rest_buffer' });
+            continue;
+        }
         if (Array.isArray(resolved) && resolved[0] === 'container' && looksLikeSlotContainer(resolved[1])) {
             fields.push({ name: fname, type: 'slot' });
             continue;
@@ -294,6 +305,10 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
 
         const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
         if (!mapped.ok) {
+            if (tailOnComplex) {
+                fields.push({ name: 'tail', type: 'rest_buffer' });
+                return { ok: true, fields };
+            }
             return { ok: false, reason: `field ${fieldEntry.name}: ${mapped.reason}`, fields: [] };
         }
         if (mapped.voidField) {
@@ -306,16 +321,24 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
             continue;
         }
         if (Array.isArray(resolved) && resolved[0] === 'container' && fieldEntry.anon) {
-            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes, tailOnComplex);
             if (!inner.ok) {
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
                 return inner;
             }
             fields.push(...inner.fields);
             continue;
         }
         if (Array.isArray(resolved) && resolved[0] === 'container') {
-            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes, tailOnComplex);
             if (!inner.ok) {
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
                 return { ok: false, reason: `field ${fieldEntry.name}: ${inner.reason}`, fields: [] };
             }
             fields.push(...inner.fields);
@@ -332,6 +355,10 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
                     const innerName = sanitizeFieldName(inner.name);
                     const innerMapped = mapFieldType(inner.type, stateTypes, globalTypes);
                     if (!innerMapped.ok || !innerMapped.fieldType) {
+                        if (tailOnComplex) {
+                            fields.push({ name: 'tail', type: 'rest_buffer' });
+                            return { ok: true, fields };
+                        }
                         return { ok: false, reason: `field ${inner.name}: ${innerMapped.reason}`, fields: [] };
                     }
                     fields.push({
@@ -342,12 +369,25 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
                 }
                 continue;
             }
+            if (tailOnComplex) {
+                fields.push({ name: 'tail', type: 'rest_buffer' });
+                return { ok: true, fields };
+            }
             return { ok: false, reason: `field ${fieldEntry.name}: unsupported switch`, fields: [] };
         }
         fields.push({ name: fname, type: mapped.fieldType });
     }
     return { ok: true, fields };
 }
+
+// Packets that benefit from prefix fields + opaque tail (action switches, metadata loops).
+const TAIL_ON_COMPLEX_PACKETS = new Set([
+    'entity_metadata',
+    'scoreboard_objective',
+    'scoreboard_score',
+    'teams',
+    'title',
+]);
 
 // Extract per-packet schemas from a single state/direction.
 // Returns an array of { wireName, fields:[{name, type}], status, reason? }.
@@ -389,7 +429,8 @@ function extractDirection(directionEntry, globalTypes) {
         }
         if (container[0] === 'container') {
             const containerFields = container[1] || [];
-            const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes);
+            const useTail = TAIL_ON_COMPLEX_PACKETS.has(wireName);
+            const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes, useTail);
             if (!flattened.ok) {
                 result.push({
                     wireName, id,

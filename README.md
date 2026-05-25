@@ -28,7 +28,7 @@ ctest --test-dir build --output-on-failure
 ```
 
 By default the library compiles the committed multi-version packet catalog under
-`generated/` (248 packet keys across 1.8, 1.12.2, 1.16.5, 1.20.4, 1.21.1).
+`generated/` (271 packet keys across 13 versions from 1.8 through 1.21.5).
 Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
 hand-rolled baseline set.
 
@@ -125,10 +125,7 @@ Each packet class carries strongly-typed fields and exposes:
 
 kprotocol::PacketRegistry registry;
 kprotocol::PacketTranslator translator;
-kprotocol::register_baseline_packets(registry, translator);
-#ifdef KPROTOCOL_GENERATED
-kprotocol::register_generated_packets(registry);  // 248 keys from minecraft-data
-#endif
+kprotocol::initialize(registry, translator);
 
 kprotocol::MinecraftServer server(registry, translator);
 class MyListener : public kprotocol::ProtocolListener {

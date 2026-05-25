@@ -19,10 +19,7 @@ public:
 int main() {
     kprotocol::PacketRegistry registry;
     kprotocol::PacketTranslator translator;
-    kprotocol::register_baseline_packets(registry, translator);
-#ifdef KPROTOCOL_GENERATED
-    kprotocol::register_generated_packets(registry);
-#endif
+    kprotocol::initialize(registry, translator);
 
     kprotocol::MinecraftServer server(registry, translator);
     server.add_listener(std::make_shared<LoggingProtocolListener>());
