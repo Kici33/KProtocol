@@ -30,4 +30,12 @@ bool uses_nbt_text(const ProtocolVersion version) noexcept {
     return protocol_number(version) >= protocol_number(ProtocolVersion::v1_20_4);
 }
 
+bool uses_split_title_packets(const ProtocolVersion version) noexcept {
+    return protocol_number(version) >= protocol_number(ProtocolVersion::v1_17);
+}
+
+bool uses_action_bar_packet(const ProtocolVersion version) noexcept {
+    return protocol_number(version) >= protocol_number(ProtocolVersion::v1_17);
+}
+
 } // namespace kprotocol

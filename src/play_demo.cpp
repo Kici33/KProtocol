@@ -61,7 +61,11 @@ bool send_play_demo(const ClientSession& client, const ProtocolVersion internal_
         return false;
     }
 
-    if (!send_scoreboard_display(client, "demo_obj", 1)) {
+    static constexpr ScoreboardLine kDemoLines[] = {
+        {.entry = "Player", .value = 10},
+        {.entry = "KProtocol", .value = 100},
+    };
+    if (!send_scoreboard_sidebar(client, "demo_obj", "Demo", kDemoLines, 1)) {
         return false;
     }
 

@@ -161,7 +161,9 @@ kprotocol::send_title(client, {
 });
 
 kprotocol::send_action_bar(client, "Hello!");
-kprotocol::send_scoreboard_display(client, "myobj", 1); // sidebar
+kprotocol::send_scoreboard_sidebar(client, "myobj", "Scores", {
+    {.entry = "Player", .value = 10},
+}, 1);
 kprotocol::send_block_change(client, kprotocol::ProtocolVersion::v1_21_1,
     kprotocol::Position{.x = 0, .y = 64, .z = 0}, "stone");
 ```

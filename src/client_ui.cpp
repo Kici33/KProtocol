@@ -2,7 +2,10 @@
 
 #include "kprotocol/block_registry.hpp"
 #include "kprotocol/codec.hpp"
+#include "kprotocol/packets/play/S10ClearTitlesPacket.hpp"
 #include "kprotocol/packets/play/S23BlockChangePacket.hpp"
+#include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"
+#include "kprotocol/packets/play/S3CScoreboardScorePacket.hpp"
 #include "kprotocol/packets/play/S3DScoreboardDisplayPacket.hpp"
 #include "kprotocol/packets/play/S45TitlePacket.hpp"
 #include "kprotocol/packets/play/S55ActionBarPacket.hpp"
@@ -21,10 +24,6 @@
 namespace kprotocol {
 
 namespace {
-
-bool is_modern_ui_version(const ProtocolVersion version) noexcept {
-    return protocol_number(version) >= protocol_number(ProtocolVersion::v1_20_4);
-}
 
 std::int32_t title_times_action(const ProtocolVersion version) noexcept {
     return protocol_number(version) <= protocol_number(ProtocolVersion::v1_8)
@@ -77,6 +76,16 @@ bool send_legacy_title(
     return client.send_packet_direct(subtitle.to_packet(), client_ver);
 }
 
+bool send_legacy_clear_title(
+    const ClientSession& client,
+    const ProtocolVersion client_ver,
+    const bool reset_times) {
+
+    S45TitlePacket packet;
+    packet.action = reset_times ? 4 : 3;
+    return client.send_packet_direct(packet.to_packet(), client_ver);
+}
+
 } // namespace
 
 bool send_title(const ClientSession& client, const TitleOptions& options) {
@@ -85,7 +94,7 @@ bool send_title(const ClientSession& client, const TitleOptions& options) {
     }
     const auto client_ver = client.protocol_version();
 
-    if (is_modern_ui_version(client_ver)) {
+    if (uses_split_title_packets(client_ver)) {
         S62SetTitleTimePacket times{
             .fade_in = options.fade_in,
             .stay = options.stay,
@@ -107,13 +116,27 @@ bool send_title(const ClientSession& client, const TitleOptions& options) {
     return send_legacy_title(client, client_ver, options);
 }
 
+bool clear_title(const ClientSession& client, const bool reset_times) {
+    if (!client.valid()) {
+        return false;
+    }
+    const auto client_ver = client.protocol_version();
+
+    if (uses_split_title_packets(client_ver)) {
+        S10ClearTitlesPacket packet{.reset_times = reset_times};
+        return client.send_packet_direct(packet.to_packet(), client_ver);
+    }
+
+    return send_legacy_clear_title(client, client_ver, reset_times);
+}
+
 bool send_action_bar(const ClientSession& client, const std::string& text) {
     if (!client.valid()) {
         return false;
     }
     const auto client_ver = client.protocol_version();
 
-    if (is_modern_ui_version(client_ver)) {
+    if (uses_action_bar_packet(client_ver)) {
         S55ActionBarPacket packet{.text = text};
         return client.send_packet_direct(packet.to_packet(client_ver), client_ver);
     }
@@ -123,16 +146,72 @@ bool send_action_bar(const ClientSession& client, const std::string& text) {
 #else
     const auto key = "play.clientbound.chat";
 #endif
+    PacketFields fields;
+    fields.emplace("message", json_text(text));
+    fields.emplace("position", static_cast<std::int8_t>(2));
+    if (protocol_number(client_ver) >= protocol_number(ProtocolVersion::v1_16_5)) {
+        fields.emplace("sender", UUID{});
+    }
     Packet packet{
         .key = key,
         .state = PacketState::play,
         .direction = PacketDirection::clientbound,
-        .fields = {
-            {"message", json_text(text)},
-            {"position", static_cast<std::int8_t>(2)},
-        },
+        .fields = std::move(fields),
     };
     return client.send_packet_direct(packet, client_ver);
+}
+
+bool send_scoreboard_objective(
+    const ClientSession& client,
+    const std::string& objective_name,
+    const std::string& display_name,
+    const ScoreboardObjectiveAction action) {
+
+    if (!client.valid()) {
+        return false;
+    }
+
+    S3BScoreboardObjectivePacket packet;
+    switch (action) {
+    case ScoreboardObjectiveAction::create:
+        packet = S3BScoreboardObjectivePacket::make_create(objective_name, display_name);
+        break;
+    case ScoreboardObjectiveAction::update:
+        packet = S3BScoreboardObjectivePacket::make_update(objective_name, display_name);
+        break;
+    case ScoreboardObjectiveAction::remove:
+        packet = S3BScoreboardObjectivePacket::make_remove(objective_name);
+        break;
+    }
+
+    return client.send_packet_direct(packet.to_packet(), client.protocol_version());
+}
+
+bool send_scoreboard_score(
+    const ClientSession& client,
+    const std::string& entry_name,
+    const std::string& objective_name,
+    const std::int32_t value) {
+
+    if (!client.valid()) {
+        return false;
+    }
+    const auto client_ver = client.protocol_version();
+    const auto packet = S3CScoreboardScorePacket::make_set(entry_name, objective_name, value);
+    return client.send_packet_direct(packet.to_packet(client_ver), client_ver);
+}
+
+bool send_scoreboard_score_remove(
+    const ClientSession& client,
+    const std::string& entry_name,
+    const std::string& objective_name) {
+
+    if (!client.valid()) {
+        return false;
+    }
+    const auto client_ver = client.protocol_version();
+    const auto packet = S3CScoreboardScorePacket::make_remove(entry_name, objective_name);
+    return client.send_packet_direct(packet.to_packet(client_ver), client_ver);
 }
 
 bool send_scoreboard_display(
@@ -149,6 +228,27 @@ bool send_scoreboard_display(
         .name = objective_name,
     };
     return client.send_packet_direct(packet.to_packet(client_ver), client_ver);
+}
+
+bool send_scoreboard_sidebar(
+    const ClientSession& client,
+    const std::string& objective_name,
+    const std::string& display_name,
+    const std::span<const ScoreboardLine> lines,
+    const std::int8_t position) {
+
+    if (!send_scoreboard_objective(
+            client, objective_name, display_name, ScoreboardObjectiveAction::create)) {
+        return false;
+    }
+
+    for (const auto& line : lines) {
+        if (!send_scoreboard_score(client, line.entry, objective_name, line.value)) {
+            return false;
+        }
+    }
+
+    return send_scoreboard_display(client, objective_name, position);
 }
 
 bool send_block_change(

@@ -85,6 +85,21 @@ void test_typed_ui_packets_1_17_and_1_21() {
         display.to_packet(kprotocol::ProtocolVersion::v1_21_1),
         kprotocol::ProtocolVersion::v1_21_1);
 
+    const auto objective = kprotocol::S3BScoreboardObjectivePacket::make_create("obj", "Demo");
+    roundtrip_packet(runtime.registry, objective.to_packet(), kprotocol::ProtocolVersion::v1_21_5);
+
+    const auto score = kprotocol::S3CScoreboardScorePacket::make_set("Player", "obj", 7);
+    roundtrip_packet(
+        runtime.registry,
+        score.to_packet(kprotocol::ProtocolVersion::v1_21_5),
+        kprotocol::ProtocolVersion::v1_21_5);
+
+    kprotocol::S10ClearTitlesPacket clear{.reset_times = false};
+    roundtrip_packet(
+        runtime.registry,
+        clear.to_packet(),
+        kprotocol::ProtocolVersion::v1_21_5);
+
     std::cout << "ok\n";
 }
 

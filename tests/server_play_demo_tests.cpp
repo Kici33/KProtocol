@@ -105,9 +105,13 @@ std::set<std::string> collect_play_keys(
         keys.insert(batch.begin(), batch.end());
         if (keys.contains("play.clientbound.block_change") &&
             keys.contains("play.clientbound.scoreboard_display_objective") &&
+            keys.contains("play.clientbound.scoreboard_objective") &&
+            keys.contains("play.clientbound.scoreboard_score") &&
             keys.contains("play.clientbound.entity_metadata") &&
             (keys.contains("play.clientbound.title") ||
-             keys.contains("play.clientbound.set_title_text"))) {
+             keys.contains("play.clientbound.set_title_text")) &&
+            (keys.contains("play.clientbound.chat") ||
+             keys.contains("play.clientbound.action_bar"))) {
             return keys;
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -199,11 +203,14 @@ void run_modern_client_flow(
 
     const auto keys = collect_play_keys(socket, registry, version);
     KPC_CHECK(keys.contains("play.clientbound.block_change"), "block_change");
-    KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard display");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_objective"), "scoreboard objective");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_score"), "scoreboard score");
     KPC_CHECK(keys.contains("play.clientbound.entity_metadata"), "entity_metadata");
     KPC_CHECK(
         keys.contains("play.clientbound.set_title_text") || keys.contains("play.clientbound.title"),
         "title");
+    KPC_CHECK(keys.contains("play.clientbound.action_bar"), "action_bar");
 
     socket.close(ec);
 }
@@ -236,9 +243,12 @@ void run_legacy_client_flow(
 
     const auto keys = collect_play_keys(socket, registry, kprotocol::ProtocolVersion::v1_8);
     KPC_CHECK(keys.contains("play.clientbound.block_change"), "block_change");
-    KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard display");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_objective"), "scoreboard objective");
+    KPC_CHECK(keys.contains("play.clientbound.scoreboard_score"), "scoreboard score");
     KPC_CHECK(keys.contains("play.clientbound.entity_metadata"), "entity_metadata");
     KPC_CHECK(keys.contains("play.clientbound.title"), "title");
+    KPC_CHECK(keys.contains("play.clientbound.chat"), "action bar chat");
 
     socket.close(ec);
 }

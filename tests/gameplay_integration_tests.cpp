@@ -5,6 +5,11 @@
 #include "kprotocol/initialize.hpp"
 #include "kprotocol/packets/play/S23BlockChangePacket.hpp"
 #include "kprotocol/packets/play/S45TitlePacket.hpp"
+#include "kprotocol/packets/play/S55ActionBarPacket.hpp"
+#include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"
+#include "kprotocol/packets/play/S3CScoreboardScorePacket.hpp"
+#include "kprotocol/packets/play/S3DScoreboardDisplayPacket.hpp"
+#include "kprotocol/text_component.hpp"
 #include "kprotocol/translation_registry.hpp"
 
 #include "kprotocol/generated/packet_keys.hpp"
@@ -91,17 +96,73 @@ void test_scoreboard_display_roundtrip() {
     kprotocol::PacketTranslator translator;
     kprotocol::initialize(registry, translator);
 
-    kprotocol::Packet packet;
-    packet.key = std::string(kprotocol::generated::packet_keys::play_clientbound_scoreboard_display_objective);
-    packet.state = kprotocol::PacketState::play;
-    packet.direction = kprotocol::PacketDirection::clientbound;
-    packet.fields["position"] = static_cast<std::int8_t>(1);
-    packet.fields["name"] = std::string("sidebar");
+    kprotocol::S3DScoreboardDisplayPacket packet{
+        .position = 1,
+        .name = "sidebar",
+    };
 
-    roundtrip_packet(registry, packet, kprotocol::ProtocolVersion::v1_8);
+    roundtrip_packet(
+        registry,
+        packet.to_packet(kprotocol::ProtocolVersion::v1_8),
+        kprotocol::ProtocolVersion::v1_8);
+    roundtrip_packet(
+        registry,
+        packet.to_packet(kprotocol::ProtocolVersion::v1_21_1),
+        kprotocol::ProtocolVersion::v1_21_1);
+    std::cout << "ok\n";
+}
 
-    packet.fields["position"] = static_cast<std::int32_t>(1);
-    roundtrip_packet(registry, packet, kprotocol::ProtocolVersion::v1_21_1);
+void test_scoreboard_objective_and_score_roundtrip() {
+    std::cout << "  scoreboard objective/score round-trip wire 47 and 770... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::PacketTranslator translator;
+    kprotocol::initialize(registry, translator);
+
+    const auto objective = kprotocol::S3BScoreboardObjectivePacket::make_create("obj", "Demo");
+    roundtrip_packet(registry, objective.to_packet(), kprotocol::ProtocolVersion::v1_8);
+    roundtrip_packet(registry, objective.to_packet(), kprotocol::ProtocolVersion::v1_21_5);
+
+    const auto score = kprotocol::S3CScoreboardScorePacket::make_set("Player", "obj", 42);
+    roundtrip_packet(
+        registry,
+        score.to_packet(kprotocol::ProtocolVersion::v1_8),
+        kprotocol::ProtocolVersion::v1_8);
+    roundtrip_packet(
+        registry,
+        score.to_packet(kprotocol::ProtocolVersion::v1_21_5),
+        kprotocol::ProtocolVersion::v1_21_5);
+    std::cout << "ok\n";
+}
+
+void test_action_bar_roundtrip_1_17_and_1_21() {
+    std::cout << "  action_bar round-trip wire 755 and 767... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::PacketTranslator translator;
+    kprotocol::initialize(registry, translator);
+
+    kprotocol::S55ActionBarPacket packet{.text = "Hello"};
+    roundtrip_packet(
+        registry,
+        packet.to_packet(kprotocol::ProtocolVersion::v1_17),
+        kprotocol::ProtocolVersion::v1_17);
+    roundtrip_packet(
+        registry,
+        packet.to_packet(kprotocol::ProtocolVersion::v1_21_1),
+        kprotocol::ProtocolVersion::v1_21_1);
+    std::cout << "ok\n";
+}
+
+void test_split_title_roundtrip_1_17() {
+    std::cout << "  split title round-trip wire 755... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::PacketTranslator translator;
+    kprotocol::initialize(registry, translator);
+
+    kprotocol::S60SetTitleTextPacket title{.text = "Hello"};
+    roundtrip_packet(
+        registry,
+        title.to_packet(kprotocol::ProtocolVersion::v1_17),
+        kprotocol::ProtocolVersion::v1_17);
     std::cout << "ok\n";
 }
 
@@ -155,7 +216,10 @@ int main() {
         test_block_change_roundtrip_1_8_and_1_21();
         test_block_id_translation_1_8_to_1_21();
         test_title_roundtrip_1_8();
+        test_split_title_roundtrip_1_17();
+        test_action_bar_roundtrip_1_17_and_1_21();
         test_scoreboard_display_roundtrip();
+        test_scoreboard_objective_and_score_roundtrip();
         test_entity_metadata_roundtrip();
         test_initialize_wires_translations();
     } catch (const std::exception& ex) {

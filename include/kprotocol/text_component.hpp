@@ -16,4 +16,8 @@ namespace kprotocol {
 // True when UI text fields use optional_nbt instead of JSON strings (765+).
 [[nodiscard]] bool uses_nbt_text(ProtocolVersion version) noexcept;
 
+// Split title / action_bar packets exist from 1.17 (wire 755) onward.
+[[nodiscard]] bool uses_split_title_packets(ProtocolVersion version) noexcept;
+[[nodiscard]] bool uses_action_bar_packet(ProtocolVersion version) noexcept;
+
 } // namespace kprotocol
