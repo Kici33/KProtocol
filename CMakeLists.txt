@@ -138,7 +138,7 @@ if(NOT kprotocol_asio_POPULATED)
     if(NOT TARGET kprotocol_asio)
         add_library(kprotocol_asio INTERFACE)
         target_include_directories(kprotocol_asio SYSTEM INTERFACE
-            ${kprotocol_asio_SOURCE_DIR}/asio/include)
+            $<BUILD_INTERFACE:${kprotocol_asio_SOURCE_DIR}/asio/include>)
         target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
         if(WIN32)
             target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
