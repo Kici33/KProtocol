@@ -1,6 +1,10 @@
 #include "kprotocol/server.hpp"
 
 #include "kprotocol/codec.hpp"
+#include "kprotocol/connection.hpp"
+#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
+#include "kprotocol/generated/packet_keys.hpp"
+#endif
 #include "kprotocol/packets/packet_keys.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/translation.hpp"
@@ -29,10 +33,11 @@ namespace kprotocol {
 struct ClientSession::Shared {
     std::shared_ptr<asio::ip::tcp::socket> socket;
     std::atomic<bool> open{true};
-    std::atomic<ProtocolVersion> client_version{ProtocolVersion::v1_21_1};
+    std::atomic<std::int32_t> client_wire{protocol_number(ProtocolVersion::v1_21_1)};
     std::atomic<PacketState> state{PacketState::handshaking};
     ProtocolVersion internal_version{ProtocolVersion::v1_21_1};
-    std::int32_t compression_threshold{-1};
+    FrameDecoder inbound_decoder;
+    std::int32_t outbound_compression_threshold{-1};
     PacketRegistry* registry{nullptr};
     PacketTranslator* translator{nullptr};
     std::string remote;
@@ -52,9 +57,9 @@ bool ClientSession::send_packet(const Packet& packet) const {
     translated.direction = PacketDirection::clientbound;
     translated.state = shared_->state.load();
     translated = shared_->translator->translate(
-        translated, shared_->internal_version, shared_->client_version.load());
+        translated, shared_->internal_version, client_protocol_version());
 
-    return send_packet_direct(translated, shared_->client_version.load());
+    return send_packet_direct(translated, client_protocol_version());
 }
 
 bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersion encode_version) const {
@@ -63,7 +68,7 @@ bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersi
     }
 
     const auto encoded = shared_->registry->encode_packet(
-        packet, encode_version, shared_->compression_threshold);
+        packet, encode_version, shared_->outbound_compression_threshold);
 
     std::lock_guard lock(shared_->send_mutex);
     asio::error_code ec;
@@ -78,7 +83,19 @@ bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersi
 }
 
 ProtocolVersion ClientSession::protocol_version() const {
-    return shared_ ? shared_->client_version.load() : ProtocolVersion::v1_21_1;
+    return client_protocol_version();
+}
+
+WireProtocol ClientSession::client_wire() const {
+    return shared_ ? WireProtocol{shared_->client_wire.load()} : WireProtocol{};
+}
+
+ProtocolVersion ClientSession::client_protocol_version() const {
+    if (!shared_) {
+        return ProtocolVersion::v1_21_1;
+    }
+    const WireProtocol wire{shared_->client_wire.load()};
+    return catalog_anchor_for(wire);
 }
 
 PacketState ClientSession::state() const {
@@ -89,6 +106,14 @@ void ClientSession::set_state(const PacketState state) const {
     if (shared_) {
         shared_->state.store(state);
     }
+}
+
+void ClientSession::enable_compression(const std::int32_t threshold) const {
+    if (!shared_) {
+        return;
+    }
+    shared_->inbound_decoder.set_threshold(threshold);
+    shared_->outbound_compression_threshold = threshold;
 }
 
 std::string ClientSession::remote_address() const {
@@ -109,7 +134,7 @@ struct MinecraftServer::Impl {
     std::thread io_thread;
     std::atomic<bool> running{false};
     std::uint16_t listen_port_{0};
-    std::int32_t compression_threshold_{-1};
+    std::int32_t default_compression_threshold_{-1};
     ProtocolVersion internal_version{ProtocolVersion::v1_21_1};
     PacketHandler packet_handler;
     ErrorHandler error_handler;
@@ -150,17 +175,18 @@ struct MinecraftServer::Impl {
     }
 
     void update_handshake_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
-        if (packet.key != packet_keys::handshake) {
+        if (!packet.key_matches(packet_keys::handshake)) {
             return;
         }
 
         if (const auto it = packet.fields.find("protocol_version"); it != packet.fields.end()) {
             if (const auto* version_number = std::get_if<std::int32_t>(&it->second); version_number != nullptr) {
-                if (!is_known_protocol(*version_number)) {
+                const WireProtocol wire{*version_number};
+                if (!is_known_protocol(wire)) {
                     emit_error("Client " + shared->remote + " announced unknown protocol "
-                               + name_of(*version_number));
+                               + name_of(wire));
                 }
-                shared->client_version = static_cast<ProtocolVersion>(*version_number);
+                shared->client_wire.store(wire.value);
             }
         }
 
@@ -177,23 +203,44 @@ struct MinecraftServer::Impl {
         }
     }
 
+    void apply_set_compression(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
+#ifdef KPROTOCOL_HAS_GENERATED_CATALOG
+        if (!packet.key_matches(generated::packet_keys::login_clientbound_compress)) {
+            return;
+        }
+#else
+        (void)packet;
+        return;
+#endif
+        if (const auto it = packet.fields.find("threshold"); it != packet.fields.end()) {
+            if (const auto* threshold = std::get_if<std::int32_t>(&it->second); threshold != nullptr) {
+                shared->inbound_decoder.set_threshold(*threshold);
+                shared->outbound_compression_threshold = *threshold;
+            }
+        }
+    }
+
     void update_session_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
         update_handshake_state(packet, shared);
 
-        if (packet.key == "login.serverbound.login_acknowledged") {
+#ifdef KPROTOCOL_HAS_GENERATED_CATALOG
+        if (packet.key_matches(generated::packet_keys::login_serverbound_login_acknowledged)) {
             shared->state = PacketState::configuration;
             return;
         }
-        if (packet.key == "configuration.serverbound.finish_configuration") {
+        if (packet.key_matches(generated::packet_keys::configuration_serverbound_finish_configuration)) {
             shared->state = PacketState::play;
         }
+#endif
     }
 
     void process_frame(const codec::EncodedFrame& frame, const std::shared_ptr<ClientSession::Shared>& shared) {
         try {
+            const auto client_ver = catalog_anchor_for(WireProtocol{shared->client_wire.load()});
             Packet packet = registry.decode_packet(
-                frame, shared->client_version.load(), shared->state.load(), PacketDirection::serverbound);
-            packet = translator.translate(packet, shared->client_version.load(), internal_version);
+                frame, client_ver, shared->state.load(), PacketDirection::serverbound);
+            packet = translator.translate(packet, client_ver, internal_version);
+            apply_set_compression(packet, shared);
             update_session_state(packet, shared);
             const ClientSession session(shared);
             emit_received(session, packet);
@@ -230,11 +277,7 @@ struct MinecraftServer::Impl {
             while (true) {
                 codec::EncodedFrame frame;
                 std::size_t consumed = 0;
-                const bool decoded = shared->compression_threshold >= 0
-                    ? codec::try_decode_frame_compressed(
-                          inbound, consumed, shared->compression_threshold, frame)
-                    : codec::try_decode_frame(inbound, consumed, frame);
-                if (!decoded) {
+                if (!shared->inbound_decoder.try_decode(inbound, consumed, frame)) {
                     break;
                 }
                 inbound.erase(inbound.begin(), inbound.begin() + static_cast<std::ptrdiff_t>(consumed));
@@ -264,7 +307,8 @@ struct MinecraftServer::Impl {
             auto shared = std::make_shared<ClientSession::Shared>();
             shared->socket = std::make_shared<asio::ip::tcp::socket>(std::move(socket));
             shared->internal_version = internal_version;
-            shared->compression_threshold = compression_threshold_;
+            shared->inbound_decoder = FrameDecoder{-1};
+            shared->outbound_compression_threshold = default_compression_threshold_;
             shared->registry = &registry;
             shared->translator = &translator;
             try {
@@ -358,7 +402,7 @@ bool MinecraftServer::start(
         return false;
     }
     impl_->internal_version = internal_version;
-    impl_->compression_threshold_ = compression_threshold;
+    impl_->default_compression_threshold_ = compression_threshold;
     if (!impl_->bind_and_listen(port)) {
         return false;
     }

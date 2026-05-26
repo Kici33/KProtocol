@@ -55,6 +55,19 @@ void write_var_long_array(std::vector<std::uint8_t>& out, std::span<const std::i
 std::int32_t read_var_int(std::span<const std::uint8_t> input, std::size_t& offset);
 std::int64_t read_var_long(std::span<const std::uint8_t> input, std::size_t& offset);
 
+// Non-throwing decode helpers (malformed → false, need-more-data → false with
+// truncated error distinguishable via Reader in lower layers).
+[[nodiscard]] bool try_read_var_int(std::span<const std::uint8_t> input,
+                                    std::size_t& offset,
+                                    std::int32_t& out) noexcept;
+[[nodiscard]] bool try_read_var_long(std::span<const std::uint8_t> input,
+                                     std::size_t& offset,
+                                     std::int64_t& out) noexcept;
+[[nodiscard]] bool try_read_string(std::span<const std::uint8_t> input,
+                                   std::size_t& offset,
+                                   std::string& out,
+                                   std::int32_t max_len = limits::max_string_length) noexcept;
+
 // ===== Fixed-Size Integer Decoders =====
 std::int8_t read_byte(std::span<const std::uint8_t> input, std::size_t& offset);
 std::uint8_t read_ubyte(std::span<const std::uint8_t> input, std::size_t& offset);

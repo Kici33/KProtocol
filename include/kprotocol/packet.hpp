@@ -1,5 +1,6 @@
 #pragma once
 
+#include "kprotocol/internal/packet_key.hpp"
 #include "kprotocol/types.hpp"   // brings in Position, UUID
 #include "kprotocol/version.hpp"
 
@@ -9,6 +10,7 @@
 #include <span>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <unordered_map>
 #include <variant>
 #include <vector>
@@ -80,6 +82,8 @@ enum class FieldType : std::uint8_t {
     optional_nbt
 };
 
+// Human-readable key for logging and registration. Hot paths should use
+// key_handle (integer compare) instead of hashing this string.
 using PacketKey = std::string;
 
 using FieldValue = std::variant<
@@ -148,9 +152,31 @@ struct PacketSchema {
 
 struct Packet {
     PacketKey key;
+    internal::PacketKeyHandle key_handle{};
     PacketState state{};
     PacketDirection direction{};
     PacketFields fields;
+
+    // Resolve key_handle from key via the interner (no-op if already set).
+    void resolve_key_handle() {
+        if (key_handle.valid()) {
+            return;
+        }
+        if (key.empty()) {
+            return;
+        }
+        key_handle = internal::PacketKeyInterner::instance().intern(key);
+    }
+
+    [[nodiscard]] bool key_matches(std::string_view other) const noexcept {
+        if (key_handle.valid()) {
+            if (const auto found = internal::PacketKeyInterner::instance().find(other);
+                found.has_value()) {
+                return key_handle == *found;
+            }
+        }
+        return key == other;
+    }
 };
 
 template <typename T>
@@ -176,6 +202,21 @@ inline T field_or(const PacketFields& fields, const std::string& name, const T& 
         return *value;
     }
     return fallback;
+}
+
+// Index-based field access aligned with schema field order (hot path).
+[[nodiscard]] inline const FieldValue* field_at(
+    const PacketFields& fields,
+    const std::vector<FieldSpec>& field_set,
+    std::size_t index) noexcept {
+    if (index >= field_set.size()) {
+        return nullptr;
+    }
+    const auto it = fields.find(field_set[index].name);
+    if (it == fields.end()) {
+        return nullptr;
+    }
+    return &it->second;
 }
 
 } // namespace kprotocol

@@ -32,9 +32,19 @@ public:
     // Encode and send without internal→client translation (packet fields must
     // match encode_version schema).
     bool send_packet_direct(const Packet& packet, ProtocolVersion encode_version) const;
+    // Catalog anchor for the client's announced wire protocol (handshake field).
     ProtocolVersion protocol_version() const;
+    WireProtocol client_wire() const;
+
+private:
+    ProtocolVersion client_protocol_version() const;
+
+public:
     PacketState state() const;
     void set_state(PacketState state) const;
+    // Call after sending login.clientbound.compress (or equivalent) so inbound
+    // frames use the compressed decoder matching outbound encoding.
+    void enable_compression(std::int32_t threshold) const;
     std::string remote_address() const;
     bool valid() const noexcept;
 

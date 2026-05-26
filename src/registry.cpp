@@ -394,15 +394,16 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(
     }
 
     std::vector<std::uint8_t> payload;
-    for (const auto& field : *field_set) {
+    for (std::size_t i = 0; i < field_set->size(); ++i) {
+        const auto& field = (*field_set)[i];
         if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
             continue;
         }
-        const auto it = packet.fields.find(field.name);
-        if (it == packet.fields.end()) {
+        const auto* value = field_at(packet.fields, *field_set, i);
+        if (value == nullptr) {
             throw std::runtime_error("Missing required packet field: " + field.name);
         }
-        write_field(payload, field, it->second);
+        write_field(payload, field, *value);
     }
 
     if (compression_threshold < 0) {
@@ -432,10 +433,12 @@ Packet PacketRegistry::decode_packet(
         .direction = schema->direction,
         .fields = {}
     };
+    packet.resolve_key_handle();
 
     std::size_t offset = 0;
     const std::span<const std::uint8_t> payload(frame.payload.data(), frame.payload.size());
-    for (const auto& field : *field_set) {
+    for (std::size_t i = 0; i < field_set->size(); ++i) {
+        const auto& field = (*field_set)[i];
         if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
             continue;
         }

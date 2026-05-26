@@ -32,13 +32,11 @@ function(kprotocol_apply_warnings target)
 endfunction()
 
 # ============================================================================
-# kprotocol_codec: pure wire codec + version table + key interner.
-# No knowledge of packets, networking, or registries.
+# kprotocol_codec: pure wire codec + version table. No packets or registries.
 # ============================================================================
 add_library(kprotocol_codec
     src/codec.cpp
     src/version.cpp
-    src/internal/packet_key.cpp
 )
 target_compile_features(kprotocol_codec PUBLIC cxx_std_20)
 target_include_directories(kprotocol_codec PUBLIC
@@ -56,6 +54,7 @@ add_library(kprotocol::codec ALIAS kprotocol_codec)
 add_library(kprotocol_core
     src/types.cpp
     src/text_component.cpp
+    src/internal/packet_key.cpp
     src/registry.cpp
     src/translation.cpp
     src/translation_registry.cpp
@@ -113,6 +112,13 @@ if(KPROTOCOL_NODE_EXECUTABLE)
                 --versions ${KPROTOCOL_GENERATE_VERSIONS}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Regenerating packet catalog into ${GENERATED_DIR} (versions: ${KPROTOCOL_GENERATE_VERSIONS})"
+        VERBATIM
+    )
+    add_custom_target(kprotocol_embed_translation_mappings
+        COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
+                ${CMAKE_SOURCE_DIR}/tools/embed_translation_mappings.mjs
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Embedding tools/translation_mappings.json into src/translation_mappings_data.cpp"
         VERBATIM
     )
 endif()

@@ -401,6 +401,39 @@ std::int64_t read_var_long(std::span<const std::uint8_t> input, std::size_t& off
     return with_reader(input, offset, [](Reader& r) { return r.read_var_long(); });
 }
 
+bool try_read_var_int(std::span<const std::uint8_t> input, std::size_t& offset, std::int32_t& out) noexcept {
+    Reader reader(input.subspan(offset));
+    out = reader.read_var_int();
+    if (!reader.ok()) {
+        return false;
+    }
+    offset += reader.cursor();
+    return true;
+}
+
+bool try_read_var_long(std::span<const std::uint8_t> input, std::size_t& offset, std::int64_t& out) noexcept {
+    Reader reader(input.subspan(offset));
+    out = reader.read_var_long();
+    if (!reader.ok()) {
+        return false;
+    }
+    offset += reader.cursor();
+    return true;
+}
+
+bool try_read_string(std::span<const std::uint8_t> input,
+                     std::size_t& offset,
+                     std::string& out,
+                     const std::int32_t max_len) noexcept {
+    Reader reader(input.subspan(offset));
+    out = reader.read_string(max_len);
+    if (!reader.ok()) {
+        return false;
+    }
+    offset += reader.cursor();
+    return true;
+}
+
 std::int8_t  read_byte(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i8(); }); }
 std::uint8_t read_ubyte(std::span<const std::uint8_t> input, std::size_t& offset) { return with_reader(input, offset, [](Reader& r) { return r.read_u8(); }); }
 std::int16_t  read_short(std::span<const std::uint8_t> input, std::size_t& offset)  { return with_reader(input, offset, [](Reader& r) { return r.read_i16_be(); }); }

@@ -55,35 +55,78 @@ namespace kprotocol {
     X(v1_21_9,  773, "1.21.9")              \
     X(v1_21_11, 774, "1.21.11")
 
+// Any Mojang protocol number announced on the wire (known or unknown).
+struct WireProtocol {
+    std::int32_t value{0};
+
+    constexpr explicit WireProtocol(std::int32_t wire = 0) noexcept : value(wire) {}
+
+    friend constexpr bool operator==(WireProtocol a, WireProtocol b) noexcept {
+        return a.value == b.value;
+    }
+    friend constexpr bool operator!=(WireProtocol a, WireProtocol b) noexcept {
+        return a.value != b.value;
+    }
+};
+
+// Dense catalog index. Values are NOT Mojang wire numbers.
+enum class KnownVersion : std::uint16_t {
+#define KPROTOCOL_X(name, wire, display) name,
+    KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
+#undef KPROTOCOL_X
+    count
+};
+
+// Legacy type: enumerator value equals the Mojang wire number. Prefer
+// KnownVersion + WireProtocol for new code; generated catalog still keys
+// schema maps with this type until the generator emits KnownVersion.
 enum class ProtocolVersion : std::int32_t {
 #define KPROTOCOL_X(name, wire, display) name = wire,
     KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
 #undef KPROTOCOL_X
 };
 
-constexpr std::int32_t protocol_number(const ProtocolVersion version) noexcept {
+[[nodiscard]] constexpr std::int32_t wire_number(KnownVersion version) noexcept;
+[[nodiscard]] constexpr std::int32_t wire_number(WireProtocol wire) noexcept { return wire.value; }
+[[nodiscard]] constexpr std::int32_t protocol_number(const ProtocolVersion version) noexcept {
     return static_cast<std::int32_t>(version);
 }
+[[nodiscard]] constexpr std::int32_t protocol_number(const KnownVersion version) noexcept {
+    return wire_number(version);
+}
 
-// Try to map a raw wire number to a known enumerator. Returns std::nullopt
-// for protocol numbers the library has not been built with explicit support for.
+[[nodiscard]] constexpr WireProtocol to_wire(ProtocolVersion version) noexcept {
+    return WireProtocol{protocol_number(version)};
+}
+[[nodiscard]] constexpr WireProtocol to_wire(KnownVersion version) noexcept {
+    return WireProtocol{wire_number(version)};
+}
+
+[[nodiscard]] std::optional<KnownVersion> try_from_wire(WireProtocol wire) noexcept;
 [[nodiscard]] std::optional<ProtocolVersion> try_from_wire(std::int32_t wire) noexcept;
-
-// True iff the wire number corresponds to a known enumerator.
+[[nodiscard]] bool is_known_protocol(WireProtocol wire) noexcept;
 [[nodiscard]] bool is_known_protocol(std::int32_t wire) noexcept;
 
-// Human-readable name. For known versions this is the canonical display
-// string (e.g. "1.20.4"); for unknown versions this returns "protocol_<wire>"
-// so logs remain useful.
+[[nodiscard]] std::string name_of(KnownVersion version);
 [[nodiscard]] std::string name_of(ProtocolVersion version);
+[[nodiscard]] std::string name_of(WireProtocol wire);
 [[nodiscard]] std::string name_of(std::int32_t wire);
 
-// Highest wire number compiled into the generated packet catalog.
 [[nodiscard]] constexpr ProtocolVersion latest_catalog_version() noexcept {
     return ProtocolVersion::v1_21_11;
 }
+[[nodiscard]] constexpr KnownVersion latest_known_version() noexcept {
+    return KnownVersion::v1_21_11;
+}
 
 // Map a client wire number to the nearest catalog anchor (largest known wire <= wire).
+[[nodiscard]] ProtocolVersion catalog_anchor_for(WireProtocol wire) noexcept;
 [[nodiscard]] ProtocolVersion catalog_anchor_for(std::int32_t wire) noexcept;
+[[nodiscard]] KnownVersion catalog_anchor_known_for(WireProtocol wire) noexcept;
+
+// Preserve unknown wire numbers for registry lookup (legacy generated code path).
+[[nodiscard]] constexpr ProtocolVersion protocol_version_from_wire(std::int32_t wire) noexcept {
+    return static_cast<ProtocolVersion>(wire);
+}
 
 } // namespace kprotocol
