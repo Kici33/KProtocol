@@ -124,19 +124,19 @@ int main() {
         kprotocol::PacketTranslator bootstrap;
         kprotocol::TranslationRegistry::initialize_all(bootstrap);
 
-        const auto entity_mapped = kprotocol::TranslationRegistry::map_entity_id(
-            kprotocol::ProtocolVersion::v1_20_4,
-            kprotocol::ProtocolVersion::v1_16_5,
-            120
-        );
-        assert(entity_mapped == 102); // zombie
-
         const auto block_mapped = kprotocol::TranslationRegistry::map_block_id(
             kprotocol::ProtocolVersion::v1_20_4,
             kprotocol::ProtocolVersion::v1_16_5,
             21
         );
-        assert(block_mapped == 20); // dark_oak_planks
+        assert(block_mapped == 20); // dark_oak_planks default state
+
+        const auto cross_era = kprotocol::TranslationRegistry::map_block_id(
+            kprotocol::ProtocolVersion::v1_8,
+            kprotocol::ProtocolVersion::v1_21_1,
+            16
+        );
+        assert(cross_era == 1); // stone default state on 1.8 -> 1.21.1
 
         std::cout << "  ✓ TranslationRegistry ID mapping functions work\n";
     }

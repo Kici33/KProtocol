@@ -55,7 +55,7 @@ public:
 
 private:
     struct IdLookupKey {
-        ProtocolVersion version{};
+        KnownVersion version{};
         PacketState state{};
         PacketDirection direction{};
         std::int32_t packet_id{};
@@ -70,8 +70,8 @@ private:
     // Looks up the highest version key <= `version` in `field_sets`; returns
     // nullptr if no entry covers it.
     static const std::vector<FieldSpec>* select_field_set(
-        const std::map<ProtocolVersion, std::vector<FieldSpec>>& field_sets,
-        ProtocolVersion version) noexcept;
+        const std::map<KnownVersion, std::vector<FieldSpec>>& field_sets,
+        KnownVersion version) noexcept;
 
     // Internal lookups keyed on the interned handle - integer hash + compare,
     // no per-call string hashing on the hot path.

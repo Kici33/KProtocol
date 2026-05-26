@@ -1,0 +1,53 @@
+#pragma once
+
+#include "kprotocol/packet.hpp"
+#include "kprotocol/text_component.hpp"
+#include "kprotocol/version.hpp"
+
+#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
+#include "kprotocol/generated/packet_keys.hpp"
+#endif
+
+#include <cstdint>
+#include <string>
+
+namespace kprotocol {
+
+class S60SetTitleTextPacket {
+public:
+    std::string text;
+
+    [[nodiscard]] Packet to_packet(const ProtocolVersion wire_version) const {
+#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
+        const std::string_view key = generated::packet_keys::play_clientbound_set_title_text;
+#else
+        const std::string_view key = "play.clientbound.set_title_text";
+#endif
+        PacketFields fields;
+        if (uses_nbt_text(wire_version)) {
+            fields.emplace("text", text_component_nbt(text));
+        } else {
+            fields.emplace("text", json_text(text));
+        }
+        return Packet{
+            .key = std::string(key),
+            .state = PacketState::play,
+            .direction = PacketDirection::clientbound,
+            .fields = std::move(fields),
+        };
+    }
+
+    static S60SetTitleTextPacket from_packet(const Packet& packet) {
+        S60SetTitleTextPacket out;
+        const auto it = packet.fields.find("text");
+        if (it == packet.fields.end()) {
+            return out;
+        }
+        if (const auto* s = std::get_if<std::string>(&it->second); s != nullptr) {
+            out.text = *s;
+        }
+        return out;
+    }
+};
+
+} // namespace kprotocol

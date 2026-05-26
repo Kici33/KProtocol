@@ -34,7 +34,7 @@ npm install minecraft-data
 #    include/kprotocol/version.hpp).
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11
 ```
 
 The CMake build exposes a convenience target that performs the same step:
@@ -44,7 +44,7 @@ cmake --build <build-dir> --target kprotocol_generate_packets
 ```
 
 The target uses the versions listed in the `KPROTOCOL_GENERATE_VERSIONS`
-CMake cache variable (default: `1.8,1.12.2,1.16.5,1.20.4,1.21.1`).
+CMake cache variable (default: full anchor list through 1.21.11 / wire 774).
 
 ## Type mapping
 
@@ -79,3 +79,40 @@ symbol is unavailable.
 The upstream data is MIT-licensed by PrismarineJS. The generator script
 itself (`tools/generate_packets.mjs`) is part of kprotocol and follows the
 project license.
+
+## Protocol version types
+
+KProtocol uses three related types (see `include/kprotocol/version.hpp`):
+
+| Type | Role |
+|---|---|
+| `WireProtocol` | Raw Mojang protocol number from the handshake (`protocol_version` field). May be unknown (future client). |
+| `KnownVersion` | Dense catalog index (`0` … `count-1`). Keys generated `PacketSchema` maps (`field_sets`, `ids`). |
+| `ProtocolVersion` | Legacy enum whose enumerator **value equals the wire number**. Kept for existing APIs; prefer `KnownVersion` + `WireProtocol` in new code. |
+
+Session path: `ClientSession::client_wire()` returns the announced wire;
+`protocol_version()` returns the **catalog anchor** (`catalog_anchor_for`) used
+for registry encode/decode. Handshake handling stores `WireProtocol` only.
+
+Helpers: `to_known_version`, `catalog_anchor_known_for`, `try_from_wire`.
+
+## Block ID translation tables
+
+Block state remapping tables live in `tools/translation_mappings.json`.
+Regenerate from minecraft-data (by block name bridge):
+
+```bash
+node tools/generate_translation_mappings.mjs
+npm run embed:translation
+node tools/embed_block_registry.mjs
+node tools/embed_metadata_registry.mjs
+```
+
+`embed:translation` writes `data/translation_mappings.bin.gz` (~7.5 MB, gzip).
+Commit the `.bin.gz` only; the raw `.bin` is gitignored. At runtime
+`translation_mappings_loader.cpp` gunzips the blob and binary-searches
+`(KnownVersion from, KnownVersion to, block id)` — pair indices match
+`KPROTOCOL_FOR_EACH_KNOWN_VERSION` order, not the 17-version CI generate list.
+
+CMake defines `KPROTOCOL_BLOCK_MAPPINGS_GZ` when the file is present and
+installs it under `share/kprotocol/`.

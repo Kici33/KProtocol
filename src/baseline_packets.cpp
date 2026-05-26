@@ -7,13 +7,13 @@ namespace kprotocol {
 
 namespace {
 
-std::map<ProtocolVersion, std::int32_t> ids(const std::int32_t v1_8, const std::int32_t v1_12_2, const std::int32_t v1_16_5, const std::int32_t v1_20_4, const std::int32_t v1_21_1) {
+std::map<KnownVersion, std::int32_t> ids(const std::int32_t v1_8, const std::int32_t v1_12_2, const std::int32_t v1_16_5, const std::int32_t v1_20_4, const std::int32_t v1_21_1) {
     return {
-        {ProtocolVersion::v1_8, v1_8},
-        {ProtocolVersion::v1_12_2, v1_12_2},
-        {ProtocolVersion::v1_16_5, v1_16_5},
-        {ProtocolVersion::v1_20_4, v1_20_4},
-        {ProtocolVersion::v1_21_1, v1_21_1}
+        {KnownVersion::v1_8, v1_8},
+        {KnownVersion::v1_12_2, v1_12_2},
+        {KnownVersion::v1_16_5, v1_16_5},
+        {KnownVersion::v1_20_4, v1_20_4},
+        {KnownVersion::v1_21_1, v1_21_1}
     };
 }
 

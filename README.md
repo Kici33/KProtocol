@@ -13,6 +13,15 @@ KProtocol is a modern Minecraft protocol library focused on:
 The framework is production-style and extensible for full protocol coverage.  
 This repository currently ships a **baseline packet set** (handshake/status/login/keepalive) and all extension points needed to register every remaining Minecraft packet.
 
+### Version model
+
+- **`WireProtocol`** — client handshake number (any int).
+- **`KnownVersion`** — dense index for generated schemas and block mappings.
+- **`ProtocolVersion`** — legacy wire-number enum for older APIs.
+
+See [GENERATE.md](GENERATE.md#protocol-version-types) for details. Prefer
+`client_wire()` + `catalog_known_version()` on sessions over bare wire enums.
+
 ## Build
 
 Prerequisites:
@@ -28,7 +37,9 @@ ctest --test-dir build --output-on-failure
 ```
 
 By default the library compiles the committed multi-version packet catalog under
-`generated/` (248 packet keys across 1.8, 1.12.2, 1.16.5, 1.20.4, 1.21.1).
+`generated/` (packet keys across 17 anchor versions from 1.8 through 1.21.11,
+wire 47–774). Unknown future client wires (e.g. 1.26 when minecraft-data adds it)
+resolve to the nearest compiled catalog anchor until you regenerate.
 Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
 hand-rolled baseline set.
 
@@ -40,7 +51,7 @@ See [GENERATE.md](GENERATE.md) for full details. Quick version:
 npm install minecraft-data
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11
 ```
 
 Or via CMake (requires Node.js on PATH):
@@ -86,6 +97,21 @@ See `examples/consumer/` for a minimal installed-consumer layout (`main.cpp` +
 `CMakeLists.txt`). After `cmake --install` from the kprotocol build tree, point
 `CMAKE_PREFIX_PATH` at the install prefix and configure that example.
 
+### Play demo server
+
+`examples/play_demo_server.cpp` is the reference play-state server. It accepts
+any supported client version, completes offline login, and sends title, action
+bar, scoreboard, block change, and entity metadata using the internal version
+(1.21.1) with automatic wire translation:
+
+```bash
+cmake -S . -B build -DKPROTOCOL_BUILD_EXAMPLES=ON
+cmake --build build --target kprotocol_play_demo
+./build/kprotocol_play_demo   # listens on 25565
+```
+
+Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
+
 ## Architecture
 
 1. `kprotocol::PacketRegistry`
@@ -120,32 +146,59 @@ Each packet class carries strongly-typed fields and exposes:
 
 ## Quick start
 
+One include, one object — no manual registry wiring:
+
 ```cpp
 #include "kprotocol/kprotocol.hpp"
 
-kprotocol::PacketRegistry registry;
-kprotocol::PacketTranslator translator;
-kprotocol::register_baseline_packets(registry, translator);
-#ifdef KPROTOCOL_GENERATED
-kprotocol::register_generated_packets(registry);  // 248 keys from minecraft-data
-#endif
+kprotocol::ProtocolServer app;
 
-kprotocol::MinecraftServer server(registry, translator);
-class MyListener : public kprotocol::ProtocolListener {
-public:
-    void onPacketReceived(const kprotocol::ClientSession&, const kprotocol::Packet& packet) override {
-        // inspect all inbound packets
-    }
-};
-
-server.add_listener(std::make_shared<MyListener>());
-server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
+app.server().on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
     if (packet.key == kprotocol::packet_keys::ping_request) {
         const auto ping = kprotocol::C01PingRequestPacket::from_packet(packet);
         client.send_packet(kprotocol::S01PongResponsePacket{.payload = ping.payload}.to_packet());
     }
 });
-server.start(25565, kprotocol::ProtocolVersion::v1_21_1);
+
+app.server().start(25565, kprotocol::ProtocolVersion::v1_21_1);
+```
+
+Cross-version UI and blocks without touching wire details:
+
+```cpp
+kprotocol::send_title(client, {
+    .title = "Welcome",
+    .subtitle = "KProtocol",
+});
+
+kprotocol::send_action_bar(client, "Hello!");
+kprotocol::clear_title(client);
+kprotocol::send_scoreboard_objective(client, "sidebar", "Scores");
+kprotocol::send_scoreboard_score(client, "Player", "sidebar", 10);
+kprotocol::send_scoreboard_display(client, "sidebar", 1);
+// Or in one call:
+kprotocol::send_scoreboard_sidebar(client, "myobj", "Scores", {
+    {.entry = "Player", .value = 10},
+}, 1);
+kprotocol::send_block_change(client, kprotocol::ProtocolVersion::v1_21_1,
+    kprotocol::Position{.x = 0, .y = 64, .z = 0}, "stone");
+```
+
+Title, action bar, and scoreboard helpers pick the correct wire shape per client
+version (legacy `title`/`chat` on 1.8–1.16.5, split title + `action_bar` from
+1.17+, NBT text components from 1.20.4+). Typed packet classes are in
+`kprotocol/packets/play/play_packets.hpp` (`S45TitlePacket`, `S55ActionBarPacket`,
+`S3BScoreboardObjectivePacket`, `S3CScoreboardScorePacket`, etc.). For
+encode-only work without a server, use `kprotocol::ProtocolRuntime` instead of
+`ProtocolServer`.
+
+Lower-level manual setup is still available:
+
+```cpp
+kprotocol::PacketRegistry registry;
+kprotocol::PacketTranslator translator;
+kprotocol::initialize(registry, translator);
+kprotocol::MinecraftServer server(registry, translator);
 ```
 
 ## Adding a new packet

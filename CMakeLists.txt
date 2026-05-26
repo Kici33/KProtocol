@@ -15,7 +15,7 @@ if(BUILD_EXAMPLE)
     set(KPROTOCOL_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 endif()
 
-set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.16.5,1.20.4,1.21.1"
+set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11"
     CACHE STRING
     "Comma-separated Minecraft versions to pass to tools/generate_packets.mjs (used by the kprotocol_generate_packets target)")
 
@@ -32,13 +32,11 @@ function(kprotocol_apply_warnings target)
 endfunction()
 
 # ============================================================================
-# kprotocol_codec: pure wire codec + version table + key interner.
-# No knowledge of packets, networking, or registries.
+# kprotocol_codec: pure wire codec + version table. No packets or registries.
 # ============================================================================
 add_library(kprotocol_codec
     src/codec.cpp
     src/version.cpp
-    src/internal/packet_key.cpp
 )
 target_compile_features(kprotocol_codec PUBLIC cxx_std_20)
 target_include_directories(kprotocol_codec PUBLIC
@@ -55,11 +53,24 @@ add_library(kprotocol::codec ALIAS kprotocol_codec)
 # ============================================================================
 add_library(kprotocol_core
     src/types.cpp
+    src/text_component.cpp
+    src/internal/packet_key.cpp
     src/registry.cpp
     src/translation.cpp
     src/translation_registry.cpp
+    src/translation_mappings_loader.cpp
+    src/entity_metadata.cpp
+    src/blocks.cpp
+    src/block_registry.cpp
+    src/metadata_registry.cpp
+    src/block_registry_data.cpp
+    src/metadata_registry_data.cpp
 )
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
+if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+    target_compile_definitions(kprotocol_core PRIVATE
+        KPROTOCOL_BLOCK_MAPPINGS_GZ="${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+endif()
 kprotocol_apply_warnings(kprotocol_core)
 add_library(kprotocol::core ALIAS kprotocol_core)
 
@@ -69,6 +80,8 @@ add_library(kprotocol::core ALIAS kprotocol_core)
 # ============================================================================
 add_library(kprotocol_packets
     src/baseline_packets.cpp
+    src/initialize.cpp
+    src/runtime.cpp
 )
 target_link_libraries(kprotocol_packets PUBLIC kprotocol_core)
 
@@ -105,6 +118,13 @@ if(KPROTOCOL_NODE_EXECUTABLE)
         COMMENT "Regenerating packet catalog into ${GENERATED_DIR} (versions: ${KPROTOCOL_GENERATE_VERSIONS})"
         VERBATIM
     )
+    add_custom_target(kprotocol_embed_translation_mappings
+        COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
+                ${CMAKE_SOURCE_DIR}/tools/embed_translation_mappings.mjs
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        COMMENT "Building data/translation_mappings.bin.gz from tools/translation_mappings.json"
+        VERBATIM
+    )
 endif()
 
 # ============================================================================
@@ -122,7 +142,7 @@ if(NOT kprotocol_asio_POPULATED)
     if(NOT TARGET kprotocol_asio)
         add_library(kprotocol_asio INTERFACE)
         target_include_directories(kprotocol_asio SYSTEM INTERFACE
-            ${kprotocol_asio_SOURCE_DIR}/asio/include)
+            $<BUILD_INTERFACE:${kprotocol_asio_SOURCE_DIR}/asio/include>)
         target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
         if(WIN32)
             target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
@@ -136,6 +156,9 @@ endif()
 # ============================================================================
 add_library(kprotocol_server
     src/server.cpp
+    src/client_ui.cpp
+    src/play_demo.cpp
+    src/protocol_server.cpp
 )
 target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
@@ -164,6 +187,8 @@ add_library(kprotocol::kprotocol ALIAS kprotocol)
 if(KPROTOCOL_BUILD_EXAMPLES)
     add_executable(kprotocol_example examples/minimal_server.cpp)
     target_link_libraries(kprotocol_example PRIVATE kprotocol::kprotocol)
+    add_executable(kprotocol_play_demo examples/play_demo_server.cpp)
+    target_link_libraries(kprotocol_play_demo PRIVATE kprotocol::kprotocol)
 endif()
 
 # ============================================================================
@@ -180,12 +205,18 @@ if(KPROTOCOL_BUILD_TESTS)
         varint_property_tests
         frame_malformed_tests
         version_tests
+        version_range_tests
         decompression_bomb_tests
         field_types_tests
         versioned_schema_tests
         generated_packets_tests
         server_smoke_tests
         server_login_tests
+        gameplay_integration_tests
+        server_play_demo_tests
+        blocks_metadata_tests
+        easy_use_tests
+        ui_tests
     )
 
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
@@ -195,7 +226,31 @@ if(KPROTOCOL_BUILD_TESTS)
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()
+        if(test_name STREQUAL "version_range_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
         if(test_name STREQUAL "server_login_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "gameplay_integration_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "server_play_demo_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "blocks_metadata_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "easy_use_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "ui_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()
@@ -224,6 +279,11 @@ install(TARGETS
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp")
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+    install(FILES data/translation_mappings.bin.gz
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/kprotocol)
+endif()
 
 if(KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/include")
     install(DIRECTORY ${GENERATED_DIR}/include/

@@ -99,10 +99,30 @@ const VERSION_TABLE = [
     { display: '1.21.3', wire: 768, enumerator: 'v1_21_3' },
     { display: '1.21.4', wire: 769, enumerator: 'v1_21_4' },
     { display: '1.21.5', wire: 770, enumerator: 'v1_21_5' },
+    { display: '1.21.6', wire: 771, enumerator: 'v1_21_6' },
+    { display: '1.21.7', wire: 772, enumerator: 'v1_21_7' },
+    { display: '1.21.8', wire: 772, enumerator: 'v1_21_7' },
+    { display: '1.21.9', wire: 773, enumerator: 'v1_21_9' },
+    { display: '1.21.10', wire: 773, enumerator: 'v1_21_9' },
+    { display: '1.21.11', wire: 774, enumerator: 'v1_21_11' },
 ];
 
 function findVersion(display) {
     return VERSION_TABLE.find(v => v.display === display);
+}
+
+// Mojang wire number -> KnownVersion enumerator (last duplicate wire wins).
+const WIRE_TO_ENUMERATOR = new Map();
+for (const row of VERSION_TABLE) {
+    WIRE_TO_ENUMERATOR.set(row.wire, row.enumerator);
+}
+
+function knownVersionExpr(wire) {
+    const enumerator = WIRE_TO_ENUMERATOR.get(wire);
+    if (!enumerator) {
+        throw new Error(`No KnownVersion enumerator for wire ${wire}`);
+    }
+    return `KnownVersion::${enumerator}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -136,6 +156,9 @@ const ALIAS_MAP = {
     Slot: 'slot',
     anonOptionalNbt: 'optional_nbt',
     anonymousNbt: 'optional_nbt',
+    optionalNbt: 'optional_nbt',
+    nbt: 'optional_nbt',
+    entityMetadata: 'rest_buffer',
 };
 
 // Fields whose name collides with C++ keywords or our own struct fields. We
@@ -188,11 +211,18 @@ function resolveType(type, stateTypes, globalTypes) {
 // Returns { ok: true, fieldType } on success, or { ok: false, reason } if the
 // type is compound / unsupported.
 function mapFieldType(type, stateTypes, globalTypes) {
+    if (typeof type === 'string' && Object.prototype.hasOwnProperty.call(ALIAS_MAP, type)) {
+        return { ok: true, fieldType: ALIAS_MAP[type] };
+    }
+
     const resolved = resolveType(type, stateTypes, globalTypes);
 
     if (typeof resolved === 'string') {
         if (resolved in ALIAS_MAP) {
             return { ok: true, fieldType: ALIAS_MAP[resolved] };
+        }
+        if (typeof type === 'string' && resolved === 'native' && type in ALIAS_MAP) {
+            return { ok: true, fieldType: ALIAS_MAP[type] };
         }
         const mapped = PRIMITIVE_MAP[resolved];
         if (mapped === null) {
@@ -231,6 +261,9 @@ function mapFieldType(type, stateTypes, globalTypes) {
             if (elemMapped.fieldType === 'var_long') {
                 return { ok: true, fieldType: 'var_long_array' };
             }
+            if (elemMapped.fieldType === 'byte_array') {
+                return { ok: true, fieldType: 'byte_array' };
+            }
             return { ok: false, reason: `unsupported array element type: ${elemMapped.fieldType}` };
         }
         if (kind === 'option') {
@@ -248,11 +281,17 @@ function mapFieldType(type, stateTypes, globalTypes) {
             }
             return { ok: false, reason: 'unsupported option shape' };
         }
+        if (kind === 'bitfield') {
+            return { ok: true, fieldType: 'u64_be' };
+        }
         if (kind === 'container') {
             return { ok: false, reason: 'nested container field (not flattened)' };
         }
         if (kind === 'switch') {
-            return { ok: false, reason: `switch type` };
+            return { ok: false, reason: `switch type`, isSwitch: true };
+        }
+        if (kind === 'entityMetadataLoop') {
+            return { ok: true, fieldType: 'rest_buffer' };
         }
         return { ok: false, reason: `compound type: ${kind}` };
     }
@@ -277,7 +316,10 @@ function looksLikeSlotContainer(containerFields) {
 }
 
 // Flatten a minecraft-data container field list into kprotocol FieldSpec entries.
-function flattenContainerFields(containerFields, stateTypes, globalTypes) {
+// When `tailOnComplex` is true, fields that cannot be flattened (action switches,
+// nested containers, etc.) are represented as a single trailing `rest_buffer` named
+// `tail` so the packet can still round-trip.
+function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOnComplex = false) {
     const fields = [];
     for (const fieldEntry of containerFields) {
         const fname = sanitizeFieldName(fieldEntry.name || 'anon');
@@ -287,13 +329,32 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
             fields.push({ name: fname, type: 'slot' });
             continue;
         }
+        if (typeof resolved === 'string' && ALIAS_MAP[resolved] === 'rest_buffer') {
+            fields.push({ name: fname, type: 'rest_buffer' });
+            continue;
+        }
         if (Array.isArray(resolved) && resolved[0] === 'container' && looksLikeSlotContainer(resolved[1])) {
             fields.push({ name: fname, type: 'slot' });
             continue;
         }
+        if (Array.isArray(resolved) && resolved[0] === 'array') {
+            const params = resolved[1] || {};
+            const elemResolved = resolveType(params.type, stateTypes, globalTypes);
+            if (Array.isArray(elemResolved) && elemResolved[0] === 'container') {
+                const inner = flattenContainerFields(elemResolved[1] || [], stateTypes, globalTypes, false);
+                if (inner.ok && inner.fields.length > 0) {
+                    fields.push({ name: fname, type: 'byte_array' });
+                    continue;
+                }
+            }
+        }
 
         const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
         if (!mapped.ok) {
+            if (tailOnComplex) {
+                fields.push({ name: 'tail', type: 'rest_buffer' });
+                return { ok: true, fields };
+            }
             return { ok: false, reason: `field ${fieldEntry.name}: ${mapped.reason}`, fields: [] };
         }
         if (mapped.voidField) {
@@ -306,16 +367,24 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
             continue;
         }
         if (Array.isArray(resolved) && resolved[0] === 'container' && fieldEntry.anon) {
-            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes, tailOnComplex);
             if (!inner.ok) {
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
                 return inner;
             }
             fields.push(...inner.fields);
             continue;
         }
         if (Array.isArray(resolved) && resolved[0] === 'container') {
-            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes);
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes, tailOnComplex);
             if (!inner.ok) {
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
                 return { ok: false, reason: `field ${fieldEntry.name}: ${inner.reason}`, fields: [] };
             }
             fields.push(...inner.fields);
@@ -332,6 +401,10 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
                     const innerName = sanitizeFieldName(inner.name);
                     const innerMapped = mapFieldType(inner.type, stateTypes, globalTypes);
                     if (!innerMapped.ok || !innerMapped.fieldType) {
+                        if (tailOnComplex) {
+                            fields.push({ name: 'tail', type: 'rest_buffer' });
+                            return { ok: true, fields };
+                        }
                         return { ok: false, reason: `field ${inner.name}: ${innerMapped.reason}`, fields: [] };
                     }
                     fields.push({
@@ -342,12 +415,25 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes) {
                 }
                 continue;
             }
+            if (tailOnComplex) {
+                fields.push({ name: 'tail', type: 'rest_buffer' });
+                return { ok: true, fields };
+            }
             return { ok: false, reason: `field ${fieldEntry.name}: unsupported switch`, fields: [] };
         }
         fields.push({ name: fname, type: mapped.fieldType });
     }
     return { ok: true, fields };
 }
+
+// Packets that benefit from prefix fields + opaque tail (action switches, metadata loops).
+const TAIL_ON_COMPLEX_PACKETS = new Set([
+    'entity_metadata',
+    'scoreboard_objective',
+    'scoreboard_score',
+    'teams',
+    'title',
+]);
 
 // Extract per-packet schemas from a single state/direction.
 // Returns an array of { wireName, fields:[{name, type}], status, reason? }.
@@ -389,7 +475,8 @@ function extractDirection(directionEntry, globalTypes) {
         }
         if (container[0] === 'container') {
             const containerFields = container[1] || [];
-            const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes);
+            const useTail = TAIL_ON_COMPLEX_PACKETS.has(wireName);
+            const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes, useTail);
             if (!flattened.ok) {
                 result.push({
                     wireName, id,
@@ -551,12 +638,12 @@ function emitSchemaBlock(s, indent) {
     lines.push(`${pad}    schema.direction = PacketDirection::${s.direction};`);
     const orderedIds = [...s.ids.entries()].sort((a, b) => a[0] - b[0]);
     for (const [wire, id] of orderedIds) {
-        lines.push(`${pad}    schema.ids.emplace(static_cast<ProtocolVersion>(${wire}), ${id});`);
+        lines.push(`${pad}    schema.ids.emplace(${knownVersionExpr(wire)}, ${id});`);
     }
     const orderedFs = [...collapsedFields.entries()].sort((a, b) => a[0] - b[0]);
     for (const [wire, fields] of orderedFs) {
         const literal = emitFieldsLiteral(fields, indent + 4);
-        lines.push(`${pad}    schema.field_sets.emplace(static_cast<ProtocolVersion>(${wire}), std::vector<FieldSpec>${literal});`);
+        lines.push(`${pad}    schema.field_sets.emplace(${knownVersionExpr(wire)}, std::vector<FieldSpec>${literal});`);
     }
     lines.push(`${pad}    registry.register_schema(std::move(schema));`);
     lines.push(`${pad}}`);

@@ -1,0 +1,16 @@
+#pragma once
+
+#include "kprotocol/packets/play/S10ClearTitlesPacket.hpp"
+#include "kprotocol/packets/play/S22MultiBlockChangePacket.hpp"
+#include "kprotocol/packets/play/S23BlockChangePacket.hpp"
+#include "kprotocol/packets/play/S24BlockActionPacket.hpp"
+#include "kprotocol/packets/play/S3BScoreboardObjectivePacket.hpp"
+#include "kprotocol/packets/play/S3CScoreboardScorePacket.hpp"
+#include "kprotocol/packets/play/S3DScoreboardDisplayPacket.hpp"
+#include "kprotocol/packets/play/S45TitlePacket.hpp"
+#include "kprotocol/packets/play/S4CEntityMetadataPacket.hpp"
+#include "kprotocol/packets/play/S55ActionBarPacket.hpp"
+#include "kprotocol/packets/play/S60SetTitleTextPacket.hpp"
+#include "kprotocol/packets/play/S61SetTitleSubtitlePacket.hpp"
+#include "kprotocol/packets/play/S62SetTitleTimePacket.hpp"
+#include "kprotocol/packets/play/STileEntityDataPacket.hpp"

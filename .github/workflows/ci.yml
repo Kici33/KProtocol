@@ -28,14 +28,25 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y cmake build-essential zlib1g-dev
 
+    - name: Install system deps (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: vcpkg install zlib:x64-windows
+
     - name: Install npm deps
       run: npm ci
 
     - name: Generate packets
-      run: node tools/generate_packets.mjs --out generated --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1
+      run: npm run generate
 
-    - name: Configure CMake
+    - name: Configure CMake (Linux)
+      if: runner.os == 'Linux'
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+
+    - name: Configure CMake (Windows)
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
 
     - name: Build
       run: cmake --build build --config Release --parallel

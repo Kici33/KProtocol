@@ -15,3 +15,11 @@ out/
 
 # Misc.
 *.log
+blocks_out.txt
+gameplay_out.txt
+gen_out.txt
+debug_register.obj
+*.obj
+
+# Optional raw blob (commit the .bin.gz only).
+data/translation_mappings.bin
