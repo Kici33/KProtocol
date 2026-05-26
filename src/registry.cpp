@@ -15,7 +15,7 @@ bool field_present(const PacketFields& fields, const std::string& optional_if) {
     if (optional_if.empty()) {
         return true;
     }
-    const auto it = fields.find(optional_if);
+    const auto it = fields.named.find(optional_if);
     if (it == fields.end()) {
         return false;
     }
@@ -175,7 +175,7 @@ std::size_t PacketRegistry::IdLookupKeyHash::operator()(const IdLookupKey& value
     auto combine = [&seed](const std::size_t h) {
         seed ^= h + 0x9e3779b9U + (seed << 6U) + (seed >> 2U);
     };
-    combine(std::hash<std::int32_t>{}(protocol_number(value.version)));
+    combine(std::hash<std::uint16_t>{}(static_cast<std::uint16_t>(value.version)));
     combine(std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(value.state)));
     combine(std::hash<std::uint8_t>{}(static_cast<std::uint8_t>(value.direction)));
     combine(std::hash<std::int32_t>{}(value.packet_id));
@@ -183,8 +183,8 @@ std::size_t PacketRegistry::IdLookupKeyHash::operator()(const IdLookupKey& value
 }
 
 const std::vector<FieldSpec>* PacketRegistry::select_field_set(
-    const std::map<ProtocolVersion, std::vector<FieldSpec>>& field_sets,
-    ProtocolVersion version) noexcept {
+    const std::map<KnownVersion, std::vector<FieldSpec>>& field_sets,
+    const KnownVersion version) noexcept {
     if (field_sets.empty()) {
         return nullptr;
     }
@@ -260,7 +260,7 @@ void PacketRegistry::register_definition(PacketDefinition definition) {
     } else {
         // No ids declared - anchor at v1_8 so any lookup beats it. This keeps
         // legacy tests that register packets without ids working.
-        schema.field_sets.emplace(ProtocolVersion::v1_8, std::move(definition.fields));
+        schema.field_sets.emplace(KnownVersion::v1_8, std::move(definition.fields));
     }
     register_schema(std::move(schema));
 }
@@ -285,7 +285,8 @@ const PacketSchema* PacketRegistry::schema_for(
     const PacketState state,
     const PacketDirection direction,
     const std::int32_t packet_id) const noexcept {
-    const IdLookupKey lookup_key{version, state, direction, packet_id};
+    const auto known = to_known_version(version);
+    const IdLookupKey lookup_key{known, state, direction, packet_id};
     const auto id_it = handle_by_id_.find(lookup_key);
     if (id_it != handle_by_id_.end()) {
         const auto def_it = schemas_by_handle_.find(id_it->second);
@@ -293,8 +294,8 @@ const PacketSchema* PacketRegistry::schema_for(
             return &def_it->second;
         }
     }
-    const auto anchor = catalog_anchor_for(protocol_number(version));
-    if (protocol_number(anchor) != protocol_number(version)) {
+    const auto anchor = catalog_anchor_known_for(to_wire(version));
+    if (anchor != known) {
         const IdLookupKey anchored{anchor, state, direction, packet_id};
         const auto anchored_it = handle_by_id_.find(anchored);
         if (anchored_it != handle_by_id_.end()) {
@@ -313,7 +314,7 @@ const std::vector<FieldSpec>* PacketRegistry::fields_for(
     if (schema == nullptr) {
         return nullptr;
     }
-    return select_field_set(schema->field_sets, version);
+    return select_field_set(schema->field_sets, to_known_version(version));
 }
 
 std::optional<PacketDefinition> PacketRegistry::definition_for(std::string_view key) const {
@@ -346,7 +347,7 @@ std::optional<PacketDefinition> PacketRegistry::definition_for(
     out.state = schema->state;
     out.direction = schema->direction;
     out.ids = schema->ids;
-    if (const auto* fs = select_field_set(schema->field_sets, version); fs != nullptr) {
+    if (const auto* fs = select_field_set(schema->field_sets, to_known_version(version)); fs != nullptr) {
         out.fields = *fs;
     } else if (!schema->field_sets.empty()) {
         out.fields = schema->field_sets.begin()->second;
@@ -359,11 +360,12 @@ std::optional<std::int32_t> PacketRegistry::packet_id_for(std::string_view key, 
     if (schema == nullptr) {
         return std::nullopt;
     }
-    const auto id_it = schema->ids.find(version);
+    const auto known = to_known_version(version);
+    const auto id_it = schema->ids.find(known);
     if (id_it != schema->ids.end()) {
         return id_it->second;
     }
-    const auto it = schema->ids.upper_bound(version);
+    const auto it = schema->ids.upper_bound(known);
     if (it == schema->ids.begin()) {
         return std::nullopt;
     }
@@ -388,7 +390,7 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(
         throw std::runtime_error("Packet key has no id for requested version");
     }
 
-    const auto* field_set = select_field_set(schema->field_sets, version);
+    const auto* field_set = select_field_set(schema->field_sets, to_known_version(version));
     if (field_set == nullptr) {
         throw std::runtime_error("Packet key has no field set for requested version");
     }
@@ -422,7 +424,7 @@ Packet PacketRegistry::decode_packet(
         throw std::runtime_error("Unknown packet id for version/state/direction");
     }
 
-    const auto* field_set = select_field_set(schema->field_sets, version);
+    const auto* field_set = select_field_set(schema->field_sets, to_known_version(version));
     if (field_set == nullptr) {
         throw std::runtime_error("Packet has no field set for requested version");
     }
@@ -434,6 +436,7 @@ Packet PacketRegistry::decode_packet(
         .fields = {}
     };
     packet.resolve_key_handle();
+    packet.fields.reserve_indexed(field_set->size());
 
     std::size_t offset = 0;
     const std::span<const std::uint8_t> payload(frame.payload.data(), frame.payload.size());
@@ -442,7 +445,9 @@ Packet PacketRegistry::decode_packet(
         if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
             continue;
         }
-        packet.fields.emplace(field.name, read_field(payload, offset, field));
+        FieldValue value = read_field(payload, offset, field);
+        packet.fields.set_indexed(i, value);
+        packet.fields.named.emplace(field.name, std::move(value));
     }
     if (offset != payload.size()) {
         throw std::runtime_error("Packet payload has trailing bytes");

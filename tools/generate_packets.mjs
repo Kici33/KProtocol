@@ -111,6 +111,20 @@ function findVersion(display) {
     return VERSION_TABLE.find(v => v.display === display);
 }
 
+// Mojang wire number -> KnownVersion enumerator (last duplicate wire wins).
+const WIRE_TO_ENUMERATOR = new Map();
+for (const row of VERSION_TABLE) {
+    WIRE_TO_ENUMERATOR.set(row.wire, row.enumerator);
+}
+
+function knownVersionExpr(wire) {
+    const enumerator = WIRE_TO_ENUMERATOR.get(wire);
+    if (!enumerator) {
+        throw new Error(`No KnownVersion enumerator for wire ${wire}`);
+    }
+    return `KnownVersion::${enumerator}`;
+}
+
 // ---------------------------------------------------------------------------
 // Type mapping. Keys are minecraft-data primitive type names.
 // ---------------------------------------------------------------------------
@@ -624,12 +638,12 @@ function emitSchemaBlock(s, indent) {
     lines.push(`${pad}    schema.direction = PacketDirection::${s.direction};`);
     const orderedIds = [...s.ids.entries()].sort((a, b) => a[0] - b[0]);
     for (const [wire, id] of orderedIds) {
-        lines.push(`${pad}    schema.ids.emplace(static_cast<ProtocolVersion>(${wire}), ${id});`);
+        lines.push(`${pad}    schema.ids.emplace(${knownVersionExpr(wire)}, ${id});`);
     }
     const orderedFs = [...collapsedFields.entries()].sort((a, b) => a[0] - b[0]);
     for (const [wire, fields] of orderedFs) {
         const literal = emitFieldsLiteral(fields, indent + 4);
-        lines.push(`${pad}    schema.field_sets.emplace(static_cast<ProtocolVersion>(${wire}), std::vector<FieldSpec>${literal});`);
+        lines.push(`${pad}    schema.field_sets.emplace(${knownVersionExpr(wire)}, std::vector<FieldSpec>${literal});`);
     }
     lines.push(`${pad}    registry.register_schema(std::move(schema));`);
     lines.push(`${pad}}`);

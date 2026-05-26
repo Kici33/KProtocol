@@ -125,7 +125,7 @@ void register_login_ack_schema(kprotocol::PacketRegistry& registry) {
         .key = std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged),
         .state = kprotocol::PacketState::login,
         .direction = kprotocol::PacketDirection::serverbound,
-        .field_sets = {{kprotocol::ProtocolVersion::v1_20_2, {}}},
+        .field_sets = {{kprotocol::KnownVersion::v1_20_2, {}}},
         .ids = {{kprotocol::ProtocolVersion::v1_20_4, 3}, {kprotocol::ProtocolVersion::v1_21_1, 3}},
     });
 }

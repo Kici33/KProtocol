@@ -116,4 +116,11 @@ KnownVersion catalog_anchor_known_for(const WireProtocol wire) noexcept {
     return KnownVersion::v1_21_11;
 }
 
+KnownVersion to_known_version(const ProtocolVersion version) noexcept {
+    if (const auto known = try_from_wire(WireProtocol{protocol_number(version)}); known.has_value()) {
+        return *known;
+    }
+    return catalog_anchor_known_for(WireProtocol{protocol_number(version)});
+}
+
 } // namespace kprotocol

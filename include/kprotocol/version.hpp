@@ -124,9 +124,15 @@ enum class ProtocolVersion : std::int32_t {
 [[nodiscard]] ProtocolVersion catalog_anchor_for(std::int32_t wire) noexcept;
 [[nodiscard]] KnownVersion catalog_anchor_known_for(WireProtocol wire) noexcept;
 
-// Preserve unknown wire numbers for registry lookup (legacy generated code path).
+// Preserve unknown wire numbers for registry lookup (legacy path).
 [[nodiscard]] constexpr ProtocolVersion protocol_version_from_wire(std::int32_t wire) noexcept {
     return static_cast<ProtocolVersion>(wire);
+}
+
+// Convert API/protocol wire enum to dense catalog index for schema maps.
+[[nodiscard]] KnownVersion to_known_version(ProtocolVersion version) noexcept;
+[[nodiscard]] constexpr ProtocolVersion to_protocol_version(const KnownVersion version) noexcept {
+    return static_cast<ProtocolVersion>(wire_number(version));
 }
 
 } // namespace kprotocol

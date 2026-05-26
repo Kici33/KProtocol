@@ -46,12 +46,12 @@ void test_per_version_field_layout_selected() {
     schema.key = "play.test.versioned";
     schema.state = kprotocol::PacketState::play;
     schema.direction = kprotocol::PacketDirection::clientbound;
-    schema.ids[kprotocol::ProtocolVersion::v1_8]    = 0x20;
-    schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x21;
-    schema.field_sets[kprotocol::ProtocolVersion::v1_8] = {
+    schema.ids[kprotocol::KnownVersion::v1_8]    = 0x20;
+    schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x21;
+    schema.field_sets[kprotocol::KnownVersion::v1_8] = {
         {"a", kprotocol::FieldType::string},
     };
-    schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+    schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
         {"a", kprotocol::FieldType::string},
         {"b", kprotocol::FieldType::string},
     };
@@ -64,13 +64,13 @@ void test_per_version_field_layout_selected() {
         p.state = kprotocol::PacketState::play;
         p.direction = kprotocol::PacketDirection::clientbound;
         p.fields["a"] = std::string("hello");
-        const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_8);
+        const auto encoded = registry.encode_packet(p, kprotocol::KnownVersion::v1_8);
         kprotocol::codec::EncodedFrame frame;
         std::size_t consumed = 0;
         assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
         assert(frame.packet_id == 0x20);
         const auto decoded = registry.decode_packet(
-            frame, kprotocol::ProtocolVersion::v1_8,
+            frame, kprotocol::KnownVersion::v1_8,
             kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
         assert(decoded.fields.size() == 1);
         assert(std::get<std::string>(decoded.fields.at("a")) == "hello");
@@ -79,7 +79,7 @@ void test_per_version_field_layout_selected() {
     // v1.16.5 inherits the v1.8 layout (highest key <= 754 is 47).
     {
         const auto* fields = registry.fields_for("play.test.versioned",
-                                                 kprotocol::ProtocolVersion::v1_16_5);
+                                                 kprotocol::KnownVersion::v1_16_5);
         assert(fields != nullptr);
         assert(fields->size() == 1);
         assert((*fields)[0].name == "a");
@@ -93,13 +93,13 @@ void test_per_version_field_layout_selected() {
         p.direction = kprotocol::PacketDirection::clientbound;
         p.fields["a"] = std::string("foo");
         p.fields["b"] = std::string("bar");
-        const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
+        const auto encoded = registry.encode_packet(p, kprotocol::KnownVersion::v1_20_4);
         kprotocol::codec::EncodedFrame frame;
         std::size_t consumed = 0;
         assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
         assert(frame.packet_id == 0x21);
         const auto decoded = registry.decode_packet(
-            frame, kprotocol::ProtocolVersion::v1_20_4,
+            frame, kprotocol::KnownVersion::v1_20_4,
             kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
         assert(decoded.fields.size() == 2);
         assert(std::get<std::string>(decoded.fields.at("a")) == "foo");
@@ -115,15 +115,15 @@ void test_below_minimum_declared_version_is_unsupported() {
     schema.key = "play.test.lowfloor";
     schema.state = kprotocol::PacketState::play;
     schema.direction = kprotocol::PacketDirection::clientbound;
-    schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x25;
-    schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+    schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x25;
+    schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
         {"v", kprotocol::FieldType::var_int},
     };
     registry.register_schema(std::move(schema));
 
     // packet_id_for at v1_8: no id declared for that version.
     const auto id = registry.packet_id_for("play.test.lowfloor",
-                                           kprotocol::ProtocolVersion::v1_8);
+                                           kprotocol::KnownVersion::v1_8);
     assert(!id.has_value());
 
     // encode_packet at v1_8 must throw.
@@ -134,7 +134,7 @@ void test_below_minimum_declared_version_is_unsupported() {
     p.fields["v"] = std::int32_t{1};
     bool threw = false;
     try {
-        (void)registry.encode_packet(p, kprotocol::ProtocolVersion::v1_8);
+        (void)registry.encode_packet(p, kprotocol::KnownVersion::v1_8);
     } catch (const std::runtime_error&) {
         threw = true;
     }
@@ -151,8 +151,8 @@ void test_repeated_register_merges() {
         schema.key = "play.test.merged";
         schema.state = kprotocol::PacketState::play;
         schema.direction = kprotocol::PacketDirection::clientbound;
-        schema.ids[kprotocol::ProtocolVersion::v1_8] = 0x30;
-        schema.field_sets[kprotocol::ProtocolVersion::v1_8] = {
+        schema.ids[kprotocol::KnownVersion::v1_8] = 0x30;
+        schema.field_sets[kprotocol::KnownVersion::v1_8] = {
             {"x", kprotocol::FieldType::var_int},
         };
         registry.register_schema(std::move(schema));
@@ -162,8 +162,8 @@ void test_repeated_register_merges() {
         schema.key = "play.test.merged";
         schema.state = kprotocol::PacketState::play;
         schema.direction = kprotocol::PacketDirection::clientbound;
-        schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x31;
-        schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+        schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x31;
+        schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
             {"x", kprotocol::FieldType::var_int},
             {"y", kprotocol::FieldType::var_int},
         };
@@ -174,8 +174,8 @@ void test_repeated_register_merges() {
     assert(schema != nullptr);
     assert(schema->ids.size() == 2);
     assert(schema->field_sets.size() == 2);
-    assert(schema->field_sets.at(kprotocol::ProtocolVersion::v1_8).size() == 1);
-    assert(schema->field_sets.at(kprotocol::ProtocolVersion::v1_20_4).size() == 2);
+    assert(schema->field_sets.at(kprotocol::KnownVersion::v1_8).size() == 1);
+    assert(schema->field_sets.at(kprotocol::KnownVersion::v1_20_4).size() == 2);
     std::cout << "ok\n";
 }
 
@@ -186,8 +186,8 @@ void test_conflicting_state_rejected() {
     schema.key = "play.test.conflict";
     schema.state = kprotocol::PacketState::play;
     schema.direction = kprotocol::PacketDirection::clientbound;
-    schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x40;
-    schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {};
+    schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x40;
+    schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {};
     registry.register_schema(schema);
 
     kprotocol::PacketSchema bad = schema;
@@ -210,16 +210,16 @@ void test_id_collision_across_keys_rejected() {
         schema.key = "play.test.first";
         schema.state = kprotocol::PacketState::play;
         schema.direction = kprotocol::PacketDirection::clientbound;
-        schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x50;
-        schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {};
+        schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x50;
+        schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {};
         registry.register_schema(std::move(schema));
     }
     kprotocol::PacketSchema collision;
     collision.key = "play.test.second";
     collision.state = kprotocol::PacketState::play;
     collision.direction = kprotocol::PacketDirection::clientbound;
-    collision.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x50;
-    collision.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {};
+    collision.ids[kprotocol::KnownVersion::v1_20_4] = 0x50;
+    collision.field_sets[kprotocol::KnownVersion::v1_20_4] = {};
 
     bool threw = false;
     try {
