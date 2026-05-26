@@ -13,6 +13,15 @@ KProtocol is a modern Minecraft protocol library focused on:
 The framework is production-style and extensible for full protocol coverage.  
 This repository currently ships a **baseline packet set** (handshake/status/login/keepalive) and all extension points needed to register every remaining Minecraft packet.
 
+### Version model
+
+- **`WireProtocol`** — client handshake number (any int).
+- **`KnownVersion`** — dense index for generated schemas and block mappings.
+- **`ProtocolVersion`** — legacy wire-number enum for older APIs.
+
+See [GENERATE.md](GENERATE.md#protocol-version-types) for details. Prefer
+`client_wire()` + `catalog_known_version()` on sessions over bare wire enums.
+
 ## Build
 
 Prerequisites:

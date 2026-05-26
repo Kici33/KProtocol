@@ -86,6 +86,10 @@ ProtocolVersion ClientSession::protocol_version() const {
     return client_protocol_version();
 }
 
+KnownVersion ClientSession::catalog_known_version() const {
+    return catalog_anchor_known_for(client_wire());
+}
+
 WireProtocol ClientSession::client_wire() const {
     return shared_ ? WireProtocol{shared_->client_wire.load()} : WireProtocol{};
 }

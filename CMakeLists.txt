@@ -58,7 +58,7 @@ add_library(kprotocol_core
     src/registry.cpp
     src/translation.cpp
     src/translation_registry.cpp
-    src/translation_mappings_data.cpp
+    src/translation_mappings_loader.cpp
     src/entity_metadata.cpp
     src/blocks.cpp
     src/block_registry.cpp
@@ -67,6 +67,10 @@ add_library(kprotocol_core
     src/metadata_registry_data.cpp
 )
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
+if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+    target_compile_definitions(kprotocol_core PRIVATE
+        KPROTOCOL_BLOCK_MAPPINGS_GZ="${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+endif()
 kprotocol_apply_warnings(kprotocol_core)
 add_library(kprotocol::core ALIAS kprotocol_core)
 
@@ -118,7 +122,7 @@ if(KPROTOCOL_NODE_EXECUTABLE)
         COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
                 ${CMAKE_SOURCE_DIR}/tools/embed_translation_mappings.mjs
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Embedding tools/translation_mappings.json into src/translation_mappings_data.cpp"
+        COMMENT "Building data/translation_mappings.bin.gz from tools/translation_mappings.json"
         VERBATIM
     )
 endif()
@@ -275,6 +279,11 @@ install(TARGETS
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp")
+
+if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+    install(FILES data/translation_mappings.bin.gz
+            DESTINATION ${CMAKE_INSTALL_DATADIR}/kprotocol)
+endif()
 
 if(KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/include")
     install(DIRECTORY ${GENERATED_DIR}/include/

@@ -7,8 +7,8 @@ namespace kprotocol {
 
 /**
  * Central registry for version-specific ID mappings and translation rules.
- * Block state mappings are embedded as sorted static arrays; item, entity, and
- * particle translation are not yet implemented and pass through unchanged.
+ * Block state mappings load from data/translation_mappings.bin.gz at runtime.
+ * Item, entity, and particle translation are not yet implemented (identity).
  */
 class TranslationRegistry {
 public:

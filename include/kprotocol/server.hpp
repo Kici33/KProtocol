@@ -32,9 +32,11 @@ public:
     // Encode and send without internal→client translation (packet fields must
     // match encode_version schema).
     bool send_packet_direct(const Packet& packet, ProtocolVersion encode_version) const;
-    // Catalog anchor for the client's announced wire protocol (handshake field).
-    ProtocolVersion protocol_version() const;
+    // Raw handshake protocol_version (may be unknown / future wire).
     WireProtocol client_wire() const;
+    // Catalog anchor used for registry encode/decode (largest known wire <= client_wire).
+    ProtocolVersion protocol_version() const;
+    [[nodiscard]] KnownVersion catalog_known_version() const;
 
 private:
     ProtocolVersion client_protocol_version() const;
