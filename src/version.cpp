@@ -90,7 +90,7 @@ std::string name_of(const KnownVersion version) {
     return name_of(wire_number(version));
 }
 
-ProtocolVersion catalog_anchor_for(const std::int32_t wire) {
+ProtocolVersion catalog_anchor_for(const std::int32_t wire) noexcept {
     return catalog_anchor_for(WireProtocol{wire});
 }
 
