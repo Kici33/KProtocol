@@ -97,10 +97,6 @@ const std::uint8_t* blob_data() noexcept {
     return g_blob.data();
 }
 
-std::size_t blob_size() noexcept {
-    return g_blob.size();
-}
-
 bool parse_header(std::uint32_t& pair_count) noexcept {
     if (g_blob.size() < 16) {
         return false;
@@ -135,12 +131,18 @@ const BlockMappingTable* find_pair_table(std::uint16_t from_idx, std::uint16_t t
     return nullptr;
 }
 
-const BlockMappingEntry* entries_base() noexcept {
+const BlockMappingEntry* entries_slice(const BlockMappingTable& table) noexcept {
     std::uint32_t pair_count = 0;
     if (!parse_header(pair_count)) {
         return nullptr;
     }
-    return reinterpret_cast<const BlockMappingEntry*>(blob_data() + 16 + pair_count * sizeof(BlockMappingTable));
+    const auto entries_start = static_cast<std::size_t>(16 + pair_count * sizeof(BlockMappingTable));
+    const auto offset = entries_start + table.entry_offset;
+    const auto bytes = static_cast<std::size_t>(table.entry_count) * sizeof(BlockMappingEntry);
+    if (offset > g_blob.size() || bytes > g_blob.size() - offset) {
+        return nullptr;
+    }
+    return reinterpret_cast<const BlockMappingEntry*>(blob_data() + offset);
 }
 
 } // namespace
@@ -159,11 +161,10 @@ std::optional<std::int32_t> lookup_block_mapping(
         return std::nullopt;
     }
 
-    const auto* entries = entries_base();
-    if (entries == nullptr) {
+    const auto* slice = entries_slice(*table);
+    if (slice == nullptr) {
         return std::nullopt;
     }
-    const auto* slice = entries + table->entry_offset;
 
     std::size_t lo = 0;
     std::size_t hi = table->entry_count;

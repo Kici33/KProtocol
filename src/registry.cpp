@@ -1,5 +1,6 @@
 #include "kprotocol/registry.hpp"
 
+#include "kprotocol/text_component.hpp"
 #include "kprotocol/types.hpp"
 #include "kprotocol/version.hpp"
 
@@ -63,9 +64,21 @@ bool should_process_field(const PacketFields& fields, const FieldSpec& spec) {
         && field_condition_matches(fields, spec);
 }
 
+std::int32_t render_type_to_id(const std::string& value) {
+    return value == "hearts" ? 1 : 0;
+}
+
+std::string render_type_to_string(const std::int32_t value) {
+    return value == 1 ? "hearts" : "integer";
+}
+
 void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const FieldValue& value) {
     switch (spec.type) {
     case FieldType::var_int:
+        if (const auto* text = std::get_if<std::string>(&value); text != nullptr) {
+            codec::write_var_int(out, render_type_to_id(*text));
+            return;
+        }
         codec::write_var_int(out, std::get<std::int32_t>(value));
         return;
     case FieldType::var_long:
@@ -75,6 +88,10 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
         codec::write_bool(out, std::get<bool>(value));
         return;
     case FieldType::string:
+        if (const auto* render_type = std::get_if<std::int32_t>(&value); render_type != nullptr) {
+            codec::write_string(out, render_type_to_string(*render_type));
+            return;
+        }
         codec::write_string(out, std::get<std::string>(value));
         return;
     case FieldType::unsigned_short:
@@ -168,6 +185,10 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
         types::write_slot(out, std::get<types::Slot>(value));
         return;
     case FieldType::optional_nbt:
+        if (const auto* text = std::get_if<std::string>(&value); text != nullptr) {
+            types::write_optional_nbt(out, text_component_nbt(*text));
+            return;
+        }
         types::write_optional_nbt(out, std::get<NBTBlob>(value));
         return;
     case FieldType::optional_nbt_array: {

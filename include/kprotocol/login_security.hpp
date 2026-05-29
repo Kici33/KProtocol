@@ -25,6 +25,8 @@ struct LoginSecurityChallenge {
 [[nodiscard]] std::vector<std::uint8_t> generate_verify_token(std::size_t bytes = 16);
 [[nodiscard]] bool constant_time_equal(std::span<const std::uint8_t> left,
                                        std::span<const std::uint8_t> right) noexcept;
+// For online-mode RSA flows, pass a response whose verify_token has already
+// been decrypted with the server private key.
 [[nodiscard]] bool verify_login_token(const C01EncryptionResponsePacket& response,
                                       std::span<const std::uint8_t> expected_token) noexcept;
 [[nodiscard]] bool is_valid_login_username(std::string_view username) noexcept;

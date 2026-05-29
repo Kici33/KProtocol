@@ -10,20 +10,23 @@
 
 #include <cstdint>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace kprotocol {
 
 enum class ScoreboardObjectiveAction : std::int8_t {
     create = 0,
-    update = 1,
-    remove = 2,
+    remove = 1,
+    update = 2,
 };
 
 class S3BScoreboardObjectivePacket {
 public:
     std::string name;
     ScoreboardObjectiveAction action{ScoreboardObjectiveAction::create};
+    std::string display_text;
+    std::int32_t render_type{};
     std::vector<std::uint8_t> tail;
 
     [[nodiscard]] static S3BScoreboardObjectivePacket make_create(
@@ -33,6 +36,8 @@ public:
         S3BScoreboardObjectivePacket packet{
             .name = std::move(objective_name),
             .action = ScoreboardObjectiveAction::create,
+            .display_text = display_name,
+            .render_type = 0,
         };
         packet.tail = encode_create_tail(display_name);
         return packet;
@@ -45,6 +50,8 @@ public:
         S3BScoreboardObjectivePacket packet{
             .name = std::move(objective_name),
             .action = ScoreboardObjectiveAction::update,
+            .display_text = display_name,
+            .render_type = 0,
         };
         std::vector<std::uint8_t> out;
         codec::write_string(out, json_text(display_name));
@@ -66,15 +73,21 @@ public:
 #else
         const std::string_view key = "play.clientbound.scoreboard_objective";
 #endif
+        PacketFields fields{
+            {"name", name},
+            {"action", static_cast<std::int8_t>(action)},
+            {"tail", tail},
+        };
+        if (action == ScoreboardObjectiveAction::create ||
+            action == ScoreboardObjectiveAction::update) {
+            fields["displayText"] = display_text;
+            fields["type"] = render_type;
+        }
         return Packet{
             .key = std::string(key),
             .state = PacketState::play,
             .direction = PacketDirection::clientbound,
-            .fields = {
-                {"name", name},
-                {"action", static_cast<std::int8_t>(action)},
-                {"tail", tail},
-            },
+            .fields = std::move(fields),
         };
     }
 
@@ -83,6 +96,8 @@ public:
             .name = require_field<std::string>(packet.fields, "name"),
             .action = static_cast<ScoreboardObjectiveAction>(
                 require_field<std::int8_t>(packet.fields, "action")),
+            .display_text = field_or<std::string>(packet.fields, "displayText", {}),
+            .render_type = field_or<std::int32_t>(packet.fields, "type", 0),
             .tail = field_or<std::vector<std::uint8_t>>(packet.fields, "tail", {}),
         };
     }
