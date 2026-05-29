@@ -6,6 +6,7 @@
 #include "kprotocol/client_ui.hpp"
 #include "kprotocol/codec.hpp"
 #include "kprotocol/entity_metadata.hpp"
+#include "kprotocol/gameplay_session.hpp"
 #include "kprotocol/initialize.hpp"
 #include "kprotocol/login_security.hpp"
 #include "kprotocol/metadata_registry.hpp"

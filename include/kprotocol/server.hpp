@@ -1,6 +1,7 @@
 #pragma once
 
 #include "kprotocol/codec/limits.hpp"
+#include "kprotocol/gameplay_session.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/translation.hpp"
 
@@ -78,6 +79,15 @@ public:
     void enable_compression(std::int32_t threshold) const;
     void close(const std::string& reason = "closed") const;
     std::string remote_address() const;
+    [[nodiscard]] GameplaySession gameplay_session() const;
+    void set_player_profile(PlayerProfile profile) const;
+    void set_entity_id(std::int32_t entity_id) const;
+    void set_game_mode(GameMode mode) const;
+    void set_dimension(std::string dimension) const;
+    void set_location(PlayerLocation location) const;
+    void mark_login_complete() const;
+    void mark_configuration_complete() const;
+    void mark_joined_game() const;
     [[nodiscard]] std::uint64_t bytes_received() const noexcept;
     [[nodiscard]] std::uint64_t bytes_sent() const noexcept;
     [[nodiscard]] std::uint64_t packets_received() const noexcept;

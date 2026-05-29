@@ -2,6 +2,7 @@
 
 #include "kprotocol/codec.hpp"
 #include "kprotocol/connection.hpp"
+#include "kprotocol/gameplay_session.hpp"
 #include "kprotocol/login_security.hpp"
 #if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
 #include "kprotocol/generated/packet_keys.hpp"
@@ -66,6 +67,8 @@ struct ClientSession::Shared {
     std::uint64_t rate_window_ms{monotonic_ms()};
     std::uint32_t packets_in_window{0};
     std::uint32_t bytes_in_window{0};
+    mutable std::mutex gameplay_mutex;
+    GameplaySession gameplay;
     std::mutex send_mutex;
     std::function<void(const ClientSession&, const Packet&)> sent_event;
     std::function<void(const ClientSession&, const std::string&)> disconnect_event;
@@ -177,6 +180,80 @@ void ClientSession::close(const std::string& reason) const {
 
 std::string ClientSession::remote_address() const {
     return shared_ ? shared_->remote : "unknown";
+}
+
+GameplaySession ClientSession::gameplay_session() const {
+    if (!shared_) {
+        return {};
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    return shared_->gameplay;
+}
+
+void ClientSession::set_player_profile(PlayerProfile profile) const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.profile = std::move(profile);
+    shared_->gameplay.login_started = !shared_->gameplay.profile.username.empty();
+}
+
+void ClientSession::set_entity_id(const std::int32_t entity_id) const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.entity_id = entity_id;
+}
+
+void ClientSession::set_game_mode(const GameMode mode) const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.game_mode = mode;
+}
+
+void ClientSession::set_dimension(std::string dimension) const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.dimension = std::move(dimension);
+}
+
+void ClientSession::set_location(const PlayerLocation location) const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.location = location;
+}
+
+void ClientSession::mark_login_complete() const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.login_complete = true;
+}
+
+void ClientSession::mark_configuration_complete() const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.configuration_complete = true;
+}
+
+void ClientSession::mark_joined_game() const {
+    if (!shared_) {
+        return;
+    }
+    std::lock_guard lock(shared_->gameplay_mutex);
+    shared_->gameplay.joined_game = true;
+    shared_->gameplay.login_complete = true;
 }
 
 std::uint64_t ClientSession::bytes_received() const noexcept {
@@ -332,12 +409,76 @@ struct MinecraftServer::Impl {
 #ifdef KPROTOCOL_HAS_GENERATED_CATALOG
         if (packet.key_matches(generated::packet_keys::login_serverbound_login_acknowledged)) {
             shared->state = PacketState::configuration;
+            ClientSession(shared).mark_login_complete();
             return;
         }
         if (packet.key_matches(generated::packet_keys::configuration_serverbound_finish_configuration)) {
             shared->state = PacketState::play;
+            ClientSession(shared).mark_configuration_complete();
         }
 #endif
+    }
+
+    void update_gameplay_session(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
+        const ClientSession session(shared);
+        if (packet.key_matches(packet_keys::login_start)) {
+            const auto it = packet.fields.find("username");
+            if (it != packet.fields.end()) {
+                if (const auto* username = std::get_if<std::string>(&it->second); username != nullptr) {
+                    auto gameplay = session.gameplay_session();
+                    gameplay.profile.username = *username;
+                    gameplay.login_started = true;
+                    session.set_player_profile(std::move(gameplay.profile));
+                }
+            }
+        }
+
+        bool has_location_update = false;
+        auto location = session.gameplay_session().location;
+        if (const auto it = packet.fields.find("x"); it != packet.fields.end()) {
+            if (const auto* value = std::get_if<double>(&it->second); value != nullptr) {
+                location.x = *value;
+                has_location_update = true;
+            }
+        }
+        if (const auto it = packet.fields.find("y"); it != packet.fields.end()) {
+            if (const auto* value = std::get_if<double>(&it->second); value != nullptr) {
+                location.y = *value;
+                has_location_update = true;
+            }
+        }
+        if (const auto it = packet.fields.find("z"); it != packet.fields.end()) {
+            if (const auto* value = std::get_if<double>(&it->second); value != nullptr) {
+                location.z = *value;
+                has_location_update = true;
+            }
+        }
+        if (const auto it = packet.fields.find("yaw"); it != packet.fields.end()) {
+            if (const auto* value = std::get_if<float>(&it->second); value != nullptr) {
+                location.yaw = *value;
+                has_location_update = true;
+            }
+        }
+        if (const auto it = packet.fields.find("pitch"); it != packet.fields.end()) {
+            if (const auto* value = std::get_if<float>(&it->second); value != nullptr) {
+                location.pitch = *value;
+                has_location_update = true;
+            }
+        }
+        auto ground_it = packet.fields.find("onGround");
+        if (ground_it == packet.fields.end()) {
+            ground_it = packet.fields.find("on_ground");
+        }
+        if (ground_it != packet.fields.end()) {
+            if (const auto* value = std::get_if<bool>(&ground_it->second); value != nullptr) {
+                location.on_ground = *value;
+                has_location_update = true;
+            }
+        }
+        if (has_location_update) {
+            location.known = true;
+            session.set_location(location);
+        }
     }
 
     bool validate_login_start(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
@@ -406,6 +547,7 @@ struct MinecraftServer::Impl {
             packet = translator.translate(packet, client_ver, internal_version);
             apply_set_compression(packet, shared);
             update_session_state(packet, shared);
+            update_gameplay_session(packet, shared);
             if (!validate_login_start(packet, shared)) {
                 return false;
             }
