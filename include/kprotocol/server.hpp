@@ -1,10 +1,12 @@
 #pragma once
 
+#include "kprotocol/codec/limits.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/translation.hpp"
 
 #include <atomic>
 #include <cstdint>
+#include <cstddef>
 #include <functional>
 #include <memory>
 #include <string>
@@ -12,6 +14,20 @@
 namespace kprotocol {
 
 class ClientSession;
+
+struct ServerRuntimeOptions {
+    // Maximum simultaneously open sessions. Extra accepted sockets are closed.
+    std::size_t max_connections{1024};
+    // Maximum bytes retained while waiting for a full frame. Prevents peers
+    // from forcing unbounded growth with malformed or never-completed frames.
+    std::size_t max_inbound_buffer{
+        static_cast<std::size_t>(codec::limits::max_packet_length) + codec::limits::max_var_int_bytes
+    };
+    // Close the peer after a packet decode/handler/translation error.
+    bool disconnect_on_packet_error{true};
+    // Enable PacketTranslator strict mode while this server is running.
+    bool require_explicit_translations{false};
+};
 
 class ProtocolListener {
 public:
@@ -21,6 +37,7 @@ public:
         onPacketReceive(client, packet);
     }
     virtual void onPacketSent(const ClientSession&, const Packet&) {}
+    virtual void onDisconnect(const ClientSession&, const std::string&) {}
     virtual void onError(const std::string&) {}
 };
 
@@ -47,6 +64,7 @@ public:
     // Call after sending login.clientbound.compress (or equivalent) so inbound
     // frames use the compressed decoder matching outbound encoding.
     void enable_compression(std::int32_t threshold) const;
+    void close(const std::string& reason = "closed") const;
     std::string remote_address() const;
     bool valid() const noexcept;
 
@@ -81,6 +99,10 @@ public:
     bool running() const noexcept;
     // Bound port after start(); 0 if not started.
     std::uint16_t listen_port() const noexcept;
+    [[nodiscard]] std::size_t active_connections() const;
+    // Runtime options must be set before start(); returns false while running.
+    bool set_runtime_options(ServerRuntimeOptions options);
+    [[nodiscard]] ServerRuntimeOptions runtime_options() const;
 
     void on_packet(PacketHandler handler);
     void on_error(ErrorHandler handler);

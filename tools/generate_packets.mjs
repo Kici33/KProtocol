@@ -21,9 +21,10 @@
 //   - All primitive minecraft-data types map to a kprotocol FieldType.
 //   - Packets containing only mappable primitives are emitted with a full
 //     field set per version.
-//   - Packets containing any compound/unsupported field are emitted with a
-//     single `rest_buffer` field named "raw" so the packet can still round-
-//     trip as an opaque blob. They are flagged "rawOnly" in coverage.json.
+//   - Packets containing unsupported shapes are omitted from the generated
+//     registry by default and reported as "unsupported" in coverage.json.
+//     Use --raw-policy keep to preserve the old opaque rest_buffer fallback,
+//     or --raw-policy fail to stop generation on the first unsupported packet.
 //   - Packets that lack a body at all (empty container) are emitted with no
 //     fields.
 
@@ -36,14 +37,16 @@ import process from 'node:process';
 // ---------------------------------------------------------------------------
 
 function parseArgs(argv) {
-    const args = { out: 'generated', versions: [] };
+    const args = { out: 'generated', versions: [], rawPolicy: 'omit' };
     for (let i = 0; i < argv.length; ++i) {
         const a = argv[i];
         if (a === '--out')           args.out = argv[++i];
         else if (a === '--versions') args.versions = argv[++i].split(',').map(s => s.trim()).filter(Boolean);
+        else if (a === '--raw-policy') args.rawPolicy = argv[++i];
         else if (a === '--help' || a === '-h') {
             console.log('Usage: node tools/generate_packets.mjs --out <dir> --versions v1,v2,...');
             console.log('       node tools/generate_packets.mjs --out <dir> --versions all-known');
+            console.log('       --raw-policy omit|keep|fail  (default: omit)');
             process.exit(0);
         } else {
             console.error(`Unknown argument: ${a}`);
@@ -54,8 +57,14 @@ function parseArgs(argv) {
         console.error('No --versions supplied.');
         process.exit(2);
     }
+    if (!['omit', 'keep', 'fail'].includes(args.rawPolicy)) {
+        console.error(`Invalid --raw-policy "${args.rawPolicy}". Expected omit, keep, or fail.`);
+        process.exit(2);
+    }
     return args;
 }
+
+let RAW_POLICY = 'omit';
 
 // ---------------------------------------------------------------------------
 // Wire-version table: must mirror KPROTOCOL_FOR_EACH_KNOWN_VERSION in
@@ -446,6 +455,27 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
                 continue;
             }
         }
+        if (Array.isArray(resolved) && resolved[0] === 'container') {
+            const inner = flattenContainerFields(resolved[1] || [], stateTypes, globalTypes, tailOnComplex);
+            if (!inner.ok) {
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
+                return { ok: false, reason: `field ${fieldEntry.name}: ${inner.reason}`, fields: [] };
+            }
+            if (fieldEntry.anon) {
+                fields.push(...inner.fields);
+            } else {
+                for (const innerField of inner.fields) {
+                    fields.push({
+                        ...innerField,
+                        name: fname + '_' + innerField.name,
+                    });
+                }
+            }
+            continue;
+        }
 
         const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
         if (!mapped.ok) {
@@ -565,20 +595,43 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
     return { ok: true, fields };
 }
 
-// Packets that benefit from prefix fields + opaque tail (action switches, metadata loops).
-const TAIL_ON_COMPLEX_PACKETS = new Set([
-    'entity_metadata',
-    'scoreboard_objective',
-    'scoreboard_score',
-    'teams',
-    'title',
-]);
-
 // Extract per-packet schemas from a single state/direction.
 // Returns an array of { wireName, fields:[{name, type}], status, reason? }.
 function extractDirection(directionEntry, globalTypes) {
     const result = [];
     const stateTypes = directionEntry?.types || {};
+
+    const unsupportedPacket = (wireName, id, reason) => {
+        if (RAW_POLICY === 'fail') {
+            throw new Error(`Unsupported packet ${wireName}: ${reason}`);
+        }
+        if (RAW_POLICY === 'keep') {
+            return {
+                wireName, id,
+                fields: [{ name: 'raw', type: 'rest_buffer' }],
+                status: 'rawOnly', reason,
+            };
+        }
+        return {
+            wireName, id,
+            fields: [],
+            status: 'unsupported', reason,
+        };
+    };
+
+    const opaquePayloadPacket = (wireName, id, reason) => {
+        if (RAW_POLICY === 'fail') {
+            throw new Error(`Unsupported packet ${wireName}: ${reason}`);
+        }
+        if (RAW_POLICY === 'keep') {
+            return unsupportedPacket(wireName, id, reason);
+        }
+        return {
+            wireName, id,
+            fields: [{ name: 'payload', type: 'rest_buffer' }],
+            status: 'ok', reason,
+        };
+    };
 
     // The packet-id mapper lives at "packet". If absent, this direction has
     // no packets in this version.
@@ -599,39 +652,33 @@ function extractDirection(directionEntry, globalTypes) {
             continue;
         }
 
-        const containerName = `packet_${wireName}`;
-        const container = stateTypes[containerName];
+        const containerNames = [`packet_${wireName}`, `packet_common_${wireName}`];
+        let container = null;
+        for (const containerName of containerNames) {
+            if (Array.isArray(stateTypes[containerName])) {
+                container = stateTypes[containerName];
+                break;
+            }
+            if (Array.isArray(globalTypes[containerName])) {
+                container = globalTypes[containerName];
+                break;
+            }
+        }
         if (!Array.isArray(container)) {
-            // minecraft-data has a mapper entry for this packet but no typed
-            // schema. Default to opaque rest_buffer so the packet still
-            // round-trips byte-exact; flag for the coverage report.
-            result.push({
-                wireName, id,
-                fields: [{ name: 'raw', type: 'rest_buffer' }],
-                status: 'rawOnly', reason: 'minecraft-data has no packet schema',
-            });
+            result.push(opaquePayloadPacket(wireName, id, 'minecraft-data has no packet schema'));
             continue;
         }
         if (container[0] === 'container') {
             const containerFields = container[1] || [];
-            const useTail = TAIL_ON_COMPLEX_PACKETS.has(wireName);
+            const useTail = true;
             const flattened = flattenContainerFields(containerFields, stateTypes, globalTypes, useTail);
             if (!flattened.ok) {
-                result.push({
-                    wireName, id,
-                    fields: [{ name: 'raw', type: 'rest_buffer' }],
-                    status: 'rawOnly', reason: flattened.reason,
-                });
+                result.push(unsupportedPacket(wireName, id, flattened.reason));
             } else {
                 result.push({ wireName, id, fields: flattened.fields, status: 'ok' });
             }
         } else {
-            // Top-level type is not a container - we wrap it as raw.
-            result.push({
-                wireName, id,
-                fields: [{ name: 'raw', type: 'rest_buffer' }],
-                status: 'rawOnly', reason: `top-level type is ${container[0]}`,
-            });
+            result.push(opaquePayloadPacket(wireName, id, `top-level type is ${container[0]}`));
         }
     }
     return result;
@@ -662,13 +709,16 @@ const STATE_MAP = {
 //   state, direction
 //   field_sets: Map<wire, Field[]>
 //   ids:        Map<wire, id>
-//   coverage:   Map<wire, "ok"|"rawOnly">
+//   coverage:   Map<wire, "ok"|"rawOnly"|"unsupported">
 // ---------------------------------------------------------------------------
 
 function aggregateAcrossVersions(perVersion) {
     const byKey = new Map();
     for (const { display, wire, packets } of perVersion) {
         for (const pkt of packets) {
+            if (pkt.status !== 'ok' && RAW_POLICY === 'omit') {
+                continue;
+            }
             const key = `${pkt.state}.${pkt.direction}.${pkt.wireName}`;
             let schema = byKey.get(key);
             if (!schema) {
@@ -843,11 +893,30 @@ function emitCoverageJson(perVersion, schemas) {
         generatedAt: new Date().toISOString(),
         versions: [],
         keys: [],
+        unsupported: [],
     };
     for (const { display, wire, packets } of perVersion) {
         const okCount = packets.filter(p => p.status === 'ok').length;
         const rawCount = packets.filter(p => p.status === 'rawOnly').length;
-        out.versions.push({ display, wire, totalPackets: packets.length, fullSchemas: okCount, rawOnly: rawCount });
+        const unsupportedCount = packets.filter(p => p.status === 'unsupported').length;
+        out.versions.push({
+            display,
+            wire,
+            totalPackets: packets.length,
+            fullSchemas: okCount,
+            rawOnly: rawCount,
+            unsupported: unsupportedCount,
+        });
+        for (const pkt of packets) {
+            if (pkt.status === 'unsupported') {
+                out.unsupported.push({
+                    display,
+                    wire,
+                    key: `${pkt.state}.${pkt.direction}.${pkt.wireName}`,
+                    reason: pkt.reason || 'unsupported packet shape',
+                });
+            }
+        }
     }
     for (const schema of [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key))) {
         const status = {};
@@ -876,6 +945,7 @@ function emitCoverageJson(perVersion, schemas) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
+    RAW_POLICY = args.rawPolicy;
     if (args.versions.length === 1 && args.versions[0] === 'all-known') {
         args.versions = canonicalVersionDisplays();
     }
@@ -922,7 +992,9 @@ async function main() {
         }
         perVersion.push({ display, wire: vinfo.wire, packets });
         const okCount = packets.filter(p => p.status === 'ok').length;
-        console.log(`  ${display.padEnd(8)} wire=${String(vinfo.wire).padStart(3)} packets=${packets.length} (${okCount} full, ${packets.length - okCount} raw)`);
+        const rawCount = packets.filter(p => p.status === 'rawOnly').length;
+        const unsupportedCount = packets.filter(p => p.status === 'unsupported').length;
+        console.log(`  ${display.padEnd(8)} wire=${String(vinfo.wire).padStart(3)} packets=${packets.length} (${okCount} full, ${rawCount} raw, ${unsupportedCount} unsupported)`);
     }
 
     const schemas = aggregateAcrossVersions(perVersion);

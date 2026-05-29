@@ -22,7 +22,9 @@
 #include <chrono>
 #include <cstdint>
 #include <cstdio>
+#include <atomic>
 #include <iostream>
+#include <memory>
 #include <string>
 #include <thread>
 #include <vector>
@@ -44,6 +46,24 @@ int main() {
     kprotocol::register_baseline_packets(registry, translator);
 
     kprotocol::MinecraftServer server(registry, translator);
+    kprotocol::ServerRuntimeOptions options;
+    options.max_connections = 4;
+    options.max_inbound_buffer = 4096;
+    options.disconnect_on_packet_error = true;
+    KPC_CHECK(server.set_runtime_options(options), "set runtime options before start");
+    KPC_CHECK(server.runtime_options().max_connections == 4, "runtime options max_connections");
+    KPC_CHECK(server.runtime_options().max_inbound_buffer == 4096, "runtime options inbound buffer");
+
+    struct DisconnectCounter final : kprotocol::ProtocolListener {
+        std::atomic<int>* count{};
+        explicit DisconnectCounter(std::atomic<int>& value) : count(&value) {}
+        void onDisconnect(const kprotocol::ClientSession&, const std::string&) override {
+            ++(*count);
+        }
+    };
+    std::atomic<int> disconnects{0};
+    server.add_listener(std::make_shared<DisconnectCounter>(disconnects));
+
     server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
         if (packet.key == kprotocol::packet_keys::status_request) {
             const auto response = kprotocol::S00StatusResponsePacket{
@@ -54,6 +74,7 @@ int main() {
     });
 
     KPC_CHECK(server.start(0, kprotocol::ProtocolVersion::v1_21_1), "server.start");
+    KPC_CHECK(!server.set_runtime_options(options), "runtime options locked while running");
     const auto port = server.listen_port();
     KPC_CHECK(port != 0, "ephemeral port assigned");
     std::cout << "  listening on port " << port << "... ";
@@ -66,6 +87,7 @@ int main() {
         std::array{asio::ip::tcp::endpoint(asio::ip::make_address("127.0.0.1"), port)},
         ec);
     KPC_CHECK(!ec, "client connect");
+    KPC_CHECK(server.active_connections() <= 1, "active connection count");
 
     kprotocol::C00HandshakePacket handshake;
     handshake.protocol_version = 767;
@@ -114,6 +136,10 @@ int main() {
     KPC_CHECK(got_response, "received status_response");
 
     client_socket.close(ec);
+    for (int attempt = 0; attempt < 50 && disconnects.load() == 0; ++attempt) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    KPC_CHECK(disconnects.load() >= 1, "disconnect listener called");
     server.stop();
     std::cout << "ok\n";
     std::cout << "All server smoke tests passed.\n";

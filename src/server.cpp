@@ -18,9 +18,11 @@
 #include <asio/use_awaitable.hpp>
 #include <asio/write.hpp>
 
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cstdint>
+#include <optional>
 #include <memory>
 #include <mutex>
 #include <stdexcept>
@@ -43,6 +45,7 @@ struct ClientSession::Shared {
     std::string remote;
     std::mutex send_mutex;
     std::function<void(const ClientSession&, const Packet&)> sent_event;
+    std::function<void(const ClientSession&, const std::string&)> disconnect_event;
 };
 
 ClientSession::ClientSession(std::shared_ptr<Shared> shared)
@@ -53,13 +56,18 @@ bool ClientSession::send_packet(const Packet& packet) const {
         return false;
     }
 
-    Packet translated = packet;
-    translated.direction = PacketDirection::clientbound;
-    translated.state = shared_->state.load();
-    translated = shared_->translator->translate(
-        translated, shared_->internal_version, client_protocol_version());
+    try {
+        Packet translated = packet;
+        translated.direction = PacketDirection::clientbound;
+        translated.state = shared_->state.load();
+        translated = shared_->translator->translate(
+            translated, shared_->internal_version, client_protocol_version());
 
-    return send_packet_direct(translated, client_protocol_version());
+        return send_packet_direct(translated, client_protocol_version());
+    } catch (const std::exception&) {
+        close("send translation failed");
+        return false;
+    }
 }
 
 bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersion encode_version) const {
@@ -67,13 +75,20 @@ bool ClientSession::send_packet_direct(const Packet& packet, const ProtocolVersi
         return false;
     }
 
-    const auto encoded = shared_->registry->encode_packet(
-        packet, encode_version, shared_->outbound_compression_threshold);
+    std::vector<std::uint8_t> encoded;
+    try {
+        encoded = shared_->registry->encode_packet(
+            packet, encode_version, shared_->outbound_compression_threshold);
+    } catch (const std::exception&) {
+        close("packet encode failed");
+        return false;
+    }
 
     std::lock_guard lock(shared_->send_mutex);
     asio::error_code ec;
     asio::write(*shared_->socket, asio::buffer(encoded), ec);
     if (ec) {
+        close("socket write failed: " + ec.message());
         return false;
     }
     if (shared_->sent_event) {
@@ -120,6 +135,21 @@ void ClientSession::enable_compression(const std::int32_t threshold) const {
     shared_->outbound_compression_threshold = threshold;
 }
 
+void ClientSession::close(const std::string& reason) const {
+    if (!shared_) {
+        return;
+    }
+    const bool was_open = shared_->open.exchange(false);
+    asio::error_code ec;
+    if (shared_->socket && shared_->socket->is_open()) {
+        shared_->socket->shutdown(asio::ip::tcp::socket::shutdown_both, ec);
+        shared_->socket->close(ec);
+    }
+    if (was_open && shared_->disconnect_event) {
+        shared_->disconnect_event(ClientSession(shared_), reason);
+    }
+}
+
 std::string ClientSession::remote_address() const {
     return shared_ ? shared_->remote : "unknown";
 }
@@ -140,6 +170,7 @@ struct MinecraftServer::Impl {
     std::uint16_t listen_port_{0};
     std::int32_t default_compression_threshold_{-1};
     ProtocolVersion internal_version{ProtocolVersion::v1_21_1};
+    ServerRuntimeOptions options;
     PacketHandler packet_handler;
     ErrorHandler error_handler;
     std::mutex listeners_mutex;
@@ -176,6 +207,28 @@ struct MinecraftServer::Impl {
         for (const auto& listener : listeners) {
             listener->onPacketSent(session, packet);
         }
+    }
+
+    void emit_disconnect(const ClientSession& session, const std::string& reason) {
+        std::lock_guard lock(listeners_mutex);
+        for (const auto& listener : listeners) {
+            listener->onDisconnect(session, reason);
+        }
+    }
+
+    void prune_clients() {
+        std::lock_guard lock(clients_mutex);
+        clients.erase(
+            std::remove_if(clients.begin(), clients.end(), [](const auto& client) {
+                return !client || !client->open.load();
+            }),
+            clients.end());
+    }
+
+    std::size_t active_connections() {
+        prune_clients();
+        std::lock_guard lock(clients_mutex);
+        return clients.size();
     }
 
     void update_handshake_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
@@ -238,7 +291,7 @@ struct MinecraftServer::Impl {
 #endif
     }
 
-    void process_frame(const codec::EncodedFrame& frame, const std::shared_ptr<ClientSession::Shared>& shared) {
+    bool process_frame(const codec::EncodedFrame& frame, const std::shared_ptr<ClientSession::Shared>& shared) {
         try {
             const auto client_ver = catalog_anchor_for(WireProtocol{shared->client_wire.load()});
             Packet packet = registry.decode_packet(
@@ -251,8 +304,14 @@ struct MinecraftServer::Impl {
             if (packet_handler) {
                 packet_handler(session, packet);
             }
+            return true;
         } catch (const std::exception& ex) {
             emit_error(std::string("Packet processing error from ") + shared->remote + ": " + ex.what());
+            if (options.disconnect_on_packet_error) {
+                ClientSession(shared).close("packet processing error");
+                return false;
+            }
+            return true;
         }
     }
 
@@ -277,6 +336,11 @@ struct MinecraftServer::Impl {
                 break;
             }
             inbound.insert(inbound.end(), recv_buffer.begin(), recv_buffer.begin() + bytes_read);
+            if (inbound.size() > options.max_inbound_buffer) {
+                emit_error("Closing " + shared->remote + ": inbound frame buffer exceeded limit");
+                ClientSession(shared).close("inbound frame buffer exceeded limit");
+                break;
+            }
 
             while (true) {
                 codec::EncodedFrame frame;
@@ -285,15 +349,14 @@ struct MinecraftServer::Impl {
                     break;
                 }
                 inbound.erase(inbound.begin(), inbound.begin() + static_cast<std::ptrdiff_t>(consumed));
-                process_frame(frame, shared);
+                if (!process_frame(frame, shared)) {
+                    break;
+                }
             }
         }
 
-        shared->open = false;
-        if (shared->socket && shared->socket->is_open()) {
-            asio::error_code ec;
-            shared->socket->close(ec);
-        }
+        ClientSession(shared).close("connection closed");
+        prune_clients();
     }
 
     asio::awaitable<void> accept_loop() {
@@ -306,6 +369,22 @@ struct MinecraftServer::Impl {
                     emit_error(std::string("Accept failed: ") + ex.what());
                 }
                 break;
+            }
+
+            prune_clients();
+            bool reject_connection = false;
+            {
+                std::lock_guard lock(clients_mutex);
+                if (clients.size() >= options.max_connections) {
+                    reject_connection = true;
+                }
+            }
+            if (reject_connection) {
+                asio::error_code close_ec;
+                socket.shutdown(asio::ip::tcp::socket::shutdown_both, close_ec);
+                socket.close(close_ec);
+                emit_error("Rejected connection: max_connections reached");
+                continue;
             }
 
             auto shared = std::make_shared<ClientSession::Shared>();
@@ -323,6 +402,9 @@ struct MinecraftServer::Impl {
             }
             shared->sent_event = [this](const ClientSession& session, const Packet& packet) {
                 emit_sent(session, packet);
+            };
+            shared->disconnect_event = [this](const ClientSession& session, const std::string& reason) {
+                emit_disconnect(session, reason);
             };
 
             {
@@ -370,15 +452,14 @@ struct MinecraftServer::Impl {
         asio::error_code ec;
         acceptor.close(ec);
 
+        std::vector<std::shared_ptr<ClientSession::Shared>> closing;
         {
             std::lock_guard lock(clients_mutex);
-            for (const auto& client : clients) {
-                client->open = false;
-                if (client->socket && client->socket->is_open()) {
-                    client->socket->close(ec);
-                }
-            }
+            closing = std::move(clients);
             clients.clear();
+        }
+        for (const auto& client : closing) {
+            ClientSession(client).close("server stopped");
         }
 
         work_guard.reset();
@@ -407,6 +488,7 @@ bool MinecraftServer::start(
     }
     impl_->internal_version = internal_version;
     impl_->default_compression_threshold_ = compression_threshold;
+    impl_->translator.set_require_explicit_translation(impl_->options.require_explicit_translations);
     if (!impl_->bind_and_listen(port)) {
         return false;
     }
@@ -428,6 +510,30 @@ bool MinecraftServer::running() const noexcept {
 
 std::uint16_t MinecraftServer::listen_port() const noexcept {
     return impl_->listen_port_;
+}
+
+std::size_t MinecraftServer::active_connections() const {
+    return impl_->active_connections();
+}
+
+bool MinecraftServer::set_runtime_options(ServerRuntimeOptions options) {
+    if (impl_->running.load()) {
+        return false;
+    }
+    if (options.max_connections == 0) {
+        options.max_connections = 1;
+    }
+    const auto min_buffer = static_cast<std::size_t>(codec::limits::max_var_int_bytes);
+    if (options.max_inbound_buffer < min_buffer) {
+        options.max_inbound_buffer = min_buffer;
+    }
+    impl_->options = options;
+    impl_->translator.set_require_explicit_translation(options.require_explicit_translations);
+    return true;
+}
+
+ServerRuntimeOptions MinecraftServer::runtime_options() const {
+    return impl_->options;
 }
 
 void MinecraftServer::on_packet(PacketHandler handler) {

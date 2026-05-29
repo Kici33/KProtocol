@@ -61,10 +61,11 @@ Or via CMake (requires Node.js on PATH):
 cmake --build build --target kprotocol_generate_packets
 ```
 
-Coverage stats land in `generated/coverage.json`. Most packets now have full
-typed schemas (arrays, slots, options, version-specific layouts, and simple
-action switches); the remainder stay as opaque `rest_buffer` blobs where
-minecraft-data uses NBT/chunk or deeply compound shapes not yet modeled.
+Coverage stats land in `generated/coverage.json`. Supported packets have typed
+schemas (arrays, slots, options, version-specific layouts, and simple action
+switches). Unsupported packet shapes are reported in coverage but are omitted
+from the generated runtime registry by default, so new protocol churn does not
+silently become whole-packet opaque blobs.
 
 
 Second project (consumer) quickstart
@@ -128,13 +129,20 @@ Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
 2. `kprotocol::PacketTranslator`
    - Registers transforms for `(packet key, fromVersion, toVersion)`.
    - Converts packet payloads across versions while preserving universal packet keys.
+   - `translate_checked()` reports whether a rule was applied, identity, or
+     missing; strict mode can throw on missing rules instead of silently passing
+     semantically risky packets through unchanged.
 
 3. `kprotocol::MinecraftServer`
    - Asio + C++20 coroutine TCP runtime (one `io_context`, no thread-per-client).
    - Accepts TCP clients, decodes framed packets, handles handshake version/state.
    - Optional compression threshold on `start()` mirrors Minecraft Set Compression.
    - Sends packets translated to each client version.
-   - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`, `onError`).
+   - Runtime guardrails include connection limits, bounded inbound frame
+     buffering, disconnect callbacks, close-on-packet-error behavior, and
+     optional strict translation checks.
+   - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`,
+     `onDisconnect`, `onError`).
 
 ## Packet class naming
 
@@ -200,6 +208,13 @@ kprotocol::PacketRegistry registry;
 kprotocol::PacketTranslator translator;
 kprotocol::initialize(registry, translator);
 kprotocol::MinecraftServer server(registry, translator);
+
+kprotocol::ServerRuntimeOptions runtime;
+runtime.max_connections = 512;
+runtime.max_inbound_buffer = 2 * 1024 * 1024 + 5;
+runtime.disconnect_on_packet_error = true;
+runtime.require_explicit_translations = true;
+server.set_runtime_options(runtime);
 ```
 
 ## Adding a new packet
@@ -250,4 +265,11 @@ translator.register_translation(
         // mutate fields as needed
         return out;
     });
+
+const auto result = translator.translate_checked(packet,
+    kprotocol::ProtocolVersion::v1_8,
+    kprotocol::ProtocolVersion::v1_21_1);
+if (result.missing()) {
+    // Decide whether this packet is safe to pass through unchanged.
+}
 ```

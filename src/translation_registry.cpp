@@ -14,8 +14,6 @@ std::optional<std::int32_t> lookup_block_mapping(
 
 namespace kprotocol {
 
-bool TranslationRegistry::initialized_ = false;
-
 namespace {
 
 PacketFields translate_block_type_field(
@@ -48,33 +46,14 @@ void register_block_change_pair(PacketTranslator& translator, ProtocolVersion fr
 }
 
 constexpr ProtocolVersion kCatalogVersions[] = {
-    ProtocolVersion::v1_8,
-    ProtocolVersion::v1_12_2,
-    ProtocolVersion::v1_13,
-    ProtocolVersion::v1_14,
-    ProtocolVersion::v1_16_5,
-    ProtocolVersion::v1_17,
-    ProtocolVersion::v1_18,
-    ProtocolVersion::v1_19,
-    ProtocolVersion::v1_20_2,
-    ProtocolVersion::v1_20_4,
-    ProtocolVersion::v1_21_1,
-    ProtocolVersion::v1_21_4,
-    ProtocolVersion::v1_21_5,
-    ProtocolVersion::v1_21_6,
-    ProtocolVersion::v1_21_7,
-    ProtocolVersion::v1_21_9,
-    ProtocolVersion::v1_21_11,
+#define KPROTOCOL_X(name, wire, display) ProtocolVersion::name,
+    KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
+#undef KPROTOCOL_X
 };
 
 } // namespace
 
 void TranslationRegistry::initialize_all(PacketTranslator& translator) {
-    if (initialized_) {
-        return;
-    }
-    initialized_ = true;
-
     for (const auto from : kCatalogVersions) {
         for (const auto to : kCatalogVersions) {
             register_block_change_pair(translator, from, to);

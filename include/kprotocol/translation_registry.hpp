@@ -38,7 +38,6 @@ public:
         std::int32_t source_id);
 
 private:
-    static bool initialized_;
 };
 
 } // namespace kprotocol

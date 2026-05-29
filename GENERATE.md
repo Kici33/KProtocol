@@ -17,9 +17,10 @@ The generator emits three artifacts under the `--out` directory:
 - `registry/register_all_packets.cpp` - implementation of
   `kprotocol::register_generated_packets(PacketRegistry&)`. Call this once at
   startup to register every supported (state, direction, version) tuple.
-- `coverage.json` - per-version stats and per-key status (`ok` vs `rawOnly`).
-  Useful for tracking how much of the wire format is fully typed vs handled
-  as an opaque `rest_buffer` blob.
+- `coverage.json` - per-version stats and per-key status (`ok`,
+  `unsupported`, or `rawOnly` when `--raw-policy keep` is used). Useful for
+  tracking how much of the wire format is fully typed and which packet shapes
+  still need native modeling.
 
 ## Regenerating
 
@@ -69,9 +70,11 @@ optional containers are flattened into prefixed optional fields when their inner
 fields are mappable.
 
 Packets that still require unsupported compound shapes (`mapper`, deep nested
-containers, chunk data, complex NBT, etc.) fall back to a single `rest_buffer`
-field named `raw` so the packet can still round-trip byte-exact as an opaque
-blob. These entries are flagged `rawOnly` in `coverage.json`.
+containers, chunk data, complex NBT, etc.) are omitted from the generated
+runtime registry by default and reported as `unsupported` in `coverage.json`.
+This keeps protocol churn from silently turning into whole-packet opaque blobs.
+Pass `--raw-policy keep` to restore the old `rawOnly` fallback, or
+`--raw-policy fail` to stop generation at the first unsupported packet.
 
 ## Disabling the committed catalog
 

@@ -7,6 +7,8 @@
 //     line up with real schema entries
 //   - the well-known login.serverbound.encryption_begin packet round-trips
 //     through the encode/decode pipeline
+//   - formerly opaque action-switch packets now round-trip through typed
+//     conditional fields
 //   - all baseline versions have at least one schema registered
 
 #include "kprotocol/codec.hpp"
@@ -110,8 +112,8 @@ void test_every_baseline_version_has_at_least_one_schema() {
     std::cout << "ok\n";
 }
 
-void test_rest_buffer_packet_roundtrips_opaque() {
-    std::cout << "  rest_buffer-shaped packet round-trips as opaque blob... ";
+void test_boss_bar_roundtrips_typed_conditional_fields() {
+    std::cout << "  boss_bar round-trips typed conditional fields... ";
     kprotocol::PacketRegistry registry;
     kprotocol::register_generated_packets(registry);
 
@@ -123,8 +125,10 @@ void test_rest_buffer_packet_roundtrips_opaque() {
     p.key = key;
     p.state = kprotocol::PacketState::play;
     p.direction = kprotocol::PacketDirection::clientbound;
-    const std::vector<std::uint8_t> opaque = {0x10, 0x20, 0x30, 0x40, 0x50};
-    p.fields["raw"] = opaque;
+    p.fields["entityUUID"] = kprotocol::UUID{{{0x12,0x34,0x56,0x78,0x9A,0xBC,0xDE,0xF0,
+                                               0xFE,0xDC,0xBA,0x98,0x76,0x54,0x32,0x10}}};
+    p.fields["action"] = std::int32_t{2};
+    p.fields["health"] = 0.5F;
 
     const auto encoded = registry.encode_packet(p, kprotocol::ProtocolVersion::v1_20_4);
     kprotocol::codec::EncodedFrame frame;
@@ -133,7 +137,9 @@ void test_rest_buffer_packet_roundtrips_opaque() {
     const auto decoded = registry.decode_packet(
         frame, kprotocol::ProtocolVersion::v1_20_4,
         kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
-    KPC_CHECK(std::get<std::vector<std::uint8_t>>(decoded.fields.at("raw")) == opaque, "raw blob");
+    KPC_CHECK(std::get<std::int32_t>(decoded.fields.at("action")) == 2, "action");
+    KPC_CHECK(std::get<float>(decoded.fields.at("health")) == 0.5F, "health");
+    KPC_CHECK(decoded.fields.find("raw") == decoded.fields.end(), "no raw field");
     std::cout << "ok\n";
 }
 
@@ -146,7 +152,7 @@ int main() {
         test_generated_key_constants_resolve();
         test_encryption_begin_roundtrip_at_1_20_4();
         test_every_baseline_version_has_at_least_one_schema();
-        test_rest_buffer_packet_roundtrips_opaque();
+        test_boss_bar_roundtrips_typed_conditional_fields();
     } catch (const std::exception& ex) {
         std::cerr << "EXCEPTION: " << ex.what() << '\n';
         return 1;

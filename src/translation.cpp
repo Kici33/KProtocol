@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <string>
+#include <utility>
 
 namespace kprotocol {
 
@@ -25,25 +26,52 @@ void PacketTranslator::register_translation(
     translations_.insert_or_assign(TranslationKey{handle, from, to}, std::move(fn));
 }
 
-Packet PacketTranslator::translate(const Packet& packet, const ProtocolVersion from, const ProtocolVersion to) const {
+bool PacketTranslator::has_translation(
+    std::string_view key,
+    const ProtocolVersion from,
+    const ProtocolVersion to) const {
     if (from == to) {
-        return packet;
+        return true;
     }
-    // Read-only lookup: if the key has never been interned, we definitely have
-    // no translation registered for it.
+    const auto handle = internal::PacketKeyInterner::instance().find(key);
+    if (!handle.has_value()) {
+        return false;
+    }
+    return translations_.contains(TranslationKey{*handle, from, to});
+}
+
+PacketTranslator::Result PacketTranslator::translate_checked(
+    const Packet& packet,
+    const ProtocolVersion from,
+    const ProtocolVersion to) const {
+    if (from == to) {
+        return Result{packet, Status::identity};
+    }
+
     const auto handle = internal::PacketKeyInterner::instance().find(packet.key);
     if (!handle.has_value()) {
-        return packet;
+        if (require_explicit_translation_) {
+            throw MissingTranslationError("No translation registered for uninterned packet key: " + packet.key);
+        }
+        return Result{packet, Status::missing_packet_key};
     }
+
     const TranslationKey key{*handle, from, to};
     const auto it = translations_.find(key);
     if (it == translations_.end()) {
-        return packet;
+        if (require_explicit_translation_) {
+            throw MissingTranslationError("No translation registered for packet key: " + packet.key);
+        }
+        return Result{packet, Status::missing_rule};
     }
 
     Packet translated = packet;
     translated.fields = it->second(packet.fields);
-    return translated;
+    return Result{std::move(translated), Status::applied};
+}
+
+Packet PacketTranslator::translate(const Packet& packet, const ProtocolVersion from, const ProtocolVersion to) const {
+    return translate_checked(packet, from, to).packet;
 }
 
 } // namespace kprotocol
