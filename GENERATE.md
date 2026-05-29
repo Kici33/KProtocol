@@ -57,11 +57,16 @@ The generator translates minecraft-data's protocol types into kprotocol's
 | `f32`, `f64` | `f32_be`, `f64_be` |
 | `UUID`, `position` | `uuid`, `position` |
 | `[buffer, {countType: varint}]` | `byte_array` |
+| `[array, {countType: varint, type: ...}]` for selected primitives | `var_int_array`, `var_long_array`, `i64_array`, `string_array`, `uuid_array`, `slot_array`, or `byte_array` |
 | `restBuffer` | `rest_buffer` |
 
 Simple `switch` fields whose branch is selected by an integer field are emitted
 as conditional `FieldSpec` entries. For example, a boss-bar `title` field can be
 typed but only read/written when `action` is `0` or `3`.
+`bitflags` and `mapper` fields are emitted as their underlying integer type.
+Optional scalar values become a `*_present` boolean plus an optional value field;
+optional containers are flattened into prefixed optional fields when their inner
+fields are mappable.
 
 Packets that still require unsupported compound shapes (`mapper`, deep nested
 containers, chunk data, complex NBT, etc.) fall back to a single `rest_buffer`

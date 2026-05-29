@@ -1,6 +1,6 @@
 Using Docker to build and test kprotocol
 
-This repository includes a Dockerfile that sets up a reproducible environment for generating packets, building the C++ library, and running tests.
+This repository includes a Dockerfile based on the official Node.js 20 slim image. It installs the C++ build tools, regenerates packets, builds the library, and runs tests.
 
 Build and start a container (recommended for environments without CMake or a C++ toolchain):
 

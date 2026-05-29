@@ -53,6 +53,10 @@ enum class FieldType : std::uint8_t {
     rest_buffer,
     var_int_array,
     var_long_array,
+    i64_array,
+    string_array,
+    uuid_array,
+    slot_array,
     slot,
     optional_nbt
 };
@@ -78,7 +82,10 @@ using FieldValue = std::variant<
     NBTBlob,
     types::Slot,
     std::vector<std::int32_t>,
-    std::vector<std::int64_t>
+    std::vector<std::int64_t>,
+    std::vector<std::string>,
+    std::vector<UUID>,
+    std::vector<types::Slot>
 >;
 
 // Dual storage: indexed values for registry encode/decode hot paths; named map

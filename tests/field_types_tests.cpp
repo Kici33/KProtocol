@@ -204,6 +204,48 @@ int main() {
     }
     std::cout << "ok\n";
 
+    assert_roundtrip<std::vector<std::int64_t>>("i64_array", kprotocol::FieldType::i64_array,
+        std::vector<std::int64_t>{1, -2, 0x0102030405060708LL}, 0x75);
+    assert_roundtrip<std::vector<std::string>>("string_array", kprotocol::FieldType::string_array,
+        std::vector<std::string>{"minecraft:overworld", "minecraft:the_nether"}, 0x76);
+    assert_roundtrip<std::vector<kprotocol::UUID>>("uuid_array", kprotocol::FieldType::uuid_array,
+        std::vector<kprotocol::UUID>{
+            kprotocol::UUID{{{0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,
+                              0x08,0x09,0x0A,0x0B,0x0C,0x0D,0x0E,0x0F}}},
+            kprotocol::UUID{{{0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,
+                              0x18,0x19,0x1A,0x1B,0x1C,0x1D,0x1E,0x1F}}},
+        }, 0x77);
+
+    std::cout << "  slot_array round-trip... " << std::flush;
+    {
+        kprotocol::PacketRegistry registry;
+        registry.register_schema(make_schema("test.slot_array",
+            {{"stacks", kprotocol::FieldType::slot_array}}, 0x78));
+        kprotocol::types::Slot a;
+        a.present = true;
+        a.item_id = 42;
+        a.count = 3;
+        kprotocol::types::Slot b;
+        b.present = true;
+        b.item_id = 7;
+        b.count = 64;
+        kprotocol::Packet p;
+        p.key = "test.slot_array";
+        p.state = kState;
+        p.direction = kDir;
+        p.fields["stacks"] = std::vector<kprotocol::types::Slot>{a, b};
+        const auto encoded = registry.encode_packet(p, kVersion);
+        kprotocol::codec::EncodedFrame frame;
+        std::size_t consumed = 0;
+        KPC_CHECK(kprotocol::codec::try_decode_frame(encoded, consumed, frame), "frame decode");
+        const auto decoded = registry.decode_packet(frame, kVersion, kState, kDir);
+        const auto out = std::get<std::vector<kprotocol::types::Slot>>(decoded.fields.at("stacks"));
+        KPC_CHECK(out.size() == 2, "slot_array size");
+        KPC_CHECK(out[0].present && out[0].item_id == 42 && out[0].count == 3, "slot_array first");
+        KPC_CHECK(out[1].present && out[1].item_id == 7 && out[1].count == 64, "slot_array second");
+    }
+    std::cout << "ok\n";
+
     std::cout << "  slot round-trip... " << std::flush;
     {
         kprotocol::PacketRegistry registry;

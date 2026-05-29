@@ -132,6 +132,38 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
     case FieldType::var_long_array:
         codec::write_var_long_array(out, std::get<std::vector<std::int64_t>>(value));
         return;
+    case FieldType::i64_array: {
+        const auto& values = std::get<std::vector<std::int64_t>>(value);
+        codec::write_var_int(out, static_cast<std::int32_t>(values.size()));
+        for (const auto item : values) {
+            codec::write_long(out, item);
+        }
+        return;
+    }
+    case FieldType::string_array: {
+        const auto& values = std::get<std::vector<std::string>>(value);
+        codec::write_var_int(out, static_cast<std::int32_t>(values.size()));
+        for (const auto& item : values) {
+            codec::write_string(out, item);
+        }
+        return;
+    }
+    case FieldType::uuid_array: {
+        const auto& values = std::get<std::vector<UUID>>(value);
+        codec::write_var_int(out, static_cast<std::int32_t>(values.size()));
+        for (const auto& uuid : values) {
+            out.insert(out.end(), uuid.bytes.begin(), uuid.bytes.end());
+        }
+        return;
+    }
+    case FieldType::slot_array: {
+        const auto& values = std::get<std::vector<types::Slot>>(value);
+        codec::write_var_int(out, static_cast<std::int32_t>(values.size()));
+        for (const auto& slot : values) {
+            types::write_slot(out, slot);
+        }
+        return;
+    }
     case FieldType::slot:
         types::write_slot(out, std::get<types::Slot>(value));
         return;
@@ -198,6 +230,60 @@ FieldValue read_field(std::span<const std::uint8_t> input, std::size_t& offset, 
         return codec::read_var_int_array(input, offset);
     case FieldType::var_long_array:
         return codec::read_var_long_array(input, offset);
+    case FieldType::i64_array: {
+        const auto count = codec::read_var_int(input, offset);
+        if (count < 0) {
+            throw codec::DecodeError("codec: negative i64 array length");
+        }
+        std::vector<std::int64_t> values;
+        values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            values.push_back(codec::read_long(input, offset));
+        }
+        return values;
+    }
+    case FieldType::string_array: {
+        const auto count = codec::read_var_int(input, offset);
+        if (count < 0) {
+            throw codec::DecodeError("codec: negative string array length");
+        }
+        std::vector<std::string> values;
+        values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            values.push_back(codec::read_string(input, offset));
+        }
+        return values;
+    }
+    case FieldType::uuid_array: {
+        const auto count = codec::read_var_int(input, offset);
+        if (count < 0) {
+            throw codec::DecodeError("codec: negative UUID array length");
+        }
+        std::vector<UUID> values;
+        values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            UUID uuid{};
+            if (offset + uuid.bytes.size() > input.size()) {
+                throw codec::DecodeError("codec: truncated UUID");
+            }
+            std::memcpy(uuid.bytes.data(), input.data() + offset, uuid.bytes.size());
+            offset += uuid.bytes.size();
+            values.push_back(uuid);
+        }
+        return values;
+    }
+    case FieldType::slot_array: {
+        const auto count = codec::read_var_int(input, offset);
+        if (count < 0) {
+            throw codec::DecodeError("codec: negative slot array length");
+        }
+        std::vector<types::Slot> values;
+        values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            values.push_back(types::read_slot(input, offset));
+        }
+        return values;
+    }
     case FieldType::slot:
         return types::read_slot(input, offset);
     case FieldType::optional_nbt:

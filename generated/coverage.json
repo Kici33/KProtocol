@@ -1,278 +1,278 @@
 {
-  "generatedAt": "2026-05-28T17:12:07.779Z",
+  "generatedAt": "2026-05-29T07:14:19.175Z",
   "versions": [
     {
       "display": "1.8",
       "wire": 47,
       "totalPackets": 112,
-      "fullSchemas": 103,
-      "rawOnly": 9
+      "fullSchemas": 106,
+      "rawOnly": 6
     },
     {
       "display": "1.9",
       "wire": 107,
       "totalPackets": 119,
-      "fullSchemas": 111,
-      "rawOnly": 8
+      "fullSchemas": 113,
+      "rawOnly": 6
     },
     {
       "display": "1.9.2",
       "wire": 109,
       "totalPackets": 119,
-      "fullSchemas": 111,
-      "rawOnly": 8
+      "fullSchemas": 113,
+      "rawOnly": 6
     },
     {
       "display": "1.9.4",
       "wire": 110,
       "totalPackets": 118,
-      "fullSchemas": 109,
-      "rawOnly": 9
+      "fullSchemas": 111,
+      "rawOnly": 7
     },
     {
       "display": "1.10",
       "wire": 210,
       "totalPackets": 118,
-      "fullSchemas": 109,
-      "rawOnly": 9
+      "fullSchemas": 111,
+      "rawOnly": 7
     },
     {
       "display": "1.11",
       "wire": 315,
       "totalPackets": 118,
-      "fullSchemas": 109,
-      "rawOnly": 9
+      "fullSchemas": 111,
+      "rawOnly": 7
     },
     {
       "display": "1.11.2",
       "wire": 316,
       "totalPackets": 118,
-      "fullSchemas": 109,
-      "rawOnly": 9
+      "fullSchemas": 111,
+      "rawOnly": 7
     },
     {
       "display": "1.12",
       "wire": 335,
       "totalPackets": 124,
-      "fullSchemas": 111,
-      "rawOnly": 13
+      "fullSchemas": 114,
+      "rawOnly": 10
     },
     {
       "display": "1.12.1",
       "wire": 338,
       "totalPackets": 125,
-      "fullSchemas": 112,
-      "rawOnly": 13
+      "fullSchemas": 115,
+      "rawOnly": 10
     },
     {
       "display": "1.12.2",
       "wire": 340,
       "totalPackets": 125,
-      "fullSchemas": 112,
-      "rawOnly": 13
+      "fullSchemas": 115,
+      "rawOnly": 10
     },
     {
       "display": "1.13",
       "wire": 393,
       "totalPackets": 143,
-      "fullSchemas": 126,
-      "rawOnly": 17
+      "fullSchemas": 130,
+      "rawOnly": 13
     },
     {
       "display": "1.13.2",
       "wire": 404,
       "totalPackets": 143,
-      "fullSchemas": 126,
-      "rawOnly": 17
+      "fullSchemas": 130,
+      "rawOnly": 13
     },
     {
       "display": "1.14",
       "wire": 477,
       "totalPackets": 152,
-      "fullSchemas": 134,
-      "rawOnly": 18
+      "fullSchemas": 139,
+      "rawOnly": 13
     },
     {
       "display": "1.14.4",
       "wire": 498,
       "totalPackets": 153,
-      "fullSchemas": 135,
-      "rawOnly": 18
+      "fullSchemas": 140,
+      "rawOnly": 13
     },
     {
       "display": "1.15",
       "wire": 573,
       "totalPackets": 153,
-      "fullSchemas": 135,
-      "rawOnly": 18
+      "fullSchemas": 140,
+      "rawOnly": 13
     },
     {
       "display": "1.15.2",
       "wire": 578,
       "totalPackets": 153,
-      "fullSchemas": 135,
-      "rawOnly": 18
+      "fullSchemas": 140,
+      "rawOnly": 13
     },
     {
       "display": "1.16",
       "wire": 735,
       "totalPackets": 153,
-      "fullSchemas": 133,
-      "rawOnly": 20
+      "fullSchemas": 139,
+      "rawOnly": 14
     },
     {
       "display": "1.16.2",
       "wire": 751,
       "totalPackets": 154,
-      "fullSchemas": 135,
-      "rawOnly": 19
+      "fullSchemas": 141,
+      "rawOnly": 13
     },
     {
       "display": "1.16.5",
       "wire": 754,
       "totalPackets": 154,
-      "fullSchemas": 135,
-      "rawOnly": 19
+      "fullSchemas": 141,
+      "rawOnly": 13
     },
     {
       "display": "1.17",
       "wire": 755,
       "totalPackets": 165,
-      "fullSchemas": 144,
-      "rawOnly": 21
+      "fullSchemas": 152,
+      "rawOnly": 13
     },
     {
       "display": "1.17.1",
       "wire": 756,
       "totalPackets": 165,
-      "fullSchemas": 143,
-      "rawOnly": 22
+      "fullSchemas": 153,
+      "rawOnly": 12
     },
     {
       "display": "1.18",
       "wire": 757,
       "totalPackets": 166,
-      "fullSchemas": 144,
-      "rawOnly": 22
+      "fullSchemas": 155,
+      "rawOnly": 11
     },
     {
       "display": "1.18.2",
       "wire": 758,
       "totalPackets": 166,
-      "fullSchemas": 144,
-      "rawOnly": 22
+      "fullSchemas": 155,
+      "rawOnly": 11
     },
     {
       "display": "1.19",
       "wire": 759,
       "totalPackets": 169,
-      "fullSchemas": 140,
-      "rawOnly": 29
+      "fullSchemas": 158,
+      "rawOnly": 11
     },
     {
       "display": "1.19.2",
       "wire": 760,
       "totalPackets": 173,
-      "fullSchemas": 139,
-      "rawOnly": 34
+      "fullSchemas": 162,
+      "rawOnly": 11
     },
     {
       "display": "1.19.3",
       "wire": 761,
       "totalPackets": 172,
-      "fullSchemas": 136,
-      "rawOnly": 36
+      "fullSchemas": 156,
+      "rawOnly": 16
     },
     {
       "display": "1.19.4",
       "wire": 762,
       "totalPackets": 176,
-      "fullSchemas": 137,
-      "rawOnly": 39
+      "fullSchemas": 158,
+      "rawOnly": 18
     },
     {
       "display": "1.20",
       "wire": 763,
       "totalPackets": 176,
-      "fullSchemas": 137,
-      "rawOnly": 39
+      "fullSchemas": 158,
+      "rawOnly": 18
     },
     {
       "display": "1.20.2",
       "wire": 764,
       "totalPackets": 197,
-      "fullSchemas": 158,
-      "rawOnly": 39
+      "fullSchemas": 179,
+      "rawOnly": 18
     },
     {
       "display": "1.20.4",
       "wire": 765,
       "totalPackets": 203,
-      "fullSchemas": 160,
-      "rawOnly": 43
+      "fullSchemas": 184,
+      "rawOnly": 19
     },
     {
       "display": "1.20.5",
       "wire": 766,
       "totalPackets": 220,
-      "fullSchemas": 158,
-      "rawOnly": 62
+      "fullSchemas": 179,
+      "rawOnly": 41
     },
     {
       "display": "1.21.1",
       "wire": 767,
       "totalPackets": 226,
-      "fullSchemas": 158,
-      "rawOnly": 68
+      "fullSchemas": 178,
+      "rawOnly": 48
     },
     {
       "display": "1.21.3",
       "wire": 768,
       "totalPackets": 235,
-      "fullSchemas": 158,
-      "rawOnly": 77
+      "fullSchemas": 184,
+      "rawOnly": 51
     },
     {
       "display": "1.21.4",
       "wire": 769,
       "totalPackets": 237,
-      "fullSchemas": 162,
-      "rawOnly": 75
+      "fullSchemas": 186,
+      "rawOnly": 51
     },
     {
       "display": "1.21.5",
       "wire": 770,
       "totalPackets": 239,
-      "fullSchemas": 159,
-      "rawOnly": 80
+      "fullSchemas": 186,
+      "rawOnly": 53
     },
     {
       "display": "1.21.6",
       "wire": 771,
       "totalPackets": 245,
-      "fullSchemas": 155,
-      "rawOnly": 90
+      "fullSchemas": 187,
+      "rawOnly": 58
     },
     {
       "display": "1.21.7",
       "wire": 772,
       "totalPackets": 226,
-      "fullSchemas": 158,
-      "rawOnly": 68
+      "fullSchemas": 178,
+      "rawOnly": 48
     },
     {
       "display": "1.21.9",
       "wire": 773,
       "totalPackets": 252,
-      "fullSchemas": 156,
-      "rawOnly": 96
+      "fullSchemas": 189,
+      "rawOnly": 63
     },
     {
       "display": "1.21.11",
       "wire": 774,
       "totalPackets": 252,
-      "fullSchemas": 156,
-      "rawOnly": 96
+      "fullSchemas": 189,
+      "rawOnly": 63
     }
   ],
   "keys": [
@@ -293,7 +293,7 @@
         "774": 9
       },
       "statusByWire": {
-        "765": "rawOnly",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -303,6 +303,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -318,6 +329,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -358,6 +374,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -414,6 +441,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -465,17 +502,17 @@
         "774": 12
       },
       "statusByWire": {
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -591,15 +628,15 @@
       "statusByWire": {
         "764": "ok",
         "765": "ok",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -619,7 +656,7 @@
         "774": 8
       },
       "statusByWire": {
-        "765": "rawOnly",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -629,6 +666,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -666,7 +714,7 @@
         "764": 6
       },
       "statusByWire": {
-        "764": "rawOnly"
+        "764": "ok"
       }
     },
     {
@@ -694,6 +742,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -719,6 +778,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -761,6 +830,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -819,6 +899,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -859,6 +950,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -874,6 +976,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -924,6 +1031,13 @@
         "769": "rawOnly",
         "770": "rawOnly",
         "772": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1075,6 +1189,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1094,6 +1219,13 @@
         "769": "rawOnly",
         "770": "rawOnly",
         "772": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1125,6 +1257,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1413,6 +1556,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1725,22 +1879,22 @@
         "756": "ok",
         "757": "ok",
         "758": "ok",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -1768,6 +1922,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -1855,6 +2020,10 @@
         "772": "ok",
         "773": "ok",
         "774": "ok"
+      },
+      "rawReasonByWire": {
+        "759": "field crypto: unsupported switch",
+        "760": "field crypto: unsupported switch"
       }
     },
     {
@@ -1924,35 +2093,35 @@
         "774": 2
       },
       "statusByWire": {
-        "393": "rawOnly",
-        "404": "rawOnly",
-        "477": "rawOnly",
-        "498": "rawOnly",
-        "573": "rawOnly",
-        "578": "rawOnly",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "393": "ok",
+        "404": "ok",
+        "477": "ok",
+        "498": "ok",
+        "573": "ok",
+        "578": "ok",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -2024,11 +2193,11 @@
         "756": "ok",
         "757": "ok",
         "758": "ok",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
         "764": "ok",
         "765": "ok",
         "766": "ok",
@@ -2256,7 +2425,7 @@
         "774": 79
       },
       "statusByWire": {
-        "765": "rawOnly",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -2266,6 +2435,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -2339,6 +2519,40 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "335": "field advancementMapping: array element: nested container field (not flattened)",
+        "338": "field advancementMapping: array element: nested container field (not flattened)",
+        "340": "field advancementMapping: array element: nested container field (not flattened)",
+        "393": "field advancementMapping: array element: nested container field (not flattened)",
+        "404": "field advancementMapping: array element: nested container field (not flattened)",
+        "477": "field advancementMapping: array element: nested container field (not flattened)",
+        "498": "field advancementMapping: array element: nested container field (not flattened)",
+        "573": "field advancementMapping: array element: nested container field (not flattened)",
+        "578": "field advancementMapping: array element: nested container field (not flattened)",
+        "735": "field advancementMapping: array element: nested container field (not flattened)",
+        "751": "field advancementMapping: array element: nested container field (not flattened)",
+        "754": "field advancementMapping: array element: nested container field (not flattened)",
+        "755": "field advancementMapping: array element: nested container field (not flattened)",
+        "756": "field advancementMapping: array element: nested container field (not flattened)",
+        "757": "field advancementMapping: array element: nested container field (not flattened)",
+        "758": "field advancementMapping: array element: nested container field (not flattened)",
+        "759": "field advancementMapping: array element: nested container field (not flattened)",
+        "760": "field advancementMapping: array element: nested container field (not flattened)",
+        "761": "field advancementMapping: array element: nested container field (not flattened)",
+        "762": "field advancementMapping: array element: nested container field (not flattened)",
+        "763": "field advancementMapping: array element: nested container field (not flattened)",
+        "764": "field advancementMapping: array element: nested container field (not flattened)",
+        "765": "field advancementMapping: array element: nested container field (not flattened)",
+        "766": "field advancementMapping: array element: nested container field (not flattened)",
+        "767": "field advancementMapping: array element: nested container field (not flattened)",
+        "768": "field advancementMapping: array element: nested container field (not flattened)",
+        "769": "field advancementMapping: array element: nested container field (not flattened)",
+        "770": "field advancementMapping: array element: nested container field (not flattened)",
+        "771": "field advancementMapping: array element: nested container field (not flattened)",
+        "772": "field advancementMapping: array element: nested container field (not flattened)",
+        "773": "field advancementMapping: array element: nested container field (not flattened)",
+        "774": "field advancementMapping: array element: nested container field (not flattened)"
       }
     },
     {
@@ -2927,6 +3141,21 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "762": "minecraft-data has no packet schema",
+        "763": "minecraft-data has no packet schema",
+        "764": "minecraft-data has no packet schema",
+        "765": "minecraft-data has no packet schema",
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -3080,8 +3309,8 @@
         "760": 12
       },
       "statusByWire": {
-        "759": "rawOnly",
-        "760": "rawOnly"
+        "759": "ok",
+        "760": "ok"
       }
     },
     {
@@ -3106,21 +3335,21 @@
         "774": 23
       },
       "statusByWire": {
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -3218,6 +3447,21 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "762": "field biomes: array element: nested container field (not flattened)",
+        "763": "field biomes: array element: nested container field (not flattened)",
+        "764": "field biomes: array element: nested container field (not flattened)",
+        "765": "field biomes: array element: nested container field (not flattened)",
+        "766": "field biomes: array element: nested container field (not flattened)",
+        "767": "field biomes: array element: nested container field (not flattened)",
+        "768": "field biomes: array element: nested container field (not flattened)",
+        "769": "field biomes: array element: nested container field (not flattened)",
+        "770": "field biomes: array element: nested container field (not flattened)",
+        "771": "field biomes: array element: nested container field (not flattened)",
+        "772": "field biomes: array element: nested container field (not flattened)",
+        "773": "field biomes: array element: nested container field (not flattened)",
+        "774": "field biomes: array element: nested container field (not flattened)"
       }
     },
     {
@@ -3233,6 +3477,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -3530,6 +3779,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -3688,6 +3948,14 @@
         "772": "ok",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "768": "field recipeDisplay: nested container field (not flattened)",
+        "769": "field recipeDisplay: nested container field (not flattened)",
+        "770": "field recipeDisplay: nested container field (not flattened)",
+        "771": "field recipeDisplay: nested container field (not flattened)",
+        "773": "field recipeDisplay: nested container field (not flattened)",
+        "774": "field recipeDisplay: nested container field (not flattened)"
       }
     },
     {
@@ -3800,6 +4068,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -3822,19 +4100,19 @@
         "774": 25
       },
       "statusByWire": {
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -3897,6 +4175,10 @@
       "statusByWire": {
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "773": "field update: nested container field (not flattened)",
+        "774": "field update: nested container field (not flattened)"
       }
     },
     {
@@ -3910,6 +4192,10 @@
       "statusByWire": {
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "773": "field chunkPos: nested container field (not flattened)",
+        "774": "field chunkPos: nested container field (not flattened)"
       }
     },
     {
@@ -3923,6 +4209,10 @@
       "statusByWire": {
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "773": "field update: nested container field (not flattened)",
+        "774": "field update: nested container field (not flattened)"
       }
     },
     {
@@ -3936,6 +4226,10 @@
       "statusByWire": {
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "773": "field event: nested container field (not flattened)",
+        "774": "field event: nested container field (not flattened)"
       }
     },
     {
@@ -3954,15 +4248,15 @@
         "774": 30
       },
       "statusByWire": {
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -4030,6 +4324,37 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "393": "field nodes: array element: nested container field (not flattened)",
+        "404": "field nodes: array element: nested container field (not flattened)",
+        "477": "field nodes: array element: nested container field (not flattened)",
+        "498": "field nodes: array element: nested container field (not flattened)",
+        "573": "field nodes: array element: nested container field (not flattened)",
+        "578": "field nodes: array element: nested container field (not flattened)",
+        "735": "field nodes: array element: nested container field (not flattened)",
+        "751": "field nodes: array element: nested container field (not flattened)",
+        "754": "field nodes: array element: nested container field (not flattened)",
+        "755": "field nodes: array element: nested container field (not flattened)",
+        "756": "field nodes: array element: nested container field (not flattened)",
+        "757": "field nodes: array element: nested container field (not flattened)",
+        "758": "field nodes: array element: nested container field (not flattened)",
+        "759": "field nodes: array element: nested container field (not flattened)",
+        "760": "field nodes: array element: nested container field (not flattened)",
+        "761": "field nodes: array element: nested container field (not flattened)",
+        "762": "field nodes: array element: nested container field (not flattened)",
+        "763": "field nodes: array element: nested container field (not flattened)",
+        "764": "field nodes: array element: nested container field (not flattened)",
+        "765": "field nodes: array element: nested container field (not flattened)",
+        "766": "field nodes: array element: nested container field (not flattened)",
+        "767": "field nodes: array element: nested container field (not flattened)",
+        "768": "field nodes: array element: nested container field (not flattened)",
+        "769": "field nodes: array element: nested container field (not flattened)",
+        "770": "field nodes: array element: nested container field (not flattened)",
+        "771": "field nodes: array element: nested container field (not flattened)",
+        "772": "field nodes: array element: nested container field (not flattened)",
+        "773": "field nodes: array element: nested container field (not flattened)",
+        "774": "field nodes: array element: nested container field (not flattened)"
       }
     },
     {
@@ -4097,6 +4422,37 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "393": "field recipes: array element: nested container field (not flattened)",
+        "404": "field recipes: array element: nested container field (not flattened)",
+        "477": "field recipes: array element: nested container field (not flattened)",
+        "498": "field recipes: array element: nested container field (not flattened)",
+        "573": "field recipes: array element: nested container field (not flattened)",
+        "578": "field recipes: array element: nested container field (not flattened)",
+        "735": "field recipes: array element: nested container field (not flattened)",
+        "751": "field recipes: array element: nested container field (not flattened)",
+        "754": "field recipes: array element: nested container field (not flattened)",
+        "755": "field recipes: array element: nested container field (not flattened)",
+        "756": "field recipes: array element: nested container field (not flattened)",
+        "757": "field recipes: array element: nested container field (not flattened)",
+        "758": "field recipes: array element: nested container field (not flattened)",
+        "759": "field recipes: array element: nested container field (not flattened)",
+        "760": "field recipes: array element: nested container field (not flattened)",
+        "761": "field recipes: array element: nested container field (not flattened)",
+        "762": "field recipes: array element: nested container field (not flattened)",
+        "763": "field recipes: array element: nested container field (not flattened)",
+        "764": "field recipes: array element: nested container field (not flattened)",
+        "765": "field recipes: array element: nested container field (not flattened)",
+        "766": "field recipes: array element: nested container field (not flattened)",
+        "767": "field recipes: array element: nested container field (not flattened)",
+        "768": "field stoneCutterRecipes: array element: nested container field (not flattened)",
+        "769": "field stoneCutterRecipes: array element: nested container field (not flattened)",
+        "770": "field stoneCutterRecipes: array element: nested container field (not flattened)",
+        "771": "field stoneCutterRecipes: array element: nested container field (not flattened)",
+        "772": "field recipes: array element: nested container field (not flattened)",
+        "773": "field stoneCutterRecipes: array element: nested container field (not flattened)",
+        "774": "field stoneCutterRecipes: array element: nested container field (not flattened)"
       }
     },
     {
@@ -4191,10 +4547,10 @@
         "768": "ok",
         "769": "ok",
         "770": "ok",
-        "771": "rawOnly",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -4496,13 +4852,13 @@
         "756": "ok",
         "757": "ok",
         "758": "ok",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
         "766": "ok",
         "767": "ok",
         "768": "ok",
@@ -4599,6 +4955,31 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "735": "field equipments: compound type: topBitSetTerminatedArray",
+        "751": "field equipments: compound type: topBitSetTerminatedArray",
+        "754": "field equipments: compound type: topBitSetTerminatedArray",
+        "755": "field equipments: compound type: topBitSetTerminatedArray",
+        "756": "field equipments: compound type: topBitSetTerminatedArray",
+        "757": "field equipments: compound type: topBitSetTerminatedArray",
+        "758": "field equipments: compound type: topBitSetTerminatedArray",
+        "759": "field equipments: compound type: topBitSetTerminatedArray",
+        "760": "field equipments: compound type: topBitSetTerminatedArray",
+        "761": "field equipments: compound type: topBitSetTerminatedArray",
+        "762": "field equipments: compound type: topBitSetTerminatedArray",
+        "763": "field equipments: compound type: topBitSetTerminatedArray",
+        "764": "field equipments: compound type: topBitSetTerminatedArray",
+        "765": "field equipments: compound type: topBitSetTerminatedArray",
+        "766": "field equipments: compound type: topBitSetTerminatedArray",
+        "767": "field equipments: compound type: topBitSetTerminatedArray",
+        "768": "field equipments: compound type: topBitSetTerminatedArray",
+        "769": "field equipments: compound type: topBitSetTerminatedArray",
+        "770": "field equipments: compound type: topBitSetTerminatedArray",
+        "771": "field equipments: compound type: topBitSetTerminatedArray",
+        "772": "field equipments: compound type: topBitSetTerminatedArray",
+        "773": "field equipments: compound type: topBitSetTerminatedArray",
+        "774": "field equipments: compound type: topBitSetTerminatedArray"
       }
     },
     {
@@ -5010,6 +5391,22 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "761": "field soundEvent: nested container field (not flattened)",
+        "762": "field soundEvent: nested container field (not flattened)",
+        "763": "field soundEvent: nested container field (not flattened)",
+        "764": "field soundEvent: nested container field (not flattened)",
+        "765": "field soundEvent: nested container field (not flattened)",
+        "766": "field sound: compound type: registryEntryHolder",
+        "767": "field sound: compound type: registryEntryHolder",
+        "768": "field sound: compound type: registryEntryHolder",
+        "769": "field sound: compound type: registryEntryHolder",
+        "770": "field sound: compound type: registryEntryHolder",
+        "771": "field sound: compound type: registryEntryHolder",
+        "772": "field sound: compound type: registryEntryHolder",
+        "773": "field sound: compound type: registryEntryHolder",
+        "774": "field sound: compound type: registryEntryHolder"
       }
     },
     {
@@ -5260,15 +5657,15 @@
         "763": "ok",
         "764": "ok",
         "765": "ok",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -5356,6 +5753,47 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "47": "field velocity: nested container field (not flattened)",
+        "107": "field velocity: nested container field (not flattened)",
+        "109": "field velocity: nested container field (not flattened)",
+        "110": "field velocity: nested container field (not flattened)",
+        "210": "field velocity: nested container field (not flattened)",
+        "315": "field velocity: nested container field (not flattened)",
+        "316": "field velocity: nested container field (not flattened)",
+        "335": "field velocity: nested container field (not flattened)",
+        "338": "field velocity: nested container field (not flattened)",
+        "340": "field velocity: nested container field (not flattened)",
+        "393": "field velocity: nested container field (not flattened)",
+        "404": "field velocity: nested container field (not flattened)",
+        "477": "field velocity: nested container field (not flattened)",
+        "498": "field velocity: nested container field (not flattened)",
+        "573": "field velocity: nested container field (not flattened)",
+        "578": "field velocity: nested container field (not flattened)",
+        "735": "field velocity: nested container field (not flattened)",
+        "751": "field velocity: nested container field (not flattened)",
+        "754": "field velocity: nested container field (not flattened)",
+        "755": "field velocity: nested container field (not flattened)",
+        "756": "field velocity: nested container field (not flattened)",
+        "757": "field velocity: nested container field (not flattened)",
+        "758": "field velocity: nested container field (not flattened)",
+        "759": "field velocity: nested container field (not flattened)",
+        "760": "field velocity: nested container field (not flattened)",
+        "761": "field velocity: nested container field (not flattened)",
+        "762": "field velocity: nested container field (not flattened)",
+        "763": "field velocity: nested container field (not flattened)",
+        "764": "field velocity: nested container field (not flattened)",
+        "765": "field velocity: nested container field (not flattened)",
+        "766": "field velocity: nested container field (not flattened)",
+        "767": "field velocity: nested container field (not flattened)",
+        "768": "field velocity: nested container field (not flattened)",
+        "769": "field velocity: nested container field (not flattened)",
+        "770": "field velocity: nested container field (not flattened)",
+        "771": "field velocity: nested container field (not flattened)",
+        "772": "field velocity: nested container field (not flattened)",
+        "773": "field velocity: unmapped primitive: native",
+        "774": "field velocity: unmapped primitive: native"
       }
     },
     {
@@ -5530,6 +5968,18 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "765": "field small_explosion_particle: nested container field (not flattened)",
+        "766": "field small_explosion_particle: nested container field (not flattened)",
+        "767": "field small_explosion_particle: nested container field (not flattened)",
+        "768": "field explosionParticle: nested container field (not flattened)",
+        "769": "field explosionParticle: nested container field (not flattened)",
+        "770": "field explosionParticle: nested container field (not flattened)",
+        "771": "field explosionParticle: nested container field (not flattened)",
+        "772": "field small_explosion_particle: nested container field (not flattened)",
+        "773": "field center: nested container field (not flattened)",
+        "774": "field center: nested container field (not flattened)"
       }
     },
     {
@@ -5609,9 +6059,9 @@
         "763": 107
       },
       "statusByWire": {
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly"
+        "761": "ok",
+        "762": "ok",
+        "763": "ok"
       }
     },
     {
@@ -5695,10 +6145,10 @@
         "768": "ok",
         "769": "ok",
         "770": "ok",
-        "771": "rawOnly",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -5838,6 +6288,22 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "761": "field signature: unsupported buffer countType: undefined",
+        "762": "field signature: unsupported buffer countType: undefined",
+        "763": "field signature: unsupported buffer countType: undefined",
+        "764": "field signature: unsupported buffer countType: undefined",
+        "765": "field signature: unsupported buffer countType: undefined",
+        "766": "field signature: unsupported buffer countType: undefined",
+        "767": "field signature: unsupported buffer countType: undefined",
+        "768": "field signature: unsupported buffer countType: undefined",
+        "769": "field signature: unsupported buffer countType: undefined",
+        "770": "field signature: unsupported buffer countType: undefined",
+        "771": "field signature: unsupported buffer countType: undefined",
+        "772": "field signature: unsupported buffer countType: undefined",
+        "773": "field signature: unsupported buffer countType: undefined",
+        "774": "field signature: unsupported buffer countType: undefined"
       }
     },
     {
@@ -6160,20 +6626,20 @@
         "498": "ok",
         "573": "ok",
         "578": "ok",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -6183,6 +6649,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "field worldState: nested container field (not flattened)",
+        "767": "field worldState: nested container field (not flattened)",
+        "768": "field worldState: nested container field (not flattened)",
+        "769": "field worldState: nested container field (not flattened)",
+        "770": "field worldState: nested container field (not flattened)",
+        "771": "field worldState: nested container field (not flattened)",
+        "772": "field worldState: nested container field (not flattened)",
+        "773": "field worldState: nested container field (not flattened)",
+        "774": "field worldState: nested container field (not flattened)"
       }
     },
     {
@@ -6270,6 +6747,47 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "47": "field rows: unsupported switch",
+        "107": "field rows: unsupported switch",
+        "109": "field rows: unsupported switch",
+        "110": "field rows: unsupported switch",
+        "210": "field rows: unsupported switch",
+        "315": "field rows: unsupported switch",
+        "316": "field rows: unsupported switch",
+        "335": "field rows: unsupported switch",
+        "338": "field rows: unsupported switch",
+        "340": "field rows: unsupported switch",
+        "393": "field rows: unsupported switch",
+        "404": "field rows: unsupported switch",
+        "477": "field rows: unsupported switch",
+        "498": "field rows: unsupported switch",
+        "573": "field rows: unsupported switch",
+        "578": "field rows: unsupported switch",
+        "735": "field rows: unsupported switch",
+        "751": "field rows: unsupported switch",
+        "754": "field rows: unsupported switch",
+        "755": "field icons: unsupported option shape",
+        "756": "field icons: unsupported option shape",
+        "757": "field icons: unsupported option shape",
+        "758": "field icons: unsupported option shape",
+        "759": "field icons: unsupported option shape",
+        "760": "field icons: unsupported option shape",
+        "761": "field icons: unsupported option shape",
+        "762": "field icons: unsupported option shape",
+        "763": "field icons: unsupported option shape",
+        "764": "field icons: unsupported option shape",
+        "765": "field icons: unsupported option shape",
+        "766": "field icons: unsupported option shape",
+        "767": "field icons: unsupported option shape",
+        "768": "field icons: unsupported option shape",
+        "769": "field icons: unsupported option shape",
+        "770": "field icons: unsupported option shape",
+        "771": "field icons: unsupported option shape",
+        "772": "field icons: unsupported option shape",
+        "773": "field icons: unsupported option shape",
+        "774": "field icons: unsupported option shape"
       }
     },
     {
@@ -6339,24 +6857,44 @@
         "754": "rawOnly",
         "755": "rawOnly",
         "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
+      },
+      "rawReasonByWire": {
+        "110": "field blockEntities: unsupported array element type: optional_nbt",
+        "210": "field blockEntities: unsupported array element type: optional_nbt",
+        "315": "field blockEntities: unsupported array element type: optional_nbt",
+        "316": "field blockEntities: unsupported array element type: optional_nbt",
+        "335": "field blockEntities: unsupported array element type: optional_nbt",
+        "338": "field blockEntities: unsupported array element type: optional_nbt",
+        "340": "field blockEntities: unsupported array element type: optional_nbt",
+        "393": "field blockEntities: unsupported array element type: optional_nbt",
+        "404": "field blockEntities: unsupported array element type: optional_nbt",
+        "477": "field blockEntities: unsupported array element type: optional_nbt",
+        "498": "field blockEntities: unsupported array element type: optional_nbt",
+        "573": "field biomes: unsupported switch",
+        "578": "field biomes: unsupported switch",
+        "735": "field biomes: unsupported switch",
+        "751": "field biomes: unsupported switch",
+        "754": "field biomes: unsupported switch",
+        "755": "field blockEntities: unsupported array element type: optional_nbt",
+        "756": "field blockEntities: unsupported array element type: optional_nbt"
       }
     },
     {
@@ -6378,7 +6916,7 @@
         "760": 50
       },
       "statusByWire": {
-        "760": "rawOnly"
+        "760": "ok"
       }
     },
     {
@@ -6400,6 +6938,14 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "768": "field steps: array element: nested container field (not flattened)",
+        "769": "field steps: array element: nested container field (not flattened)",
+        "770": "field steps: array element: nested container field (not flattened)",
+        "771": "field steps: array element: nested container field (not flattened)",
+        "773": "field steps: array element: nested container field (not flattened)",
+        "774": "field steps: array element: nested container field (not flattened)"
       }
     },
     {
@@ -7083,8 +7629,8 @@
         "774": 63
       },
       "statusByWire": {
-        "759": "rawOnly",
-        "760": "rawOnly",
+        "759": "ok",
+        "760": "ok",
         "761": "rawOnly",
         "762": "rawOnly",
         "763": "rawOnly",
@@ -7099,6 +7645,22 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "761": "field signature: unsupported option shape",
+        "762": "field signature: unsupported option shape",
+        "763": "field signature: unsupported option shape",
+        "764": "field signature: unsupported option shape",
+        "765": "field signature: unsupported option shape",
+        "766": "field signature: unsupported option shape",
+        "767": "field signature: unsupported option shape",
+        "768": "field signature: unsupported option shape",
+        "769": "field signature: unsupported option shape",
+        "770": "field signature: unsupported option shape",
+        "771": "field signature: unsupported option shape",
+        "772": "field signature: unsupported option shape",
+        "773": "field signature: unsupported option shape",
+        "774": "field signature: unsupported option shape"
       }
     },
     {
@@ -7186,6 +7748,47 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "47": "field data: array element: nested container field (not flattened)",
+        "107": "field data: array element: nested container field (not flattened)",
+        "109": "field data: array element: nested container field (not flattened)",
+        "110": "field data: array element: nested container field (not flattened)",
+        "210": "field data: array element: nested container field (not flattened)",
+        "315": "field data: array element: nested container field (not flattened)",
+        "316": "field data: array element: nested container field (not flattened)",
+        "335": "field data: array element: nested container field (not flattened)",
+        "338": "field data: array element: nested container field (not flattened)",
+        "340": "field data: array element: nested container field (not flattened)",
+        "393": "field data: array element: nested container field (not flattened)",
+        "404": "field data: array element: nested container field (not flattened)",
+        "477": "field data: array element: nested container field (not flattened)",
+        "498": "field data: array element: nested container field (not flattened)",
+        "573": "field data: array element: nested container field (not flattened)",
+        "578": "field data: array element: nested container field (not flattened)",
+        "735": "field data: array element: nested container field (not flattened)",
+        "751": "field data: array element: nested container field (not flattened)",
+        "754": "field data: array element: nested container field (not flattened)",
+        "755": "field data: array element: nested container field (not flattened)",
+        "756": "field data: array element: nested container field (not flattened)",
+        "757": "field data: array element: nested container field (not flattened)",
+        "758": "field data: array element: nested container field (not flattened)",
+        "759": "field data: array element: nested container field (not flattened)",
+        "760": "field data: array element: nested container field (not flattened)",
+        "761": "field data: array element: nested container field (not flattened)",
+        "762": "field data: array element: nested container field (not flattened)",
+        "763": "field data: array element: nested container field (not flattened)",
+        "764": "field data: array element: nested container field (not flattened)",
+        "765": "field data: array element: nested container field (not flattened)",
+        "766": "field data: array element: nested container field (not flattened)",
+        "767": "field data: array element: nested container field (not flattened)",
+        "768": "field data: array element: nested container field (not flattened)",
+        "769": "field data: array element: nested container field (not flattened)",
+        "770": "field data: array element: nested container field (not flattened)",
+        "771": "field data: array element: nested container field (not flattened)",
+        "772": "field data: array element: nested container field (not flattened)",
+        "773": "field data: array element: nested container field (not flattened)",
+        "774": "field data: array element: nested container field (not flattened)"
       }
     },
     {
@@ -7209,20 +7812,20 @@
         "774": 67
       },
       "statusByWire": {
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -7409,15 +8012,15 @@
         "763": "ok",
         "764": "ok",
         "765": "ok",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -7441,12 +8044,12 @@
         "774": 33
       },
       "statusByWire": {
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
         "767": "rawOnly",
         "768": "rawOnly",
         "769": "rawOnly",
@@ -7455,6 +8058,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "field type: compound type: registryEntryHolder",
+        "768": "field type: compound type: registryEntryHolder",
+        "769": "field type: compound type: registryEntryHolder",
+        "770": "field type: compound type: registryEntryHolder",
+        "771": "field type: compound type: registryEntryHolder",
+        "772": "field type: compound type: registryEntryHolder",
+        "773": "field type: compound type: registryEntryHolder",
+        "774": "field type: compound type: registryEntryHolder"
       }
     },
     {
@@ -7476,6 +8089,14 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "768": "field entries: array element: nested container field (not flattened)",
+        "769": "field entries: array element: nested container field (not flattened)",
+        "770": "field entries: array element: nested container field (not flattened)",
+        "771": "field entries: array element: nested container field (not flattened)",
+        "773": "field entries: array element: nested container field (not flattened)",
+        "774": "field entries: array element: nested container field (not flattened)"
       }
     },
     {
@@ -7518,6 +8139,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "field crafting: nested container field (not flattened)",
+        "773": "field crafting: nested container field (not flattened)",
+        "774": "field crafting: nested container field (not flattened)"
       }
     },
     {
@@ -7711,7 +8337,7 @@
         "774": 78
       },
       "statusByWire": {
-        "765": "rawOnly",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -7721,6 +8347,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -7740,16 +8377,16 @@
         "774": 77
       },
       "statusByWire": {
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -7807,16 +8444,16 @@
         "735": "ok",
         "751": "ok",
         "754": "ok",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly"
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok"
       }
     },
     {
@@ -7888,13 +8525,13 @@
         "756": "ok",
         "757": "ok",
         "758": "ok",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
         "766": "rawOnly",
         "767": "rawOnly",
         "768": "rawOnly",
@@ -7904,6 +8541,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "field worldState: nested container field (not flattened)",
+        "767": "field worldState: nested container field (not flattened)",
+        "768": "field worldState: nested container field (not flattened)",
+        "769": "field worldState: nested container field (not flattened)",
+        "770": "field worldState: nested container field (not flattened)",
+        "771": "field worldState: nested container field (not flattened)",
+        "772": "field worldState: nested container field (not flattened)",
+        "773": "field worldState: nested container field (not flattened)",
+        "774": "field worldState: nested container field (not flattened)"
       }
     },
     {
@@ -8175,7 +8823,7 @@
         "47": 62
       },
       "statusByWire": {
-        "47": "rawOnly"
+        "47": "ok"
       }
     },
     {
@@ -8234,38 +8882,38 @@
         "774": 83
       },
       "statusByWire": {
-        "335": "rawOnly",
-        "338": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "404": "rawOnly",
-        "477": "rawOnly",
-        "498": "rawOnly",
-        "573": "rawOnly",
-        "578": "rawOnly",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "335": "ok",
+        "338": "ok",
+        "340": "ok",
+        "393": "ok",
+        "404": "ok",
+        "477": "ok",
+        "498": "ok",
+        "573": "ok",
+        "578": "ok",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -8291,22 +8939,22 @@
         "774": 84
       },
       "statusByWire": {
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -8332,6 +8980,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -8443,7 +9101,7 @@
         "774": 94
       },
       "statusByWire": {
-        "768": "rawOnly",
+        "768": "ok",
         "769": "ok",
         "770": "ok",
         "771": "ok",
@@ -8549,7 +9207,7 @@
         "774": 106
       },
       "statusByWire": {
-        "768": "rawOnly",
+        "768": "ok",
         "769": "ok",
         "770": "ok",
         "771": "ok",
@@ -8582,6 +9240,9 @@
         "772": "ok",
         "773": "ok",
         "774": "ok"
+      },
+      "rawReasonByWire": {
+        "766": "field power: nested container field (not flattened)"
       }
     },
     {
@@ -8873,6 +9534,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "field dialog: compound type: registryEntryHolder",
+        "773": "field dialog: compound type: registryEntryHolder",
+        "774": "field dialog: compound type: registryEntryHolder"
       }
     },
     {
@@ -9003,6 +9669,22 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "761": "field sound: compound type: registryEntryHolder",
+        "762": "field sound: compound type: registryEntryHolder",
+        "763": "field sound: compound type: registryEntryHolder",
+        "764": "field sound: compound type: registryEntryHolder",
+        "765": "field sound: compound type: registryEntryHolder",
+        "766": "field sound: compound type: registryEntryHolder",
+        "767": "field sound: compound type: registryEntryHolder",
+        "768": "field sound: compound type: registryEntryHolder",
+        "769": "field sound: compound type: registryEntryHolder",
+        "770": "field sound: compound type: registryEntryHolder",
+        "771": "field sound: compound type: registryEntryHolder",
+        "772": "field sound: compound type: registryEntryHolder",
+        "773": "field sound: compound type: registryEntryHolder",
+        "774": "field sound: compound type: registryEntryHolder"
       }
     },
     {
@@ -9090,6 +9772,47 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "47": "field velocity: unsupported switch",
+        "107": "field velocity: nested container field (not flattened)",
+        "109": "field velocity: nested container field (not flattened)",
+        "110": "field velocity: nested container field (not flattened)",
+        "210": "field velocity: nested container field (not flattened)",
+        "315": "field velocity: nested container field (not flattened)",
+        "316": "field velocity: nested container field (not flattened)",
+        "335": "field velocity: nested container field (not flattened)",
+        "338": "field velocity: nested container field (not flattened)",
+        "340": "field velocity: nested container field (not flattened)",
+        "393": "field velocity: nested container field (not flattened)",
+        "404": "field velocity: nested container field (not flattened)",
+        "477": "field velocity: nested container field (not flattened)",
+        "498": "field velocity: nested container field (not flattened)",
+        "573": "field velocity: nested container field (not flattened)",
+        "578": "field velocity: nested container field (not flattened)",
+        "735": "field velocity: nested container field (not flattened)",
+        "751": "field velocity: nested container field (not flattened)",
+        "754": "field velocity: nested container field (not flattened)",
+        "755": "field velocity: nested container field (not flattened)",
+        "756": "field velocity: nested container field (not flattened)",
+        "757": "field velocity: nested container field (not flattened)",
+        "758": "field velocity: nested container field (not flattened)",
+        "759": "field velocity: nested container field (not flattened)",
+        "760": "field velocity: nested container field (not flattened)",
+        "761": "field velocity: nested container field (not flattened)",
+        "762": "field velocity: nested container field (not flattened)",
+        "763": "field velocity: nested container field (not flattened)",
+        "764": "field velocity: nested container field (not flattened)",
+        "765": "field velocity: nested container field (not flattened)",
+        "766": "field velocity: nested container field (not flattened)",
+        "767": "field velocity: nested container field (not flattened)",
+        "768": "field velocity: nested container field (not flattened)",
+        "769": "field velocity: nested container field (not flattened)",
+        "770": "field velocity: nested container field (not flattened)",
+        "771": "field velocity: nested container field (not flattened)",
+        "772": "field velocity: nested container field (not flattened)",
+        "773": "field velocity: unmapped primitive: native",
+        "774": "field velocity: unmapped primitive: native"
       }
     },
     {
@@ -9224,6 +9947,31 @@
         "756": "rawOnly",
         "757": "rawOnly",
         "758": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "47": "field velocity: nested container field (not flattened)",
+        "107": "field velocity: nested container field (not flattened)",
+        "109": "field velocity: nested container field (not flattened)",
+        "110": "field velocity: nested container field (not flattened)",
+        "210": "field velocity: nested container field (not flattened)",
+        "315": "field velocity: nested container field (not flattened)",
+        "316": "field velocity: nested container field (not flattened)",
+        "335": "field velocity: nested container field (not flattened)",
+        "338": "field velocity: nested container field (not flattened)",
+        "340": "field velocity: nested container field (not flattened)",
+        "393": "field velocity: nested container field (not flattened)",
+        "404": "field velocity: nested container field (not flattened)",
+        "477": "field velocity: nested container field (not flattened)",
+        "498": "field velocity: nested container field (not flattened)",
+        "573": "field velocity: nested container field (not flattened)",
+        "578": "field velocity: nested container field (not flattened)",
+        "735": "field velocity: nested container field (not flattened)",
+        "751": "field velocity: nested container field (not flattened)",
+        "754": "field velocity: nested container field (not flattened)",
+        "755": "field velocity: nested container field (not flattened)",
+        "756": "field velocity: nested container field (not flattened)",
+        "757": "field velocity: nested container field (not flattened)",
+        "758": "field velocity: nested container field (not flattened)"
       }
     },
     {
@@ -9407,6 +10155,10 @@
         "772": "ok",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -9648,6 +10400,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -9758,45 +10521,45 @@
         "774": 15
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "107": "rawOnly",
-        "109": "rawOnly",
-        "110": "rawOnly",
-        "210": "rawOnly",
-        "315": "rawOnly",
-        "316": "rawOnly",
-        "335": "rawOnly",
-        "338": "rawOnly",
-        "340": "rawOnly",
-        "393": "rawOnly",
-        "404": "rawOnly",
-        "477": "rawOnly",
-        "498": "rawOnly",
-        "573": "rawOnly",
-        "578": "rawOnly",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "47": "ok",
+        "107": "ok",
+        "109": "ok",
+        "110": "ok",
+        "210": "ok",
+        "315": "ok",
+        "316": "ok",
+        "335": "ok",
+        "338": "ok",
+        "340": "ok",
+        "393": "ok",
+        "404": "ok",
+        "477": "ok",
+        "498": "ok",
+        "573": "ok",
+        "578": "ok",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -9962,10 +10725,10 @@
         "774": 124
       },
       "statusByWire": {
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "770": "ok",
+        "771": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -10115,6 +10878,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "field waypoint: nested container field (not flattened)",
+        "773": "field waypoint: nested container field (not flattened)",
+        "774": "field waypoint: nested container field (not flattened)"
       }
     },
     {
@@ -10151,17 +10919,17 @@
         "774": 50
       },
       "statusByWire": {
-        "477": "rawOnly",
-        "498": "rawOnly",
-        "573": "rawOnly",
-        "578": "rawOnly",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
+        "477": "ok",
+        "498": "ok",
+        "573": "ok",
+        "578": "ok",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
         "759": "ok",
         "760": "ok",
         "761": "ok",
@@ -10178,6 +10946,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "field trades: array element: nested container field (not flattened)",
+        "767": "field trades: array element: nested container field (not flattened)",
+        "768": "field trades: array element: nested container field (not flattened)",
+        "769": "field trades: array element: nested container field (not flattened)",
+        "770": "field trades: array element: nested container field (not flattened)",
+        "771": "field trades: array element: nested container field (not flattened)",
+        "772": "field trades: array element: nested container field (not flattened)",
+        "773": "field trades: array element: nested container field (not flattened)",
+        "774": "field trades: array element: nested container field (not flattened)"
       }
     },
     {
@@ -10252,6 +11031,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -10375,29 +11165,29 @@
         "335": "ok",
         "338": "ok",
         "340": "ok",
-        "393": "rawOnly",
-        "404": "rawOnly",
-        "477": "rawOnly",
-        "498": "rawOnly",
-        "573": "rawOnly",
-        "578": "rawOnly",
-        "735": "rawOnly",
-        "751": "rawOnly",
-        "754": "rawOnly",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "772": "rawOnly"
+        "393": "ok",
+        "404": "ok",
+        "477": "ok",
+        "498": "ok",
+        "573": "ok",
+        "578": "ok",
+        "735": "ok",
+        "751": "ok",
+        "754": "ok",
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "772": "ok"
       }
     },
     {
@@ -10550,26 +11340,26 @@
         "735": "ok",
         "751": "ok",
         "754": "ok",
-        "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "755": "ok",
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -10951,25 +11741,47 @@
         "751": "rawOnly",
         "754": "rawOnly",
         "755": "rawOnly",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
+      },
+      "rawReasonByWire": {
+        "47": "field items: unsupported array countType: i16",
+        "107": "field items: unsupported array countType: i16",
+        "109": "field items: unsupported array countType: i16",
+        "110": "field items: unsupported array countType: i16",
+        "210": "field items: unsupported array countType: i16",
+        "315": "field items: unsupported array countType: i16",
+        "316": "field items: unsupported array countType: i16",
+        "335": "field items: unsupported array countType: i16",
+        "338": "field items: unsupported array countType: i16",
+        "340": "field items: unsupported array countType: i16",
+        "393": "field items: unsupported array countType: i16",
+        "404": "field items: unsupported array countType: i16",
+        "477": "field items: unsupported array countType: i16",
+        "498": "field items: unsupported array countType: i16",
+        "573": "field items: unsupported array countType: i16",
+        "578": "field items: unsupported array countType: i16",
+        "735": "field items: unsupported array countType: i16",
+        "751": "field items: unsupported array countType: i16",
+        "754": "field items: unsupported array countType: i16",
+        "755": "field items: unsupported array countType: i16"
       }
     },
     {
@@ -11436,6 +12248,37 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "393": "field data: compound type: particleData",
+        "404": "field data: compound type: particleData",
+        "477": "field data: compound type: particleData",
+        "498": "field data: compound type: particleData",
+        "573": "field data: compound type: particleData",
+        "578": "field data: compound type: particleData",
+        "735": "field data: compound type: particleData",
+        "751": "field data: compound type: particleData",
+        "754": "field data: compound type: particleData",
+        "755": "field data: compound type: particleData",
+        "756": "field data: compound type: particleData",
+        "757": "field data: compound type: particleData",
+        "758": "field data: compound type: particleData",
+        "759": "field data: compound type: particleData",
+        "760": "field data: compound type: particleData",
+        "761": "field data: compound type: particleData",
+        "762": "field data: compound type: particleData",
+        "763": "field data: compound type: particleData",
+        "764": "field data: compound type: particleData",
+        "765": "field data: compound type: particleData",
+        "766": "field particle: nested container field (not flattened)",
+        "767": "field particle: nested container field (not flattened)",
+        "768": "field particle: nested container field (not flattened)",
+        "769": "field particle: nested container field (not flattened)",
+        "770": "field particle: nested container field (not flattened)",
+        "771": "field particle: nested container field (not flattened)",
+        "772": "field particle: nested container field (not flattened)",
+        "773": "field particle: nested container field (not flattened)",
+        "774": "field particle: nested container field (not flattened)"
       }
     },
     {
@@ -11596,6 +12439,40 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "335": "field tabId: unsupported switch",
+        "338": "field tabId: unsupported switch",
+        "340": "field tabId: unsupported switch",
+        "393": "field tabId: unsupported switch",
+        "404": "field tabId: unsupported switch",
+        "477": "field tabId: unsupported switch",
+        "498": "field tabId: unsupported switch",
+        "573": "field tabId: unsupported switch",
+        "578": "field tabId: unsupported switch",
+        "735": "field tabId: unsupported switch",
+        "751": "field tabId: unsupported switch",
+        "754": "field tabId: unsupported switch",
+        "755": "field tabId: unsupported switch",
+        "756": "field tabId: unsupported switch",
+        "757": "field tabId: unsupported switch",
+        "758": "field tabId: unsupported switch",
+        "759": "field tabId: unsupported switch",
+        "760": "field tabId: unsupported switch",
+        "761": "field tabId: unsupported switch",
+        "762": "field tabId: unsupported switch",
+        "763": "field tabId: unsupported switch",
+        "764": "field tabId: unsupported switch",
+        "765": "field tabId: unsupported switch",
+        "766": "field tabId: unsupported switch",
+        "767": "field tabId: unsupported switch",
+        "768": "field tabId: unsupported switch",
+        "769": "field tabId: unsupported switch",
+        "770": "field tabId: unsupported switch",
+        "771": "field tabId: unsupported switch",
+        "772": "field tabId: unsupported switch",
+        "773": "field tabId: unsupported switch",
+        "774": "field tabId: unsupported switch"
       }
     },
     {
@@ -11869,9 +12746,9 @@
         "774": 4
       },
       "statusByWire": {
-        "771": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "771": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -11953,7 +12830,7 @@
       },
       "statusByWire": {
         "759": "ok",
-        "760": "rawOnly",
+        "760": "ok",
         "761": "rawOnly",
         "762": "rawOnly",
         "763": "rawOnly",
@@ -11968,6 +12845,13 @@
         "772": "ok",
         "773": "ok",
         "774": "ok"
+      },
+      "rawReasonByWire": {
+        "761": "field argumentSignatures: array element: nested container field (not flattened)",
+        "762": "field argumentSignatures: array element: nested container field (not flattened)",
+        "763": "field argumentSignatures: array element: nested container field (not flattened)",
+        "764": "field argumentSignatures: array element: nested container field (not flattened)",
+        "765": "field argumentSignatures: array element: nested container field (not flattened)"
       }
     },
     {
@@ -11995,6 +12879,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "field argumentSignatures: array element: nested container field (not flattened)",
+        "767": "field argumentSignatures: array element: nested container field (not flattened)",
+        "768": "field argumentSignatures: array element: nested container field (not flattened)",
+        "769": "field argumentSignatures: array element: nested container field (not flattened)",
+        "770": "field argumentSignatures: array element: nested container field (not flattened)",
+        "771": "field argumentSignatures: array element: nested container field (not flattened)",
+        "772": "field argumentSignatures: array element: nested container field (not flattened)",
+        "773": "field argumentSignatures: array element: nested container field (not flattened)",
+        "774": "field argumentSignatures: array element: nested container field (not flattened)"
       }
     },
     {
@@ -12021,7 +12916,7 @@
       },
       "statusByWire": {
         "759": "ok",
-        "760": "rawOnly",
+        "760": "ok",
         "761": "rawOnly",
         "762": "rawOnly",
         "763": "rawOnly",
@@ -12036,6 +12931,22 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "761": "field signature: unsupported option shape",
+        "762": "field signature: unsupported option shape",
+        "763": "field signature: unsupported option shape",
+        "764": "field signature: unsupported option shape",
+        "765": "field signature: unsupported option shape",
+        "766": "field signature: unsupported option shape",
+        "767": "field signature: unsupported option shape",
+        "768": "field signature: unsupported option shape",
+        "769": "field signature: unsupported option shape",
+        "770": "field signature: unsupported option shape",
+        "771": "field signature: unsupported option shape",
+        "772": "field signature: unsupported option shape",
+        "773": "field signature: unsupported option shape",
+        "774": "field signature: unsupported option shape"
       }
     },
     {
@@ -12349,6 +13260,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -12449,6 +13371,18 @@
         "573": "rawOnly",
         "578": "rawOnly",
         "735": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "335": "field undefined: unsupported switch",
+        "338": "field undefined: unsupported switch",
+        "340": "field undefined: unsupported switch",
+        "393": "field undefined: unsupported switch",
+        "404": "field undefined: unsupported switch",
+        "477": "field undefined: unsupported switch",
+        "498": "field undefined: unsupported switch",
+        "573": "field undefined: unsupported switch",
+        "578": "field undefined: unsupported switch",
+        "735": "field undefined: unsupported switch"
       }
     },
     {
@@ -12464,6 +13398,11 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "771": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -12585,8 +13524,8 @@
         "774": 22
       },
       "statusByWire": {
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -12688,25 +13627,25 @@
         "751": "ok",
         "754": "ok",
         "755": "ok",
-        "756": "rawOnly",
-        "757": "rawOnly",
-        "758": "rawOnly",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "756": "ok",
+        "757": "ok",
+        "758": "ok",
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -12877,10 +13816,10 @@
         "768": "ok",
         "769": "ok",
         "770": "ok",
-        "771": "rawOnly",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -12961,13 +13900,13 @@
         "765": "ok",
         "766": "ok",
         "767": "ok",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -13340,13 +14279,13 @@
         "765": "ok",
         "766": "ok",
         "767": "ok",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -13371,7 +14310,7 @@
         "774": 5
       },
       "statusByWire": {
-        "760": "rawOnly",
+        "760": "ok",
         "761": "ok",
         "762": "ok",
         "763": "ok",
@@ -13594,12 +14533,12 @@
         "774": 42
       },
       "statusByWire": {
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -13748,13 +14687,13 @@
         "765": "ok",
         "766": "ok",
         "767": "ok",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -13835,13 +14774,13 @@
         "765": "ok",
         "766": "ok",
         "767": "ok",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -14266,22 +15205,22 @@
         "756": "ok",
         "757": "ok",
         "758": "ok",
-        "759": "rawOnly",
-        "760": "rawOnly",
-        "761": "rawOnly",
-        "762": "rawOnly",
-        "763": "rawOnly",
-        "764": "rawOnly",
-        "765": "rawOnly",
-        "766": "rawOnly",
-        "767": "rawOnly",
-        "768": "rawOnly",
-        "769": "rawOnly",
-        "770": "rawOnly",
-        "771": "rawOnly",
-        "772": "rawOnly",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "759": "ok",
+        "760": "ok",
+        "761": "ok",
+        "762": "ok",
+        "763": "ok",
+        "764": "ok",
+        "765": "ok",
+        "766": "ok",
+        "767": "ok",
+        "768": "ok",
+        "769": "ok",
+        "770": "ok",
+        "771": "ok",
+        "772": "ok",
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -14369,6 +15308,12 @@
         "772": "ok",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "770": "field item: nested container field (not flattened)",
+        "771": "field item: nested container field (not flattened)",
+        "773": "field item: nested container field (not flattened)",
+        "774": "field item: nested container field (not flattened)"
       }
     },
     {
@@ -14428,10 +15373,10 @@
         "768": "ok",
         "769": "ok",
         "770": "ok",
-        "771": "rawOnly",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -14565,6 +15510,17 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "766": "minecraft-data has no packet schema",
+        "767": "minecraft-data has no packet schema",
+        "768": "minecraft-data has no packet schema",
+        "769": "minecraft-data has no packet schema",
+        "770": "minecraft-data has no packet schema",
+        "771": "minecraft-data has no packet schema",
+        "772": "minecraft-data has no packet schema",
+        "773": "minecraft-data has no packet schema",
+        "774": "minecraft-data has no packet schema"
       }
     },
     {
@@ -14860,16 +15816,16 @@
         "774": 14
       },
       "statusByWire": {
-        "47": "rawOnly",
-        "107": "rawOnly",
-        "109": "rawOnly",
-        "110": "rawOnly",
-        "210": "rawOnly",
-        "315": "rawOnly",
-        "316": "rawOnly",
-        "335": "rawOnly",
-        "338": "rawOnly",
-        "340": "rawOnly",
+        "47": "ok",
+        "107": "ok",
+        "109": "ok",
+        "110": "ok",
+        "210": "ok",
+        "315": "ok",
+        "316": "ok",
+        "335": "ok",
+        "338": "ok",
+        "340": "ok",
         "393": "ok",
         "404": "ok",
         "477": "ok",
@@ -15001,6 +15957,12 @@
         "771": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "770": "field data: nested container field (not flattened)",
+        "771": "field data: nested container field (not flattened)",
+        "773": "field data: nested container field (not flattened)",
+        "774": "field data: nested container field (not flattened)"
       }
     },
     {
@@ -15415,11 +16377,11 @@
         "767": "ok",
         "768": "ok",
         "769": "ok",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {
@@ -15592,6 +16554,16 @@
         "772": "rawOnly",
         "773": "rawOnly",
         "774": "rawOnly"
+      },
+      "rawReasonByWire": {
+        "767": "field rotation: nested container field (not flattened)",
+        "768": "field rotation: nested container field (not flattened)",
+        "769": "field rotation: nested container field (not flattened)",
+        "770": "field rotation: nested container field (not flattened)",
+        "771": "field rotation: nested container field (not flattened)",
+        "772": "field rotation: nested container field (not flattened)",
+        "773": "field rotation: nested container field (not flattened)",
+        "774": "field rotation: nested container field (not flattened)"
       }
     },
     {
@@ -15759,11 +16731,11 @@
         "767": "ok",
         "768": "ok",
         "769": "ok",
-        "770": "rawOnly",
-        "771": "rawOnly",
+        "770": "ok",
+        "771": "ok",
         "772": "ok",
-        "773": "rawOnly",
-        "774": "rawOnly"
+        "773": "ok",
+        "774": "ok"
       }
     },
     {

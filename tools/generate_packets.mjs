@@ -268,8 +268,23 @@ function mapFieldType(type, stateTypes, globalTypes) {
             if (elemMapped.fieldType === 'var_int') {
                 return { ok: true, fieldType: 'var_int_array' };
             }
+            if (elemMapped.fieldType === 'u8') {
+                return { ok: true, fieldType: 'byte_array' };
+            }
             if (elemMapped.fieldType === 'var_long') {
                 return { ok: true, fieldType: 'var_long_array' };
+            }
+            if (elemMapped.fieldType === 'i64_be') {
+                return { ok: true, fieldType: 'i64_array' };
+            }
+            if (elemMapped.fieldType === 'string') {
+                return { ok: true, fieldType: 'string_array' };
+            }
+            if (elemMapped.fieldType === 'uuid') {
+                return { ok: true, fieldType: 'uuid_array' };
+            }
+            if (elemMapped.fieldType === 'slot') {
+                return { ok: true, fieldType: 'slot_array' };
             }
             if (elemMapped.fieldType === 'byte_array') {
                 return { ok: true, fieldType: 'byte_array' };
@@ -277,7 +292,18 @@ function mapFieldType(type, stateTypes, globalTypes) {
             return { ok: false, reason: `unsupported array element type: ${elemMapped.fieldType}` };
         }
         if (kind === 'option') {
-            const params = resolved[1] || {};
+            const optionPayload = resolved[1];
+            if (optionPayload !== undefined && (!optionPayload.fields || typeof optionPayload === 'string' || Array.isArray(optionPayload))) {
+                const innerMapped = mapFieldType(optionPayload, stateTypes, globalTypes);
+                if (innerMapped.ok && innerMapped.fieldType) {
+                    return {
+                        ok: true,
+                        expandOption: true,
+                        innerType: innerMapped.fieldType,
+                    };
+                }
+            }
+            const params = optionPayload || {};
             const innerFields = params.fields || [];
             if (innerFields.length === 1) {
                 const innerMapped = mapFieldType(innerFields[0], stateTypes, globalTypes);
@@ -293,6 +319,14 @@ function mapFieldType(type, stateTypes, globalTypes) {
         }
         if (kind === 'bitfield') {
             return { ok: true, fieldType: 'u64_be' };
+        }
+        if (kind === 'bitflags' || kind === 'mapper') {
+            const params = resolved[1] || {};
+            const innerMapped = mapFieldType(params.type, stateTypes, globalTypes);
+            if (innerMapped.ok && innerMapped.fieldType) {
+                return { ok: true, fieldType: innerMapped.fieldType };
+            }
+            return { ok: false, reason: `${kind} underlying type: ${innerMapped.reason || 'unsupported'}` };
         }
         if (kind === 'container') {
             return { ok: false, reason: 'nested container field (not flattened)' };
@@ -387,6 +421,29 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
                     fields.push({ name: fname, type: 'byte_array' });
                     continue;
                 }
+            }
+        }
+        if (Array.isArray(resolved) && resolved[0] === 'option') {
+            const optionPayload = resolveType(resolved[1], stateTypes, globalTypes);
+            if (Array.isArray(optionPayload) && optionPayload[0] === 'container') {
+                const inner = flattenContainerFields(optionPayload[1] || [], stateTypes, globalTypes, false);
+                if (!inner.ok) {
+                    if (tailOnComplex) {
+                        fields.push({ name: 'tail', type: 'rest_buffer' });
+                        return { ok: true, fields };
+                    }
+                    return { ok: false, reason: `field ${fieldEntry.name}: option container: ${inner.reason}`, fields: [] };
+                }
+                const presentName = fname + '_present';
+                fields.push({ name: presentName, type: 'boolean' });
+                for (const innerField of inner.fields) {
+                    fields.push({
+                        ...innerField,
+                        name: fname + '_' + innerField.name,
+                        optional_if: presentName,
+                    });
+                }
+                continue;
             }
         }
 
@@ -623,11 +680,15 @@ function aggregateAcrossVersions(perVersion) {
                     fieldSets: new Map(),
                     ids: new Map(),
                     coverage: new Map(),
+                    rawReasons: new Map(),
                 };
                 byKey.set(key, schema);
             }
             schema.ids.set(wire, pkt.id);
             schema.coverage.set(wire, pkt.status);
+            if (pkt.reason) {
+                schema.rawReasons.set(wire, pkt.reason);
+            }
             schema.fieldSets.set(wire, pkt.fields);
             schema.displayByWire ??= new Map();
             schema.displayByWire.set(wire, display);
@@ -790,8 +851,12 @@ function emitCoverageJson(perVersion, schemas) {
     }
     for (const schema of [...schemas.values()].sort((a, b) => a.key.localeCompare(b.key))) {
         const status = {};
+        const rawReasons = {};
         for (const [wire, st] of schema.coverage.entries()) {
             status[wire] = st;
+        }
+        for (const [wire, reason] of schema.rawReasons.entries()) {
+            rawReasons[wire] = reason;
         }
         out.keys.push({
             key: schema.key,
@@ -799,6 +864,7 @@ function emitCoverageJson(perVersion, schemas) {
             direction: schema.direction,
             ids: Object.fromEntries(schema.ids),
             statusByWire: status,
+            ...(Object.keys(rawReasons).length > 0 ? { rawReasonByWire: rawReasons } : {}),
         });
     }
     return JSON.stringify(out, null, 2);

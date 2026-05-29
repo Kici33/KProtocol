@@ -1,21 +1,14 @@
-FROM ubuntu:22.04
+FROM node:20-bookworm-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
     cmake \
-    curl \
+    g++ \
     git \
-    gnupg \
-    lsb-release \
-    software-properties-common \
-    wget \
+    make \
     zlib1g-dev \
-    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace

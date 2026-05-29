@@ -27,6 +27,14 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 9);
         schema.ids.emplace(KnownVersion::v1_21_11, 9);
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"url", kprotocol::FieldType::string},
+            {"hash", kprotocol::FieldType::string},
+            {"forced", kprotocol::FieldType::boolean},
+            {"promptMessage_present", kprotocol::FieldType::boolean},
+            {"promptMessage", kprotocol::FieldType::optional_nbt, "promptMessage_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -156,7 +164,7 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 12);
         schema.ids.emplace(KnownVersion::v1_21_11, 12);
         schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"features", kprotocol::FieldType::string_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -241,7 +249,8 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
             {"codec", kprotocol::FieldType::optional_nbt}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"id", kprotocol::FieldType::string},
+            {"entries", kprotocol::FieldType::byte_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -261,6 +270,10 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 8);
         schema.ids.emplace(KnownVersion::v1_21_11, 8);
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"uuid_present", kprotocol::FieldType::boolean},
+            {"uuid", kprotocol::FieldType::uuid, "uuid_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -289,7 +302,11 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(KnownVersion::v1_20_2, 6);
         schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"url", kprotocol::FieldType::string},
+            {"hash", kprotocol::FieldType::string},
+            {"forced", kprotocol::FieldType::boolean},
+            {"promptMessage_present", kprotocol::FieldType::boolean},
+            {"promptMessage", kprotocol::FieldType::string, "promptMessage_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1004,7 +1021,31 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
             {"username", kprotocol::FieldType::string}
         });
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"uuid", kprotocol::FieldType::uuid},
+            {"username", kprotocol::FieldType::string},
+            {"properties", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"username", kprotocol::FieldType::string},
+            {"properties", kprotocol::FieldType::byte_array},
+            {"strictErrorHandling", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"username", kprotocol::FieldType::string},
+            {"properties", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"username", kprotocol::FieldType::string},
+            {"properties", kprotocol::FieldType::byte_array},
+            {"strictErrorHandling", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"username", kprotocol::FieldType::string},
+            {"properties", kprotocol::FieldType::byte_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1138,7 +1179,9 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 2);
         schema.ids.emplace(KnownVersion::v1_21_11, 2);
         schema.field_sets.emplace(KnownVersion::v1_13, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"messageId", kprotocol::FieldType::var_int},
+            {"data_present", kprotocol::FieldType::boolean},
+            {"data", kprotocol::FieldType::rest_buffer, "data_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1190,7 +1233,25 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
             {"username", kprotocol::FieldType::string}
         });
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"username", kprotocol::FieldType::string},
+            {"signature_present", kprotocol::FieldType::boolean},
+            {"signature_timestamp", kprotocol::FieldType::i64_be, "signature_present"},
+            {"signature_publicKey", kprotocol::FieldType::byte_array, "signature_present"},
+            {"signature_signature", kprotocol::FieldType::byte_array, "signature_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"username", kprotocol::FieldType::string},
+            {"signature_present", kprotocol::FieldType::boolean},
+            {"signature_timestamp", kprotocol::FieldType::i64_be, "signature_present"},
+            {"signature_publicKey", kprotocol::FieldType::byte_array, "signature_present"},
+            {"signature_signature", kprotocol::FieldType::byte_array, "signature_present"},
+            {"playerUUID_present", kprotocol::FieldType::boolean},
+            {"playerUUID", kprotocol::FieldType::uuid, "playerUUID_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
+            {"username", kprotocol::FieldType::string},
+            {"playerUUID_present", kprotocol::FieldType::boolean},
+            {"playerUUID", kprotocol::FieldType::uuid, "playerUUID_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
             {"username", kprotocol::FieldType::string},
@@ -1340,6 +1401,14 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 79);
         schema.ids.emplace(KnownVersion::v1_21_11, 79);
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"uuid", kprotocol::FieldType::uuid},
+            {"url", kprotocol::FieldType::string},
+            {"hash", kprotocol::FieldType::string},
+            {"forced", kprotocol::FieldType::boolean},
+            {"promptMessage_present", kprotocol::FieldType::boolean},
+            {"promptMessage", kprotocol::FieldType::optional_nbt, "promptMessage_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -1849,7 +1918,9 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_19, 12);
         schema.ids.emplace(KnownVersion::v1_19_2, 12);
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"queryId", kprotocol::FieldType::i32_be},
+            {"message_present", kprotocol::FieldType::boolean},
+            {"message", kprotocol::FieldType::string, "message_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -1874,7 +1945,8 @@ static void register_generated_packets_batch_1(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 23);
         schema.ids.emplace(KnownVersion::v1_21_11, 23);
         schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"action", kprotocol::FieldType::var_int},
+            {"entries", kprotocol::FieldType::string_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2365,7 +2437,14 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 25);
         schema.ids.emplace(KnownVersion::v1_21_11, 25);
         schema.field_sets.emplace(KnownVersion::v1_19_4, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"entityId", kprotocol::FieldType::var_int},
+            {"sourceTypeId", kprotocol::FieldType::var_int},
+            {"sourceCauseId", kprotocol::FieldType::var_int},
+            {"sourceDirectId", kprotocol::FieldType::var_int},
+            {"sourcePosition_present", kprotocol::FieldType::boolean},
+            {"sourcePosition_x", kprotocol::FieldType::f64_be, "sourcePosition_present"},
+            {"sourcePosition_y", kprotocol::FieldType::f64_be, "sourcePosition_present"},
+            {"sourcePosition_z", kprotocol::FieldType::f64_be, "sourcePosition_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2472,7 +2551,8 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 30);
         schema.ids.emplace(KnownVersion::v1_21_11, 30);
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"sample", kprotocol::FieldType::i64_array},
+            {"type", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2617,14 +2697,16 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
             {"difficultyLocked", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"difficulty", kprotocol::FieldType::var_int},
+            {"difficultyLocked", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"difficulty", kprotocol::FieldType::u8},
             {"difficultyLocked", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"difficulty", kprotocol::FieldType::var_int},
+            {"difficultyLocked", kprotocol::FieldType::boolean}
         });
         registry.register_schema(std::move(schema));
     }
@@ -2833,7 +2915,13 @@ static void register_generated_packets_batch_2(PacketRegistry& registry) {
             {"hideParticles", kprotocol::FieldType::i8}
         });
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"entityId", kprotocol::FieldType::var_int},
+            {"effectId", kprotocol::FieldType::var_int},
+            {"amplifier", kprotocol::FieldType::i8},
+            {"duration", kprotocol::FieldType::var_int},
+            {"hideParticles", kprotocol::FieldType::i8},
+            {"factorCodec_present", kprotocol::FieldType::boolean},
+            {"factorCodec", kprotocol::FieldType::optional_nbt, "factorCodec_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"entityId", kprotocol::FieldType::var_int},
@@ -3335,9 +3423,6 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"entityId", kprotocol::FieldType::var_int},
             {"properties", kprotocol::FieldType::byte_array}
         });
-        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -3572,7 +3657,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_19_4, 107);
         schema.ids.emplace(KnownVersion::v1_20, 107);
         schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"features", kprotocol::FieldType::string_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3623,16 +3708,6 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.field_sets.emplace(KnownVersion::v1_8, std::vector<FieldSpec>{
             {"reason", kprotocol::FieldType::u8},
             {"gameMode", kprotocol::FieldType::f32_be}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
-            {"reason", kprotocol::FieldType::u8},
-            {"gameMode", kprotocol::FieldType::f32_be}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -3993,6 +4068,139 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"enableRespawnScreen", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_16, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::u8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"dimension", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::u8},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_16_2, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::u8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"dimension", kprotocol::FieldType::optional_nbt},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_17, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::i8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"dimension", kprotocol::FieldType::optional_nbt},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_18, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::i8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"dimension", kprotocol::FieldType::optional_nbt},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"simulationDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::i8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"worldType", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"simulationDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::i8},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"dimensionCodec", kprotocol::FieldType::optional_nbt},
+            {"worldType", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"simulationDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"},
+            {"portalCooldown", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
+            {"entityId", kprotocol::FieldType::i32_be},
+            {"isHardcore", kprotocol::FieldType::boolean},
+            {"worldNames", kprotocol::FieldType::string_array},
+            {"maxPlayers", kprotocol::FieldType::var_int},
+            {"viewDistance", kprotocol::FieldType::var_int},
+            {"simulationDistance", kprotocol::FieldType::var_int},
+            {"reducedDebugInfo", kprotocol::FieldType::boolean},
+            {"enableRespawnScreen", kprotocol::FieldType::boolean},
+            {"doLimitedCrafting", kprotocol::FieldType::boolean},
+            {"worldType", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"gameMode", kprotocol::FieldType::u8},
+            {"previousGameMode", kprotocol::FieldType::i8},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"},
+            {"portalCooldown", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -4107,6 +4315,72 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.field_sets.emplace(KnownVersion::v1_9_4, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
+        schema.field_sets.emplace(KnownVersion::v1_18, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"heightmaps", kprotocol::FieldType::optional_nbt},
+            {"chunkData", kprotocol::FieldType::byte_array},
+            {"blockEntities", kprotocol::FieldType::byte_array},
+            {"trustEdges", kprotocol::FieldType::boolean},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"heightmaps", kprotocol::FieldType::optional_nbt},
+            {"chunkData", kprotocol::FieldType::byte_array},
+            {"blockEntities", kprotocol::FieldType::byte_array},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_5, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"heightmaps", kprotocol::FieldType::byte_array},
+            {"chunkData", kprotocol::FieldType::byte_array},
+            {"blockEntities", kprotocol::FieldType::byte_array},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"heightmaps", kprotocol::FieldType::optional_nbt},
+            {"chunkData", kprotocol::FieldType::byte_array},
+            {"blockEntities", kprotocol::FieldType::byte_array},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::i32_be},
+            {"z", kprotocol::FieldType::i32_be},
+            {"heightmaps", kprotocol::FieldType::byte_array},
+            {"chunkData", kprotocol::FieldType::byte_array},
+            {"blockEntities", kprotocol::FieldType::byte_array},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -4129,7 +4403,11 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(KnownVersion::v1_19_2, 50);
         schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"previousSignature_present", kprotocol::FieldType::boolean},
+            {"previousSignature", kprotocol::FieldType::byte_array, "previousSignature_present"},
+            {"senderUuid", kprotocol::FieldType::uuid},
+            {"signature", kprotocol::FieldType::byte_array},
+            {"messageHash", kprotocol::FieldType::byte_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -4675,6 +4953,39 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 63);
         schema.ids.emplace(KnownVersion::v1_21_11, 63);
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
+            {"signedChatContent", kprotocol::FieldType::string},
+            {"unsignedChatContent_present", kprotocol::FieldType::boolean},
+            {"unsignedChatContent", kprotocol::FieldType::string, "unsignedChatContent_present"},
+            {"type", kprotocol::FieldType::var_int},
+            {"senderUuid", kprotocol::FieldType::uuid},
+            {"senderName", kprotocol::FieldType::string},
+            {"senderTeam_present", kprotocol::FieldType::boolean},
+            {"senderTeam", kprotocol::FieldType::string, "senderTeam_present"},
+            {"timestamp", kprotocol::FieldType::i64_be},
+            {"salt", kprotocol::FieldType::i64_be},
+            {"signature", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"previousSignature_present", kprotocol::FieldType::boolean},
+            {"previousSignature", kprotocol::FieldType::byte_array, "previousSignature_present"},
+            {"senderUuid", kprotocol::FieldType::uuid},
+            {"signature", kprotocol::FieldType::byte_array},
+            {"plainMessage", kprotocol::FieldType::string},
+            {"formattedMessage_present", kprotocol::FieldType::boolean},
+            {"formattedMessage", kprotocol::FieldType::string, "formattedMessage_present"},
+            {"timestamp", kprotocol::FieldType::i64_be},
+            {"salt", kprotocol::FieldType::i64_be},
+            {"previousMessages", kprotocol::FieldType::byte_array},
+            {"unsignedChatContent_present", kprotocol::FieldType::boolean},
+            {"unsignedChatContent", kprotocol::FieldType::string, "unsignedChatContent_present"},
+            {"filterType", kprotocol::FieldType::var_int},
+            {"filterTypeMask", kprotocol::FieldType::i64_array, "", "filterType", {2}},
+            {"type", kprotocol::FieldType::var_int},
+            {"networkName", kprotocol::FieldType::string},
+            {"networkTargetName_present", kprotocol::FieldType::boolean},
+            {"networkTargetName", kprotocol::FieldType::string, "networkTargetName_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -4748,7 +5059,7 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 67);
         schema.ids.emplace(KnownVersion::v1_21_11, 67);
         schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::uuid_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -4910,7 +5221,46 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"teleportId", kprotocol::FieldType::var_int}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8},
+            {"teleportId", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
+            {"teleportId", kprotocol::FieldType::var_int},
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"dx", kprotocol::FieldType::f64_be},
+            {"dy", kprotocol::FieldType::f64_be},
+            {"dz", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u32_be}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8},
+            {"teleportId", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
+            {"teleportId", kprotocol::FieldType::var_int},
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"dx", kprotocol::FieldType::f64_be},
+            {"dy", kprotocol::FieldType::f64_be},
+            {"dz", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u32_be}
         });
         registry.register_schema(std::move(schema));
     }
@@ -4934,6 +5284,20 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 33);
         schema.ids.emplace(KnownVersion::v1_21_11, 33);
         schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
+            {"message", kprotocol::FieldType::string},
+            {"type", kprotocol::FieldType::var_int},
+            {"name", kprotocol::FieldType::string},
+            {"target_present", kprotocol::FieldType::boolean},
+            {"target", kprotocol::FieldType::string, "target_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"message", kprotocol::FieldType::optional_nbt},
+            {"type", kprotocol::FieldType::var_int},
+            {"name", kprotocol::FieldType::optional_nbt},
+            {"target_present", kprotocol::FieldType::boolean},
+            {"target", kprotocol::FieldType::optional_nbt, "target_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_1, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -5126,6 +5490,10 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 78);
         schema.ids.emplace(KnownVersion::v1_21_11, 78);
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"uuid_present", kprotocol::FieldType::boolean},
+            {"uuid", kprotocol::FieldType::uuid, "uuid_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -5146,7 +5514,9 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 77);
         schema.ids.emplace(KnownVersion::v1_21_11, 77);
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"entity_name", kprotocol::FieldType::string},
+            {"objective_name_present", kprotocol::FieldType::boolean},
+            {"objective_name", kprotocol::FieldType::string, "objective_name_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5189,7 +5559,11 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"hash", kprotocol::FieldType::string}
         });
         schema.field_sets.emplace(KnownVersion::v1_17, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"url", kprotocol::FieldType::string},
+            {"hash", kprotocol::FieldType::string},
+            {"forced", kprotocol::FieldType::boolean},
+            {"promptMessage_present", kprotocol::FieldType::boolean},
+            {"promptMessage", kprotocol::FieldType::string, "promptMessage_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5275,6 +5649,60 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"copyMetadata", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
+            {"dimension", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"gamemode", kprotocol::FieldType::u8},
+            {"previousGamemode", kprotocol::FieldType::u8},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"copyMetadata", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"dimension", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"gamemode", kprotocol::FieldType::i8},
+            {"previousGamemode", kprotocol::FieldType::u8},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"copyMetadata", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20, std::vector<FieldSpec>{
+            {"dimension", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"gamemode", kprotocol::FieldType::i8},
+            {"previousGamemode", kprotocol::FieldType::u8},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"copyMetadata", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"},
+            {"portalCooldown", kprotocol::FieldType::var_int}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
+            {"dimension", kprotocol::FieldType::string},
+            {"worldName", kprotocol::FieldType::string},
+            {"hashedSeed", kprotocol::FieldType::i64_be},
+            {"gamemode", kprotocol::FieldType::i8},
+            {"previousGamemode", kprotocol::FieldType::u8},
+            {"isDebug", kprotocol::FieldType::boolean},
+            {"isFlat", kprotocol::FieldType::boolean},
+            {"death_present", kprotocol::FieldType::boolean},
+            {"death_dimensionName", kprotocol::FieldType::string, "death_present"},
+            {"death_location", kprotocol::FieldType::position, "death_present"},
+            {"portalCooldown", kprotocol::FieldType::var_int},
+            {"copyMetadata", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -5452,7 +5880,11 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
             {"itemName", kprotocol::FieldType::string},
             {"scoreName", kprotocol::FieldType::string},
             {"value", kprotocol::FieldType::var_int},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"display_name_present", kprotocol::FieldType::boolean},
+            {"display_name", kprotocol::FieldType::optional_nbt, "display_name_present"},
+            {"number_format_present", kprotocol::FieldType::boolean},
+            {"number_format", kprotocol::FieldType::var_int, "number_format_present"},
+            {"styling", kprotocol::FieldType::optional_nbt, "", "number_format", {1, 2}}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5463,7 +5895,15 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.direction = PacketDirection::clientbound;
         schema.ids.emplace(KnownVersion::v1_8, 62);
         schema.field_sets.emplace(KnownVersion::v1_8, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"team", kprotocol::FieldType::string},
+            {"mode", kprotocol::FieldType::i8},
+            {"name", kprotocol::FieldType::string, "", "mode", {0, 2}},
+            {"prefix", kprotocol::FieldType::string, "", "mode", {0, 2}},
+            {"suffix", kprotocol::FieldType::string, "", "mode", {0, 2}},
+            {"friendlyFire", kprotocol::FieldType::i8, "", "mode", {0, 2}},
+            {"nameTagVisibility", kprotocol::FieldType::string, "", "mode", {0, 2}},
+            {"color", kprotocol::FieldType::i8, "", "mode", {0, 2}},
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5523,7 +5963,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 83);
         schema.ids.emplace(KnownVersion::v1_21_11, 83);
         schema.field_sets.emplace(KnownVersion::v1_12, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"id_present", kprotocol::FieldType::boolean},
+            {"id", kprotocol::FieldType::string, "id_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5549,7 +5990,43 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 84);
         schema.ids.emplace(KnownVersion::v1_21_11, 84);
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"motd_present", kprotocol::FieldType::boolean},
+            {"motd", kprotocol::FieldType::string, "motd_present"},
+            {"icon_present", kprotocol::FieldType::boolean},
+            {"icon", kprotocol::FieldType::string, "icon_present"},
+            {"previewsChat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"motd_present", kprotocol::FieldType::boolean},
+            {"motd", kprotocol::FieldType::string, "motd_present"},
+            {"icon_present", kprotocol::FieldType::boolean},
+            {"icon", kprotocol::FieldType::string, "icon_present"},
+            {"previewsChat", kprotocol::FieldType::boolean},
+            {"enforcesSecureChat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
+            {"motd_present", kprotocol::FieldType::boolean},
+            {"motd", kprotocol::FieldType::string, "motd_present"},
+            {"icon_present", kprotocol::FieldType::boolean},
+            {"icon", kprotocol::FieldType::string, "icon_present"},
+            {"enforcesSecureChat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_4, std::vector<FieldSpec>{
+            {"motd", kprotocol::FieldType::string},
+            {"iconBytes_present", kprotocol::FieldType::boolean},
+            {"iconBytes", kprotocol::FieldType::byte_array, "iconBytes_present"},
+            {"enforcesSecureChat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
+            {"motd", kprotocol::FieldType::optional_nbt},
+            {"iconBytes_present", kprotocol::FieldType::boolean},
+            {"iconBytes", kprotocol::FieldType::byte_array, "iconBytes_present"},
+            {"enforcesSecureChat", kprotocol::FieldType::boolean}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
+            {"motd", kprotocol::FieldType::optional_nbt},
+            {"iconBytes_present", kprotocol::FieldType::boolean},
+            {"iconBytes", kprotocol::FieldType::byte_array, "iconBytes_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5655,7 +6132,8 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 94);
         schema.ids.emplace(KnownVersion::v1_21_11, 94);
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"contents_present", kprotocol::FieldType::boolean},
+            {"contents", kprotocol::FieldType::slot, "contents_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_4, std::vector<FieldSpec>{
             {"contents", kprotocol::FieldType::slot}
@@ -5723,7 +6201,9 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 106);
         schema.ids.emplace(KnownVersion::v1_21_11, 106);
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"slotId", kprotocol::FieldType::var_int},
+            {"contents_present", kprotocol::FieldType::boolean},
+            {"contents", kprotocol::FieldType::slot, "contents_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_4, std::vector<FieldSpec>{
             {"slotId", kprotocol::FieldType::var_int},
@@ -6620,7 +7100,13 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 15);
         schema.ids.emplace(KnownVersion::v1_21_11, 15);
         schema.field_sets.emplace(KnownVersion::v1_8, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"matches", kprotocol::FieldType::string_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_13, std::vector<FieldSpec>{
+            {"transactionId", kprotocol::FieldType::var_int},
+            {"start", kprotocol::FieldType::var_int},
+            {"length", kprotocol::FieldType::var_int},
+            {"matches", kprotocol::FieldType::byte_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -6727,7 +7213,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"nameTagVisibility", kprotocol::FieldType::string, "", "mode", {0, 2}},
             {"collisionRule", kprotocol::FieldType::string, "", "mode", {0, 2}},
             {"color", kprotocol::FieldType::i8, "", "mode", {0, 2}},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         schema.field_sets.emplace(KnownVersion::v1_13, std::vector<FieldSpec>{
             {"team", kprotocol::FieldType::string},
@@ -6739,7 +7225,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"formatting", kprotocol::FieldType::var_int, "", "mode", {0, 2}},
             {"prefix", kprotocol::FieldType::string, "", "mode", {0, 2}},
             {"suffix", kprotocol::FieldType::string, "", "mode", {0, 2}},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
             {"team", kprotocol::FieldType::string},
@@ -6751,7 +7237,7 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"formatting", kprotocol::FieldType::var_int, "", "mode", {0, 2}},
             {"prefix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
             {"suffix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_5, std::vector<FieldSpec>{
             {"team", kprotocol::FieldType::string},
@@ -6763,10 +7249,11 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"formatting", kprotocol::FieldType::var_int, "", "mode", {0, 2}},
             {"prefix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
             {"suffix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
             {"team", kprotocol::FieldType::string},
+            {"mode", kprotocol::FieldType::i8},
             {"tail", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
@@ -6779,10 +7266,11 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
             {"formatting", kprotocol::FieldType::var_int, "", "mode", {0, 2}},
             {"prefix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
             {"suffix", kprotocol::FieldType::optional_nbt, "", "mode", {0, 2}},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"players", kprotocol::FieldType::string_array, "", "mode", {0, 3, 4}}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
             {"team", kprotocol::FieldType::string},
+            {"mode", kprotocol::FieldType::i8},
             {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -6797,7 +7285,11 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 124);
         schema.ids.emplace(KnownVersion::v1_21_11, 124);
         schema.field_sets.emplace(KnownVersion::v1_21_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"status", kprotocol::FieldType::optional_nbt},
+            {"size_present", kprotocol::FieldType::boolean},
+            {"size_x", kprotocol::FieldType::var_int, "size_present"},
+            {"size_y", kprotocol::FieldType::var_int, "size_present"},
+            {"size_z", kprotocol::FieldType::var_int, "size_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -6943,9 +7435,13 @@ static void register_generated_packets_batch_5(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 50);
         schema.ids.emplace(KnownVersion::v1_21_11, 50);
         schema.field_sets.emplace(KnownVersion::v1_14, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"windowId", kprotocol::FieldType::var_int},
+            {"trades", kprotocol::FieldType::byte_array},
+            {"villagerLevel", kprotocol::FieldType::var_int},
+            {"experience", kprotocol::FieldType::var_int},
+            {"isRegularVillager", kprotocol::FieldType::boolean}
         });
-        schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
+        schema.field_sets.emplace(KnownVersion::v1_14_4, std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::var_int},
             {"trades", kprotocol::FieldType::byte_array},
             {"villagerLevel", kprotocol::FieldType::var_int},
@@ -7103,7 +7599,26 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
             {"recipes2", kprotocol::FieldType::var_int_array, "", "action", {0}}
         });
         schema.field_sets.emplace(KnownVersion::v1_13, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"action", kprotocol::FieldType::var_int},
+            {"craftingBookOpen", kprotocol::FieldType::boolean},
+            {"filteringCraftable", kprotocol::FieldType::boolean},
+            {"smeltingBookOpen", kprotocol::FieldType::boolean},
+            {"filteringSmeltable", kprotocol::FieldType::boolean},
+            {"recipes1", kprotocol::FieldType::string_array},
+            {"recipes2", kprotocol::FieldType::string_array, "", "action", {0}}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_16_2, std::vector<FieldSpec>{
+            {"action", kprotocol::FieldType::var_int},
+            {"craftingBookOpen", kprotocol::FieldType::boolean},
+            {"filteringCraftable", kprotocol::FieldType::boolean},
+            {"smeltingBookOpen", kprotocol::FieldType::boolean},
+            {"filteringSmeltable", kprotocol::FieldType::boolean},
+            {"blastFurnaceOpen", kprotocol::FieldType::boolean},
+            {"filteringBlastFurnace", kprotocol::FieldType::boolean},
+            {"smokerBookOpen", kprotocol::FieldType::boolean},
+            {"filteringSmoker", kprotocol::FieldType::boolean},
+            {"recipes1", kprotocol::FieldType::string_array},
+            {"recipes2", kprotocol::FieldType::string_array, "", "action", {0}}
         });
         registry.register_schema(std::move(schema));
     }
@@ -7234,7 +7749,25 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
             {"data", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(KnownVersion::v1_17, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"chunkX", kprotocol::FieldType::var_int},
+            {"chunkZ", kprotocol::FieldType::var_int},
+            {"trustEdges", kprotocol::FieldType::boolean},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_20, std::vector<FieldSpec>{
+            {"chunkX", kprotocol::FieldType::var_int},
+            {"chunkZ", kprotocol::FieldType::var_int},
+            {"skyLightMask", kprotocol::FieldType::i64_array},
+            {"blockLightMask", kprotocol::FieldType::i64_array},
+            {"emptySkyLightMask", kprotocol::FieldType::i64_array},
+            {"emptyBlockLightMask", kprotocol::FieldType::i64_array},
+            {"skyLight", kprotocol::FieldType::byte_array},
+            {"blockLight", kprotocol::FieldType::byte_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -7492,6 +8025,30 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_11, 18);
         schema.field_sets.emplace(KnownVersion::v1_8, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_17_1, std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::u8},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"items", kprotocol::FieldType::slot_array},
+            {"carriedItem", kprotocol::FieldType::slot}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"items", kprotocol::FieldType::slot_array},
+            {"carriedItem", kprotocol::FieldType::slot}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::u8},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"items", kprotocol::FieldType::slot_array},
+            {"carriedItem", kprotocol::FieldType::slot}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
+            {"windowId", kprotocol::FieldType::var_int},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"items", kprotocol::FieldType::slot_array},
+            {"carriedItem", kprotocol::FieldType::slot}
         });
         registry.register_schema(std::move(schema));
     }
@@ -8138,7 +8695,7 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 4);
         schema.ids.emplace(KnownVersion::v1_21_11, 4);
         schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"mode", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -8204,6 +8761,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
             {"signedPreview", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"command", kprotocol::FieldType::string},
+            {"timestamp", kprotocol::FieldType::i64_be},
+            {"salt", kprotocol::FieldType::i64_be},
+            {"argumentSignatures", kprotocol::FieldType::byte_array},
+            {"signedPreview", kprotocol::FieldType::boolean},
+            {"previousMessages", kprotocol::FieldType::byte_array},
+            {"lastRejectedMessage_present", kprotocol::FieldType::boolean},
+            {"lastRejectedMessage_sender", kprotocol::FieldType::uuid, "lastRejectedMessage_present"},
+            {"lastRejectedMessage_signature", kprotocol::FieldType::byte_array, "lastRejectedMessage_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
@@ -8259,6 +8827,17 @@ static void register_generated_packets_batch_6(PacketRegistry& registry) {
             {"signedPreview", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
+            {"message", kprotocol::FieldType::string},
+            {"timestamp", kprotocol::FieldType::i64_be},
+            {"salt", kprotocol::FieldType::i64_be},
+            {"signature", kprotocol::FieldType::byte_array},
+            {"signedPreview", kprotocol::FieldType::boolean},
+            {"previousMessages", kprotocol::FieldType::byte_array},
+            {"lastRejectedMessage_present", kprotocol::FieldType::boolean},
+            {"lastRejectedMessage_sender", kprotocol::FieldType::uuid, "lastRejectedMessage_present"},
+            {"lastRejectedMessage_signature", kprotocol::FieldType::byte_array, "lastRejectedMessage_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
             {"raw", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
@@ -8651,7 +9230,7 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 22);
         schema.ids.emplace(KnownVersion::v1_21_11, 22);
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"subscriptions", kprotocol::FieldType::var_int_array}
         });
         registry.register_schema(std::move(schema));
     }
@@ -8740,7 +9319,10 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"hand", kprotocol::FieldType::var_int}
         });
         schema.field_sets.emplace(KnownVersion::v1_17_1, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"hand", kprotocol::FieldType::var_int},
+            {"pages", kprotocol::FieldType::string_array},
+            {"title_present", kprotocol::FieldType::boolean},
+            {"title", kprotocol::FieldType::string, "title_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -8859,17 +9441,6 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"actionId", kprotocol::FieldType::var_int},
             {"jumpBoost", kprotocol::FieldType::var_int}
         });
-        schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
-            {"entityId", kprotocol::FieldType::var_int},
-            {"actionId", kprotocol::FieldType::var_int},
-            {"jumpBoost", kprotocol::FieldType::var_int}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -8920,13 +9491,13 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"flags", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"flags", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9153,7 +9724,9 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"yaw", kprotocol::FieldType::f32_be},
@@ -9161,7 +9734,9 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9186,7 +9761,10 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 5);
         schema.ids.emplace(KnownVersion::v1_21_11, 5);
         schema.field_sets.emplace(KnownVersion::v1_19_2, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"previousMessages", kprotocol::FieldType::byte_array},
+            {"lastRejectedMessage_present", kprotocol::FieldType::boolean},
+            {"lastRejectedMessage_sender", kprotocol::FieldType::uuid, "lastRejectedMessage_present"},
+            {"lastRejectedMessage_signature", kprotocol::FieldType::byte_array, "lastRejectedMessage_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_19_3, std::vector<FieldSpec>{
             {"count", kprotocol::FieldType::var_int}
@@ -9331,7 +9909,7 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 42);
         schema.ids.emplace(KnownVersion::v1_21_11, 42);
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"inputs", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9429,7 +10007,10 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
@@ -9438,7 +10019,10 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9495,7 +10079,12 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_3, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::f64_be},
@@ -9506,7 +10095,12 @@ static void register_generated_packets_batch_7(PacketRegistry& registry) {
             {"onGround", kprotocol::FieldType::boolean}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"x", kprotocol::FieldType::f64_be},
+            {"y", kprotocol::FieldType::f64_be},
+            {"z", kprotocol::FieldType::f64_be},
+            {"yaw", kprotocol::FieldType::f32_be},
+            {"pitch", kprotocol::FieldType::f32_be},
+            {"flags", kprotocol::FieldType::u8}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9793,7 +10387,10 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
             {"secondary_effect", kprotocol::FieldType::var_int}
         });
         schema.field_sets.emplace(KnownVersion::v1_19, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"primary_effect_present", kprotocol::FieldType::boolean},
+            {"primary_effect", kprotocol::FieldType::var_int, "primary_effect_present"},
+            {"secondary_effect_present", kprotocol::FieldType::boolean},
+            {"secondary_effect", kprotocol::FieldType::var_int, "secondary_effect_present"}
         });
         registry.register_schema(std::move(schema));
     }
@@ -9893,13 +10490,13 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
             {"newDifficulty", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_6, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"newDifficulty", kprotocol::FieldType::var_int}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"newDifficulty", kprotocol::FieldType::u8}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"newDifficulty", kprotocol::FieldType::var_int}
         });
         registry.register_schema(std::move(schema));
     }
@@ -10212,7 +10809,15 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 14);
         schema.ids.emplace(KnownVersion::v1_21_11, 14);
         schema.field_sets.emplace(KnownVersion::v1_8, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"text", kprotocol::FieldType::string},
+            {"block_present", kprotocol::FieldType::boolean},
+            {"block", kprotocol::FieldType::position, "block_present"}
+        });
+        schema.field_sets.emplace(KnownVersion::v1_9, std::vector<FieldSpec>{
+            {"text", kprotocol::FieldType::string},
+            {"assumeCommand", kprotocol::FieldType::boolean},
+            {"lookedAtBlock_present", kprotocol::FieldType::boolean},
+            {"lookedAtBlock", kprotocol::FieldType::position, "lookedAtBlock_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_13, std::vector<FieldSpec>{
             {"transactionId", kprotocol::FieldType::var_int},
@@ -10599,30 +11204,6 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
             {"seed", kprotocol::FieldType::var_int},
             {"flags", kprotocol::FieldType::u8}
         });
-        schema.field_sets.emplace(KnownVersion::v1_21_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
-            {"location", kprotocol::FieldType::position},
-            {"action", kprotocol::FieldType::var_int},
-            {"mode", kprotocol::FieldType::var_int},
-            {"name", kprotocol::FieldType::string},
-            {"offset_x", kprotocol::FieldType::i8},
-            {"offset_y", kprotocol::FieldType::i8},
-            {"offset_z", kprotocol::FieldType::i8},
-            {"size_x", kprotocol::FieldType::i8},
-            {"size_y", kprotocol::FieldType::i8},
-            {"size_z", kprotocol::FieldType::i8},
-            {"mirror", kprotocol::FieldType::var_int},
-            {"rotation", kprotocol::FieldType::var_int},
-            {"metadata", kprotocol::FieldType::string},
-            {"integrity", kprotocol::FieldType::f32_be},
-            {"seed", kprotocol::FieldType::var_int},
-            {"flags", kprotocol::FieldType::u8}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
-        });
         registry.register_schema(std::move(schema));
     }
     {
@@ -10904,7 +11485,17 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
             {"cursorItem", kprotocol::FieldType::slot}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_5, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"windowId", kprotocol::FieldType::var_int},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"slot", kprotocol::FieldType::i16_be},
+            {"mouseButton", kprotocol::FieldType::i8},
+            {"mode", kprotocol::FieldType::var_int},
+            {"changedSlots", kprotocol::FieldType::byte_array},
+            {"cursorItem_present", kprotocol::FieldType::boolean},
+            {"cursorItem_itemId", kprotocol::FieldType::var_int, "cursorItem_present"},
+            {"cursorItem_itemCount", kprotocol::FieldType::var_int, "cursorItem_present"},
+            {"cursorItem_components", kprotocol::FieldType::byte_array, "cursorItem_present"},
+            {"cursorItem_removeComponents", kprotocol::FieldType::byte_array, "cursorItem_present"}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_7, std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::u8},
@@ -10916,7 +11507,17 @@ static void register_generated_packets_batch_8(PacketRegistry& registry) {
             {"cursorItem", kprotocol::FieldType::slot}
         });
         schema.field_sets.emplace(KnownVersion::v1_21_9, std::vector<FieldSpec>{
-            {"raw", kprotocol::FieldType::rest_buffer}
+            {"windowId", kprotocol::FieldType::var_int},
+            {"stateId", kprotocol::FieldType::var_int},
+            {"slot", kprotocol::FieldType::i16_be},
+            {"mouseButton", kprotocol::FieldType::i8},
+            {"mode", kprotocol::FieldType::var_int},
+            {"changedSlots", kprotocol::FieldType::byte_array},
+            {"cursorItem_present", kprotocol::FieldType::boolean},
+            {"cursorItem_itemId", kprotocol::FieldType::var_int, "cursorItem_present"},
+            {"cursorItem_itemCount", kprotocol::FieldType::var_int, "cursorItem_present"},
+            {"cursorItem_components", kprotocol::FieldType::byte_array, "cursorItem_present"},
+            {"cursorItem_removeComponents", kprotocol::FieldType::byte_array, "cursorItem_present"}
         });
         registry.register_schema(std::move(schema));
     }
