@@ -1,8 +1,11 @@
 #include "kprotocol/kprotocol.hpp"
 
 #include <chrono>
+#include <cstdlib>
+#include <cstdint>
 #include <iostream>
 #include <memory>
+#include <string>
 #include <thread>
 
 #if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
@@ -42,7 +45,15 @@ void handle_play_demo(
 
 } // namespace
 
-int main() {
+int main(int argc, char** argv) {
+    std::uint16_t port = 25565;
+    if (const char* env_port = std::getenv("KPROTOCOL_PORT"); env_port != nullptr) {
+        port = static_cast<std::uint16_t>(std::stoi(env_port));
+    }
+    if (argc > 1) {
+        port = static_cast<std::uint16_t>(std::stoi(argv[1]));
+    }
+
     kprotocol::PacketRegistry registry;
     kprotocol::PacketTranslator translator;
     kprotocol::initialize(registry, translator);
@@ -66,12 +77,13 @@ int main() {
         }
     });
 
-    if (!server.start(25565, kInternalVersion)) {
+    if (!server.start(port, kInternalVersion)) {
         std::cerr << "Failed to start play demo server\n";
         return 1;
     }
 
-    std::cout << "Play demo server on port 25565 (internal " << kprotocol::name_of(kInternalVersion) << ")\n";
+    std::cout << "Play demo server on port " << server.listen_port()
+              << " (internal " << kprotocol::name_of(kInternalVersion) << ")\n";
     std::cout << "Login in offline mode to receive the play-state packet showcase.\n";
 
     while (server.running()) {

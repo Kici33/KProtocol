@@ -22,19 +22,27 @@ public:
             .direction = PacketDirection::serverbound,
             .fields = {
                 {"protocol_version", protocol_version},
+                {"protocolVersion", protocol_version},
                 {"server_address", server_address},
+                {"serverHost", server_address},
                 {"server_port", server_port},
-                {"next_state", next_state}
+                {"serverPort", server_port},
+                {"next_state", next_state},
+                {"nextState", next_state}
             }
         };
     }
 
     static C00HandshakePacket from_packet(const Packet& packet) {
         return C00HandshakePacket{
-            .protocol_version = require_field<std::int32_t>(packet.fields, "protocol_version"),
-            .server_address = require_field<std::string>(packet.fields, "server_address"),
-            .server_port = require_field<std::uint16_t>(packet.fields, "server_port"),
-            .next_state = require_field<std::int32_t>(packet.fields, "next_state")
+            .protocol_version = field_or<std::int32_t>(
+                packet.fields, "protocol_version", field_or<std::int32_t>(packet.fields, "protocolVersion", 0)),
+            .server_address = field_or<std::string>(
+                packet.fields, "server_address", field_or<std::string>(packet.fields, "serverHost", {})),
+            .server_port = field_or<std::uint16_t>(
+                packet.fields, "server_port", field_or<std::uint16_t>(packet.fields, "serverPort", 0)),
+            .next_state = field_or<std::int32_t>(
+                packet.fields, "next_state", field_or<std::int32_t>(packet.fields, "nextState", 0))
         };
     }
 };

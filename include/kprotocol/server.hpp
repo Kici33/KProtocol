@@ -23,6 +23,15 @@ struct ServerRuntimeOptions {
     std::size_t max_inbound_buffer{
         static_cast<std::size_t>(codec::limits::max_packet_length) + codec::limits::max_var_int_bytes
     };
+    // Optional idle connection timeout in milliseconds. 0 disables it.
+    std::uint64_t idle_timeout_ms{0};
+    // Optional timeout for clients that connect but never finish handshaking.
+    // 0 disables it.
+    std::uint64_t handshake_timeout_ms{0};
+    // Optional inbound packet-rate cap per connection. 0 disables it.
+    std::uint32_t max_packets_per_second{0};
+    // Optional inbound byte-rate cap per connection. 0 disables it.
+    std::uint32_t max_bytes_per_second{0};
     // Close the peer after a packet decode/handler/translation error.
     bool disconnect_on_packet_error{true};
     // Reject login_start usernames that do not match the Java Edition limits
@@ -69,6 +78,10 @@ public:
     void enable_compression(std::int32_t threshold) const;
     void close(const std::string& reason = "closed") const;
     std::string remote_address() const;
+    [[nodiscard]] std::uint64_t bytes_received() const noexcept;
+    [[nodiscard]] std::uint64_t bytes_sent() const noexcept;
+    [[nodiscard]] std::uint64_t packets_received() const noexcept;
+    [[nodiscard]] std::uint64_t packets_sent() const noexcept;
     bool valid() const noexcept;
 
 private:

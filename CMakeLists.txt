@@ -8,6 +8,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # ------------------------- Options --------------------------------------------
 option(KPROTOCOL_BUILD_TESTS    "Build kprotocol unit + integration tests" ON)
 option(KPROTOCOL_BUILD_EXAMPLES "Build kprotocol example binaries"         OFF)
+option(KPROTOCOL_BUILD_REAL_CLIENT_TESTS
+       "Add opt-in tests that run an external real Minecraft client against kprotocol_play_demo" OFF)
 option(KPROTOCOL_BUILD_GENERATED_PACKETS
        "Compile the committed generated/ packet catalog into kprotocol_packets" ON)
 option(BUILD_EXAMPLE            "(deprecated) alias of KPROTOCOL_BUILD_EXAMPLES" OFF)
@@ -18,6 +20,15 @@ endif()
 set(KPROTOCOL_GENERATE_VERSIONS "all-known"
     CACHE STRING
     "Comma-separated Minecraft versions to pass to tools/generate_packets.mjs (used by the kprotocol_generate_packets target)")
+set(KPROTOCOL_REAL_CLIENT_CMD ""
+    CACHE STRING
+    "Shell command/template for the opt-in real-client integration test. Placeholders: {host} {port} {version} {wire}")
+set(KPROTOCOL_REAL_CLIENT_VERSIONS "1.8:47,1.21.1:767"
+    CACHE STRING
+    "Comma-separated name:wire entries for the opt-in real-client integration test")
+set(KPROTOCOL_REAL_CLIENT_PORT "25565"
+    CACHE STRING
+    "Local port used by the opt-in real-client integration test")
 
 find_package(ZLIB REQUIRED)
 
@@ -185,7 +196,7 @@ add_library(kprotocol::kprotocol ALIAS kprotocol)
 # ============================================================================
 # Examples
 # ============================================================================
-if(KPROTOCOL_BUILD_EXAMPLES)
+if(KPROTOCOL_BUILD_EXAMPLES OR KPROTOCOL_BUILD_REAL_CLIENT_TESTS)
     add_executable(kprotocol_example examples/minimal_server.cpp)
     target_link_libraries(kprotocol_example PRIVATE kprotocol::kprotocol)
     add_executable(kprotocol_play_demo examples/play_demo_server.cpp)
@@ -214,6 +225,7 @@ if(KPROTOCOL_BUILD_TESTS)
         versioned_schema_tests
         generated_packets_tests
         server_smoke_tests
+        server_connection_management_tests
         server_login_tests
         gameplay_integration_tests
         server_play_demo_tests
@@ -264,6 +276,27 @@ if(KPROTOCOL_BUILD_TESTS)
             add_test(NAME kprotocol_${test_name} COMMAND kprotocol_${test_name})
         endif()
     endforeach()
+
+    if(KPROTOCOL_BUILD_REAL_CLIENT_TESTS)
+        if(NOT KPROTOCOL_NODE_EXECUTABLE)
+            message(FATAL_ERROR "KPROTOCOL_BUILD_REAL_CLIENT_TESTS requires Node.js")
+        endif()
+        if(KPROTOCOL_REAL_CLIENT_CMD STREQUAL "")
+            message(FATAL_ERROR "KPROTOCOL_BUILD_REAL_CLIENT_TESTS requires -DKPROTOCOL_REAL_CLIENT_CMD=<command>")
+        endif()
+        add_test(
+            NAME kprotocol_real_client_smoke
+            COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
+                    ${CMAKE_SOURCE_DIR}/tools/real_client_smoke.mjs
+                    --server $<TARGET_FILE:kprotocol_play_demo>
+                    --client-cmd ${KPROTOCOL_REAL_CLIENT_CMD}
+                    --versions ${KPROTOCOL_REAL_CLIENT_VERSIONS}
+                    --port ${KPROTOCOL_REAL_CLIENT_PORT}
+        )
+        set_tests_properties(kprotocol_real_client_smoke PROPERTIES
+            LABELS "real-client;integration"
+            TIMEOUT 180)
+    endif()
 endif()
 
 # ============================================================================

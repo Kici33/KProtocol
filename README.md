@@ -114,6 +114,33 @@ cmake --build build --target kprotocol_play_demo
 
 Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
 
+### Real-client integration tests
+
+Unit and loopback tests run by default. Real Minecraft client tests are opt-in
+because they need an external client/bot runner and usually require assets or
+credentials that do not belong in CI.
+
+Configure CMake with `KPROTOCOL_BUILD_REAL_CLIENT_TESTS=ON` and provide a
+client command. KProtocol starts `kprotocol_play_demo`, waits for TCP readiness,
+then runs the command once per configured version:
+
+```bash
+cmake -S . -B build \
+  -DKPROTOCOL_BUILD_REAL_CLIENT_TESTS=ON \
+  -DKPROTOCOL_REAL_CLIENT_CMD="node ./my-real-client-check.mjs --host {host} --port {port} --version {version}" \
+  -DKPROTOCOL_REAL_CLIENT_VERSIONS="1.8:47,1.21.1:767"
+
+cmake --build build --target kprotocol_play_demo
+ctest --test-dir build -R kprotocol_real_client_smoke --output-on-failure
+```
+
+The command receives placeholders (`{host}`, `{port}`, `{version}`, `{wire}`)
+and matching environment variables (`KPROTOCOL_REAL_CLIENT_HOST`,
+`KPROTOCOL_REAL_CLIENT_PORT`, `KPROTOCOL_REAL_CLIENT_VERSION`,
+`KPROTOCOL_REAL_CLIENT_WIRE`). The client runner should connect in offline mode,
+complete login/configuration as needed, verify it receives the play demo packets,
+and exit `0` on success.
+
 ## Architecture
 
 1. `kprotocol::PacketRegistry`
@@ -142,7 +169,8 @@ Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
      verify-token generation/checking, username validation, and Set Compression.
    - Sends packets translated to each client version.
    - Runtime guardrails include connection limits, bounded inbound frame
-     buffering, disconnect callbacks, close-on-packet-error behavior, and
+     buffering, optional idle/handshake timeouts, optional inbound packet/byte
+     rate caps, disconnect callbacks, close-on-packet-error behavior, and
      optional strict translation checks.
    - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`,
      `onDisconnect`, `onError`).
@@ -215,6 +243,10 @@ kprotocol::MinecraftServer server(registry, translator);
 kprotocol::ServerRuntimeOptions runtime;
 runtime.max_connections = 512;
 runtime.max_inbound_buffer = 2 * 1024 * 1024 + 5;
+runtime.handshake_timeout_ms = 10'000;   // optional; 0 disables
+runtime.idle_timeout_ms = 120'000;       // optional; 0 disables
+runtime.max_packets_per_second = 200;    // optional; 0 disables
+runtime.max_bytes_per_second = 2'000'000;// optional; 0 disables
 runtime.disconnect_on_packet_error = true;
 runtime.require_explicit_translations = true;
 server.set_runtime_options(runtime);

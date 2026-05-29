@@ -59,6 +59,8 @@ public:
 
         if (protocol_number(wire_version) >= protocol_number(ProtocolVersion::v1_20_4)) {
             fields.emplace("value", value);
+            fields.emplace("display_name_present", false);
+            fields.emplace("number_format_present", false);
             fields.emplace("tail", std::vector<std::uint8_t>{});
         } else {
             fields.emplace("action", legacy_action);
