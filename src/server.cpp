@@ -2,6 +2,7 @@
 
 #include "kprotocol/codec.hpp"
 #include "kprotocol/connection.hpp"
+#include "kprotocol/login_security.hpp"
 #if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
 #include "kprotocol/generated/packet_keys.hpp"
 #endif
@@ -291,6 +292,26 @@ struct MinecraftServer::Impl {
 #endif
     }
 
+    bool validate_login_start(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
+        if (!options.validate_login_usernames || !packet.key_matches(packet_keys::login_start)) {
+            return true;
+        }
+
+        const auto it = packet.fields.find("username");
+        if (it == packet.fields.end()) {
+            emit_error("Closing " + shared->remote + ": login_start missing username");
+            ClientSession(shared).close("invalid login username");
+            return false;
+        }
+        const auto* username = std::get_if<std::string>(&it->second);
+        if (username == nullptr || !is_valid_login_username(*username)) {
+            emit_error("Closing " + shared->remote + ": invalid login username");
+            ClientSession(shared).close("invalid login username");
+            return false;
+        }
+        return true;
+    }
+
     bool process_frame(const codec::EncodedFrame& frame, const std::shared_ptr<ClientSession::Shared>& shared) {
         try {
             const auto client_ver = catalog_anchor_for(WireProtocol{shared->client_wire.load()});
@@ -299,6 +320,9 @@ struct MinecraftServer::Impl {
             packet = translator.translate(packet, client_ver, internal_version);
             apply_set_compression(packet, shared);
             update_session_state(packet, shared);
+            if (!validate_login_start(packet, shared)) {
+                return false;
+            }
             const ClientSession session(shared);
             emit_received(session, packet);
             if (packet_handler) {

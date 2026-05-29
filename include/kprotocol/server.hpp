@@ -25,6 +25,9 @@ struct ServerRuntimeOptions {
     };
     // Close the peer after a packet decode/handler/translation error.
     bool disconnect_on_packet_error{true};
+    // Reject login_start usernames that do not match the Java Edition limits
+    // used by offline and online-mode login names.
+    bool validate_login_usernames{true};
     // Enable PacketTranslator strict mode while this server is running.
     bool require_explicit_translations{false};
 };

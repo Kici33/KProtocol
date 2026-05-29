@@ -156,6 +156,7 @@ endif()
 # ============================================================================
 add_library(kprotocol_server
     src/server.cpp
+    src/login_security.cpp
     src/client_ui.cpp
     src/play_demo.cpp
     src/protocol_server.cpp
@@ -208,6 +209,7 @@ if(KPROTOCOL_BUILD_TESTS)
         version_range_tests
         decompression_bomb_tests
         nbt_tests
+        login_security_tests
         field_types_tests
         versioned_schema_tests
         generated_packets_tests

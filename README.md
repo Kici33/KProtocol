@@ -138,6 +138,8 @@ Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
    - Asio + C++20 coroutine TCP runtime (one `io_context`, no thread-per-client).
    - Accepts TCP clients, decodes framed packets, handles handshake version/state.
    - Optional compression threshold on `start()` mirrors Minecraft Set Compression.
+   - Login/security helpers cover encryption request/response packets,
+     verify-token generation/checking, username validation, and Set Compression.
    - Sends packets translated to each client version.
    - Runtime guardrails include connection limits, bounded inbound frame
      buffering, disconnect callbacks, close-on-packet-error behavior, and
@@ -216,6 +218,24 @@ runtime.max_inbound_buffer = 2 * 1024 * 1024 + 5;
 runtime.disconnect_on_packet_error = true;
 runtime.require_explicit_translations = true;
 server.set_runtime_options(runtime);
+```
+
+Login/security helpers are available when implementing online-mode or custom
+authentication flows:
+
+```cpp
+#include "kprotocol/login_security.hpp"
+
+auto challenge = kprotocol::LoginSecurityChallenge{
+    .server_id = "",
+    .public_key = public_key_der,
+    .verify_token = kprotocol::generate_verify_token(),
+};
+
+kprotocol::send_login_encryption_request(client, challenge);
+// After decrypting the client's C01EncryptionResponsePacket verifyToken:
+// kprotocol::verify_login_token(response, challenge.verify_token)
+kprotocol::send_login_set_compression(client, 256);
 ```
 
 ## Adding a new packet

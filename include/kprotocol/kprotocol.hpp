@@ -7,6 +7,7 @@
 #include "kprotocol/codec.hpp"
 #include "kprotocol/entity_metadata.hpp"
 #include "kprotocol/initialize.hpp"
+#include "kprotocol/login_security.hpp"
 #include "kprotocol/metadata_registry.hpp"
 #include "kprotocol/packet.hpp"
 #include "kprotocol/packets/play/play_packets.hpp"

@@ -19,6 +19,9 @@ inline const std::string pong_response{generated::packet_keys::status_clientboun
 inline const std::string login_start{generated::packet_keys::login_serverbound_login_start};
 inline const std::string login_success{generated::packet_keys::login_clientbound_success};
 inline const std::string login_disconnect{generated::packet_keys::login_clientbound_disconnect};
+inline const std::string login_encryption_request{generated::packet_keys::login_clientbound_encryption_begin};
+inline const std::string login_encryption_response{generated::packet_keys::login_serverbound_encryption_begin};
+inline const std::string login_set_compression{generated::packet_keys::login_clientbound_compress};
 inline const std::string keep_alive_serverbound{generated::packet_keys::play_serverbound_keep_alive};
 inline const std::string keep_alive_clientbound{generated::packet_keys::play_clientbound_keep_alive};
 #else
@@ -30,6 +33,9 @@ inline constexpr char pong_response[] = "status.clientbound.ping";
 inline constexpr char login_start[] = "login.serverbound.login_start";
 inline constexpr char login_success[] = "login.clientbound.success";
 inline constexpr char login_disconnect[] = "login.clientbound.disconnect";
+inline constexpr char login_encryption_request[] = "login.clientbound.encryption_begin";
+inline constexpr char login_encryption_response[] = "login.serverbound.encryption_begin";
+inline constexpr char login_set_compression[] = "login.clientbound.compress";
 inline constexpr char keep_alive_serverbound[] = "play.serverbound.keep_alive";
 inline constexpr char keep_alive_clientbound[] = "play.clientbound.keep_alive";
 #endif

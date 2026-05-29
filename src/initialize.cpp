@@ -7,10 +7,10 @@
 namespace kprotocol {
 
 void initialize(PacketRegistry& registry, PacketTranslator& translator) {
-    register_baseline_packets(registry, translator);
 #if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
     register_generated_packets(registry);
 #endif
+    register_baseline_packets(registry, translator);
     TranslationRegistry::initialize_all(translator);
 }
 

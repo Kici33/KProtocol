@@ -126,7 +126,7 @@ void register_login_ack_schema(kprotocol::PacketRegistry& registry) {
         .state = kprotocol::PacketState::login,
         .direction = kprotocol::PacketDirection::serverbound,
         .field_sets = {{kprotocol::KnownVersion::v1_20_2, {}}},
-        .ids = {{kprotocol::ProtocolVersion::v1_20_4, 3}, {kprotocol::ProtocolVersion::v1_21_1, 3}},
+        .ids = {{kprotocol::KnownVersion::v1_20_4, 3}, {kprotocol::KnownVersion::v1_21_1, 3}},
     });
 }
 

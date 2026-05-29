@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <utility>
 
 namespace kprotocol {
 
@@ -38,10 +39,17 @@ std::string add_uuid_dashes(const std::string& raw) {
     return output;
 }
 
+void register_definition_if_missing(PacketRegistry& registry, PacketDefinition definition) {
+    if (registry.schema_for(definition.key) != nullptr) {
+        return;
+    }
+    registry.register_definition(std::move(definition));
+}
+
 } // namespace
 
 void register_baseline_packets(PacketRegistry& registry, PacketTranslator& translator) {
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::handshake,
         .state = PacketState::handshaking,
         .direction = PacketDirection::serverbound,
@@ -54,7 +62,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x00, 0x00, 0x00, 0x00)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::status_request,
         .state = PacketState::status,
         .direction = PacketDirection::serverbound,
@@ -62,7 +70,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x00, 0x00, 0x00, 0x00)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::status_response,
         .state = PacketState::status,
         .direction = PacketDirection::clientbound,
@@ -70,7 +78,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x00, 0x00, 0x00, 0x00)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::ping_request,
         .state = PacketState::status,
         .direction = PacketDirection::serverbound,
@@ -78,7 +86,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x01, 0x01, 0x01, 0x01, 0x01)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::pong_response,
         .state = PacketState::status,
         .direction = PacketDirection::clientbound,
@@ -86,7 +94,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x01, 0x01, 0x01, 0x01, 0x01)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::login_start,
         .state = PacketState::login,
         .direction = PacketDirection::serverbound,
@@ -94,7 +102,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x00, 0x00, 0x00, 0x00)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::login_success,
         .state = PacketState::login,
         .direction = PacketDirection::clientbound,
@@ -105,7 +113,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x02, 0x02, 0x02, 0x02, 0x02)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::login_disconnect,
         .state = PacketState::login,
         .direction = PacketDirection::clientbound,
@@ -113,7 +121,38 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x00, 0x00, 0x00, 0x00)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
+        .key = packet_keys::login_encryption_request,
+        .state = PacketState::login,
+        .direction = PacketDirection::clientbound,
+        .fields = {
+            {"serverId", FieldType::string},
+            {"publicKey", FieldType::byte_array},
+            {"verifyToken", FieldType::byte_array}
+        },
+        .ids = ids(0x01, 0x01, 0x01, 0x01, 0x01)
+    });
+
+    register_definition_if_missing(registry, PacketDefinition{
+        .key = packet_keys::login_encryption_response,
+        .state = PacketState::login,
+        .direction = PacketDirection::serverbound,
+        .fields = {
+            {"sharedSecret", FieldType::byte_array},
+            {"verifyToken", FieldType::byte_array}
+        },
+        .ids = ids(0x01, 0x01, 0x01, 0x01, 0x01)
+    });
+
+    register_definition_if_missing(registry, PacketDefinition{
+        .key = packet_keys::login_set_compression,
+        .state = PacketState::login,
+        .direction = PacketDirection::clientbound,
+        .fields = {{"threshold", FieldType::var_int}},
+        .ids = ids(0x03, 0x03, 0x03, 0x03, 0x03)
+    });
+
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::keep_alive_serverbound,
         .state = PacketState::play,
         .direction = PacketDirection::serverbound,
@@ -121,7 +160,7 @@ void register_baseline_packets(PacketRegistry& registry, PacketTranslator& trans
         .ids = ids(0x00, 0x0B, 0x10, 0x15, 0x15)
     });
 
-    registry.register_definition(PacketDefinition{
+    register_definition_if_missing(registry, PacketDefinition{
         .key = packet_keys::keep_alive_clientbound,
         .state = PacketState::play,
         .direction = PacketDirection::clientbound,
