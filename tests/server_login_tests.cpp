@@ -2,12 +2,11 @@
 
 #include "kprotocol/baseline_packets.hpp"
 #include "kprotocol/codec.hpp"
+#include "kprotocol/packets/login/CLoginAcknowledgedPacket.hpp"
 #include "kprotocol/packets/packet_keys.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/server.hpp"
 #include "kprotocol/translation.hpp"
-
-#include "kprotocol/generated/packet_keys.hpp"
 
 #include <asio/connect.hpp>
 #include <asio/ip/tcp.hpp>
@@ -58,7 +57,7 @@ int main() {
     kprotocol::PacketTranslator translator;
     kprotocol::register_baseline_packets(registry, translator);
     registry.register_schema(kprotocol::PacketSchema{
-        .key = std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged),
+        .key = std::string(kprotocol::packet_keys::login_acknowledged),
         .state = kprotocol::PacketState::login,
         .direction = kprotocol::PacketDirection::serverbound,
         .field_sets = {{kprotocol::KnownVersion::v1_20_2, {}}},
@@ -80,7 +79,7 @@ int main() {
             };
             (void)client.send_packet(response.to_packet());
         }
-        if (packet.key == std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged)) {
+        if (packet.key_matches(kprotocol::packet_keys::login_acknowledged)) {
             saw_login_ack = true;
         }
         {
@@ -145,11 +144,11 @@ int main() {
     KPC_CHECK(got_login_success, "received login_success");
     KPC_CHECK(saw_login_start.load(), "server saw login_start");
 
-    kprotocol::Packet login_ack;
-    login_ack.key = std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged);
-    login_ack.state = kprotocol::PacketState::login;
-    login_ack.direction = kprotocol::PacketDirection::serverbound;
-    write_packet(client_socket, registry, login_ack, kprotocol::ProtocolVersion::v1_21_1);
+    write_packet(
+        client_socket,
+        registry,
+        kprotocol::CLoginAcknowledgedPacket{}.to_packet(),
+        kprotocol::ProtocolVersion::v1_21_1);
 
     for (int attempt = 0; attempt < 100 && !saw_login_ack.load(); ++attempt) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));

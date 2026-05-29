@@ -12,6 +12,24 @@ namespace {
 constexpr std::size_t kMaxNbtDepth = 64;
 constexpr std::int32_t kMaxNbtElements = 1'000'000;
 
+int hex_nibble(const char c) noexcept {
+    if (c >= '0' && c <= '9') {
+        return c - '0';
+    }
+    if (c >= 'a' && c <= 'f') {
+        return 10 + (c - 'a');
+    }
+    if (c >= 'A' && c <= 'F') {
+        return 10 + (c - 'A');
+    }
+    return -1;
+}
+
+char hex_char(const std::uint8_t nibble) noexcept {
+    constexpr char kHex[] = "0123456789abcdef";
+    return kHex[nibble & 0x0F];
+}
+
 std::uint8_t to_wire_type(const NBTTagType type) {
     return static_cast<std::uint8_t>(type);
 }
@@ -429,6 +447,47 @@ UUID UUID::from_bytes(std::span<const std::uint8_t> data) {
         std::memcpy(u.bytes.data(), data.data(), 16);
     }
     return u;
+}
+
+UUID UUID::from_string(std::string_view text) {
+    std::array<char, 32> raw{};
+    std::size_t raw_size = 0;
+    for (const char c : text) {
+        if (c == '-') {
+            continue;
+        }
+        if (raw_size >= raw.size()) {
+            throw std::invalid_argument("UUID has too many hex digits");
+        }
+        raw[raw_size++] = c;
+    }
+    if (raw_size != raw.size()) {
+        throw std::invalid_argument("UUID must contain 32 hex digits");
+    }
+
+    UUID uuid;
+    for (std::size_t i = 0; i < uuid.bytes.size(); ++i) {
+        const int high = hex_nibble(raw[i * 2]);
+        const int low = hex_nibble(raw[i * 2 + 1]);
+        if (high < 0 || low < 0) {
+            throw std::invalid_argument("UUID contains non-hex digit");
+        }
+        uuid.bytes[i] = static_cast<std::uint8_t>((high << 4) | low);
+    }
+    return uuid;
+}
+
+std::string UUID::to_string() const {
+    std::string output;
+    output.reserve(36U);
+    for (std::size_t i = 0; i < bytes.size(); ++i) {
+        if (i == 4U || i == 6U || i == 8U || i == 10U) {
+            output.push_back('-');
+        }
+        output.push_back(hex_char(static_cast<std::uint8_t>(bytes[i] >> 4)));
+        output.push_back(hex_char(bytes[i]));
+    }
+    return output;
 }
 
 } // namespace kprotocol

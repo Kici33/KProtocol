@@ -4,9 +4,6 @@
 #include "kprotocol/connection.hpp"
 #include "kprotocol/gameplay_session.hpp"
 #include "kprotocol/login_security.hpp"
-#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
-#include "kprotocol/generated/packet_keys.hpp"
-#endif
 #include "kprotocol/packets/packet_keys.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/translation.hpp"
@@ -387,14 +384,9 @@ struct MinecraftServer::Impl {
     }
 
     void apply_set_compression(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
-#ifdef KPROTOCOL_HAS_GENERATED_CATALOG
-        if (!packet.key_matches(generated::packet_keys::login_clientbound_compress)) {
+        if (!packet.key_matches(packet_keys::login_set_compression)) {
             return;
         }
-#else
-        (void)packet;
-        return;
-#endif
         if (const auto it = packet.fields.find("threshold"); it != packet.fields.end()) {
             if (const auto* threshold = std::get_if<std::int32_t>(&it->second); threshold != nullptr) {
                 shared->inbound_decoder.set_threshold(*threshold);
@@ -406,17 +398,15 @@ struct MinecraftServer::Impl {
     void update_session_state(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {
         update_handshake_state(packet, shared);
 
-#ifdef KPROTOCOL_HAS_GENERATED_CATALOG
-        if (packet.key_matches(generated::packet_keys::login_serverbound_login_acknowledged)) {
+        if (packet.key_matches(packet_keys::login_acknowledged)) {
             shared->state = PacketState::configuration;
             ClientSession(shared).mark_login_complete();
             return;
         }
-        if (packet.key_matches(generated::packet_keys::configuration_serverbound_finish_configuration)) {
+        if (packet.key_matches(packet_keys::configuration_finish_serverbound)) {
             shared->state = PacketState::play;
             ClientSession(shared).mark_configuration_complete();
         }
-#endif
     }
 
     void update_gameplay_session(const Packet& packet, const std::shared_ptr<ClientSession::Shared>& shared) {

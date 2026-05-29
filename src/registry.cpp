@@ -129,7 +129,14 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
         codec::write_double(out, std::get<double>(value));
         return;
     case FieldType::uuid: {
-        const auto& uuid = std::get<UUID>(value);
+        UUID uuid{};
+        if (const auto* typed = std::get_if<UUID>(&value); typed != nullptr) {
+            uuid = *typed;
+        } else if (const auto* text = std::get_if<std::string>(&value); text != nullptr) {
+            uuid = UUID::from_string(*text);
+        } else {
+            throw std::bad_variant_access{};
+        }
         out.insert(out.end(), uuid.bytes.begin(), uuid.bytes.end());
         return;
     }

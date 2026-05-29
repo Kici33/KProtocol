@@ -35,9 +35,16 @@ bool send_offline_login_success(
     if (!client.send_packet(packet)) {
         return false;
     }
+    client.set_player_profile(PlayerProfile{
+        .username = username,
+        .uuid = uuid,
+        .authenticated = false,
+    });
+    client.mark_login_complete();
 
     if (protocol_number(client.protocol_version()) < protocol_number(kConfigurationCutoff)) {
         client.set_state(PacketState::play);
+        client.mark_configuration_complete();
     }
     return true;
 }

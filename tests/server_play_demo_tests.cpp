@@ -3,13 +3,14 @@
 
 #include "kprotocol/baseline_packets.hpp"
 #include "kprotocol/codec.hpp"
+#include "kprotocol/configuration.hpp"
 #include "kprotocol/initialize.hpp"
+#include "kprotocol/packets/configuration/CFinishConfigurationPacket.hpp"
+#include "kprotocol/packets/login/CLoginAcknowledgedPacket.hpp"
 #include "kprotocol/packets/packet_keys.hpp"
 #include "kprotocol/play_demo.hpp"
 #include "kprotocol/registry.hpp"
 #include "kprotocol/server.hpp"
-
-#include "kprotocol/generated/packet_keys.hpp"
 
 #include <asio/connect.hpp>
 #include <asio/ip/tcp.hpp>
@@ -69,8 +70,9 @@ std::set<std::string> decode_clientbound_keys(
             const auto decoded = registry.decode_packet(
                 frame, version, state, kprotocol::PacketDirection::clientbound);
             keys.insert(decoded.key);
-        } catch (const std::exception&) {
+        } catch (const std::exception& ex) {
             // Ignore undecodable frames while draining configuration/login.
+            std::cerr << "ignored clientbound frame in state decode: " << ex.what() << '\n';
         }
     }
     return keys;
@@ -122,7 +124,7 @@ std::set<std::string> collect_play_keys(
 
 void register_login_ack_schema(kprotocol::PacketRegistry& registry) {
     registry.register_schema(kprotocol::PacketSchema{
-        .key = std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged),
+        .key = std::string(kprotocol::packet_keys::login_acknowledged),
         .state = kprotocol::PacketState::login,
         .direction = kprotocol::PacketDirection::serverbound,
         .field_sets = {{kprotocol::KnownVersion::v1_20_2, {}}},
@@ -142,8 +144,12 @@ kprotocol::MinecraftServer make_play_demo_server(kprotocol::PacketRegistry& regi
             }
             return;
         }
-        if (packet.key ==
-            std::string(kprotocol::generated::packet_keys::configuration_serverbound_finish_configuration)) {
+        if (packet.key_matches(kprotocol::packet_keys::login_acknowledged)) {
+            KPC_CHECK(kprotocol::send_feature_flags(client), "feature flags");
+            KPC_CHECK(kprotocol::send_configuration_finish(client), "finish configuration");
+            return;
+        }
+        if (packet.key_matches(kprotocol::packet_keys::configuration_finish_serverbound)) {
             KPC_CHECK(kprotocol::send_play_demo(client, kInternalVersion), "play demo 1.21");
         }
     });
@@ -190,19 +196,29 @@ void run_modern_client_flow(
     }
     KPC_CHECK(got_login_success, "login_success");
 
-    kprotocol::Packet login_ack;
-    login_ack.key = std::string(kprotocol::generated::packet_keys::login_serverbound_login_acknowledged);
-    login_ack.state = kprotocol::PacketState::login;
-    login_ack.direction = kprotocol::PacketDirection::serverbound;
-    write_packet(socket, registry, login_ack, version);
+    std::cerr << "modern flow: sending login_ack\n";
+    write_packet(socket, registry, kprotocol::CLoginAcknowledgedPacket{}.to_packet(), version);
 
-    kprotocol::Packet finish;
-    finish.key = std::string(kprotocol::generated::packet_keys::configuration_serverbound_finish_configuration);
-    finish.state = kprotocol::PacketState::configuration;
-    finish.direction = kprotocol::PacketDirection::serverbound;
-    write_packet(socket, registry, finish, version);
+    bool got_configuration_finish = false;
+    for (int attempt = 0; attempt < 100 && !got_configuration_finish; ++attempt) {
+        read_some(socket, inbound);
+        auto keys = decode_clientbound_keys(
+            inbound,
+            registry,
+            version,
+            kprotocol::PacketState::configuration);
+        if (keys.contains(kprotocol::packet_keys::configuration_finish_clientbound)) {
+            got_configuration_finish = true;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    KPC_CHECK(got_configuration_finish, "configuration finish");
+
+    std::cerr << "modern flow: sending configuration finish\n";
+    write_packet(socket, registry, kprotocol::CFinishConfigurationPacket{}.to_packet(), version);
 
     inbound.clear();
+    std::cerr << "modern flow: collecting play packets\n";
     const auto keys = collect_play_keys(socket, registry, version);
     KPC_CHECK(keys.contains("play.clientbound.block_change"), "block_change");
     KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard display");

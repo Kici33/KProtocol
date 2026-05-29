@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <span>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace kprotocol {
@@ -27,6 +28,8 @@ struct Position {
 struct UUID {
     std::array<std::uint8_t, 16> bytes{};
     static UUID from_bytes(std::span<const std::uint8_t> data);
+    static UUID from_string(std::string_view text);
+    [[nodiscard]] std::string to_string() const;
 
     friend bool operator==(const UUID&, const UUID&) noexcept = default;
 };

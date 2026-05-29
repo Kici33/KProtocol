@@ -168,6 +168,7 @@ endif()
 add_library(kprotocol_server
     src/server.cpp
     src/login_security.cpp
+    src/configuration.cpp
     src/client_ui.cpp
     src/play_demo.cpp
     src/protocol_server.cpp
@@ -227,6 +228,8 @@ if(KPROTOCOL_BUILD_TESTS)
         server_smoke_tests
         server_connection_management_tests
         server_login_tests
+        configuration_phase_tests
+        gameplay_session_tests
         gameplay_integration_tests
         server_play_demo_tests
         blocks_metadata_tests
@@ -246,6 +249,10 @@ if(KPROTOCOL_BUILD_TESTS)
             continue()
         endif()
         if(test_name STREQUAL "server_login_tests"
+                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+            continue()
+        endif()
+        if(test_name STREQUAL "configuration_phase_tests"
                 AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
             continue()
         endif()

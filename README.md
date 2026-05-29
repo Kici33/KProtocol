@@ -11,7 +11,9 @@ KProtocol is a modern Minecraft protocol library focused on:
 ## Current scope
 
 The framework is production-style and extensible for full protocol coverage.  
-This repository currently ships a **baseline packet set** (handshake/status/login/keepalive) and all extension points needed to register every remaining Minecraft packet.
+This repository ships the committed generated Minecraft packet catalog, a
+hand-written ergonomic packet layer for common flows, and extension points for
+application-specific packets.
 
 ### Version model
 
@@ -174,6 +176,10 @@ and exit `0` on success.
      optional strict translation checks.
    - Supports `ProtocolListener` hooks (`onPacketReceived`, `onPacketSent`,
      `onDisconnect`, `onError`).
+   - Tracks modern login -> configuration -> play transitions, including
+     `login_acknowledged` and `configuration.finish_configuration`.
+   - Exposes a lightweight `GameplaySession` per client for profile, entity id,
+     gamemode, dimension, position, and login/config/play lifecycle flags.
 
 ## Packet class naming
 
@@ -251,6 +257,39 @@ runtime.disconnect_on_packet_error = true;
 runtime.require_explicit_translations = true;
 server.set_runtime_options(runtime);
 ```
+
+Gameplay handlers can use the session model as their durable per-player state:
+
+```cpp
+server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
+    if (packet.key == kprotocol::packet_keys::login_start) {
+        auto state = client.gameplay_session();
+        client.set_entity_id(1);
+        client.set_game_mode(kprotocol::GameMode::survival);
+        client.set_dimension("minecraft:overworld");
+        client.set_location({.x = 0.0, .y = 64.0, .z = 0.0, .known = true});
+        client.mark_joined_game();
+    }
+});
+```
+
+Modern clients (1.20.2+) enter a configuration phase before play. KProtocol has
+typed packets and helpers for the common phase boundary:
+
+```cpp
+server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Packet& packet) {
+    if (packet.key_matches(kprotocol::packet_keys::login_acknowledged)) {
+        kprotocol::send_feature_flags(client);
+        kprotocol::send_configuration_finish(client);
+    }
+    if (packet.key_matches(kprotocol::packet_keys::configuration_finish_serverbound)) {
+        kprotocol::send_play_demo(client, kprotocol::ProtocolVersion::v1_21_1);
+    }
+});
+```
+
+For registry payloads, use `SRegistryDataPacket`: `codec` is used by 1.20.2
+style schemas, while `id` + `entries` is used by newer registry-data packets.
 
 Login/security helpers are available when implementing online-mode or custom
 authentication flows:

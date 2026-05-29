@@ -8,10 +8,6 @@
 #include <string>
 #include <thread>
 
-#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
-#include "kprotocol/generated/packet_keys.hpp"
-#endif
-
 namespace {
 
 constexpr kprotocol::ProtocolVersion kInternalVersion = kprotocol::ProtocolVersion::v1_21_1;
@@ -34,13 +30,19 @@ void handle_play_demo(
         return;
     }
 
-#if defined(KPROTOCOL_HAS_GENERATED_CATALOG)
-    if (packet.key == std::string(kprotocol::generated::packet_keys::configuration_serverbound_finish_configuration)) {
+    if (packet.key_matches(kprotocol::packet_keys::login_acknowledged)) {
+        if (!kprotocol::send_feature_flags(client) ||
+            !kprotocol::send_configuration_finish(client)) {
+            std::cerr << "configuration finish failed for " << client.remote_address() << '\n';
+        }
+        return;
+    }
+
+    if (packet.key_matches(kprotocol::packet_keys::configuration_finish_serverbound)) {
         if (!kprotocol::send_play_demo(client, kInternalVersion)) {
             std::cerr << "play demo failed for " << client.remote_address() << '\n';
         }
     }
-#endif
 }
 
 } // namespace
