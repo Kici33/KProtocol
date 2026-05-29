@@ -5,6 +5,7 @@
 #include "kprotocol/version.hpp"
 
 #include <cstdint>
+#include <initializer_list>
 #include <map>
 #include <optional>
 #include <span>
@@ -58,7 +59,8 @@ enum class FieldType : std::uint8_t {
     uuid_array,
     slot_array,
     slot,
-    optional_nbt
+    optional_nbt,
+    optional_nbt_array
 };
 
 using PacketKey = std::string;
@@ -85,7 +87,8 @@ using FieldValue = std::variant<
     std::vector<std::int64_t>,
     std::vector<std::string>,
     std::vector<UUID>,
-    std::vector<types::Slot>
+    std::vector<types::Slot>,
+    std::vector<NBTBlob>
 >;
 
 // Dual storage: indexed values for registry encode/decode hot paths; named map
@@ -93,6 +96,14 @@ using FieldValue = std::variant<
 struct PacketFields {
     std::unordered_map<std::string, FieldValue> named;
     std::vector<std::optional<FieldValue>> indexed;
+
+    PacketFields() = default;
+
+    PacketFields(std::initializer_list<std::pair<std::string, FieldValue>> entries) {
+        for (const auto& [name, value] : entries) {
+            named.emplace(name, value);
+        }
+    }
 
     void clear() {
         named.clear();

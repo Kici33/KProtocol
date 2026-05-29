@@ -207,6 +207,7 @@ if(KPROTOCOL_BUILD_TESTS)
         version_tests
         version_range_tests
         decompression_bomb_tests
+        nbt_tests
         field_types_tests
         versioned_schema_tests
         generated_packets_tests

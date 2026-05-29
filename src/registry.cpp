@@ -170,6 +170,14 @@ void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const Fi
     case FieldType::optional_nbt:
         types::write_optional_nbt(out, std::get<NBTBlob>(value));
         return;
+    case FieldType::optional_nbt_array: {
+        const auto& values = std::get<std::vector<NBTBlob>>(value);
+        codec::write_var_int(out, static_cast<std::int32_t>(values.size()));
+        for (const auto& item : values) {
+            types::write_optional_nbt(out, item);
+        }
+        return;
+    }
     }
     throw std::runtime_error("Unsupported field type in write_field");
 }
@@ -288,6 +296,18 @@ FieldValue read_field(std::span<const std::uint8_t> input, std::size_t& offset, 
         return types::read_slot(input, offset);
     case FieldType::optional_nbt:
         return types::read_optional_nbt(input, offset);
+    case FieldType::optional_nbt_array: {
+        const auto count = codec::read_var_int(input, offset);
+        if (count < 0) {
+            throw codec::DecodeError("codec: negative optional NBT array length");
+        }
+        std::vector<NBTBlob> values;
+        values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            values.push_back(types::read_optional_nbt(input, offset));
+        }
+        return values;
+    }
     }
     throw std::runtime_error("Unsupported field type in read_field");
 }
@@ -489,7 +509,7 @@ std::optional<std::int32_t> PacketRegistry::packet_id_for(std::string_view key, 
     if (id_it != schema->ids.end()) {
         return id_it->second;
     }
-    const auto it = schema->ids.upper_bound(known);
+    auto it = schema->ids.upper_bound(known);
     if (it == schema->ids.begin()) {
         return std::nullopt;
     }

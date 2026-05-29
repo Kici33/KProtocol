@@ -4580,7 +4580,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"groundUp", kprotocol::FieldType::boolean},
             {"bitMap", kprotocol::FieldType::var_int},
             {"chunkData", kprotocol::FieldType::byte_array},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"blockEntities", kprotocol::FieldType::optional_nbt_array}
         });
         schema.field_sets.emplace(KnownVersion::v1_14, std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::i32_be},
@@ -4589,7 +4589,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"bitMap", kprotocol::FieldType::var_int},
             {"heightmaps", kprotocol::FieldType::optional_nbt},
             {"chunkData", kprotocol::FieldType::byte_array},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"blockEntities", kprotocol::FieldType::optional_nbt_array}
         });
         schema.field_sets.emplace(KnownVersion::v1_15, std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::i32_be},
@@ -4623,7 +4623,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"heightmaps", kprotocol::FieldType::optional_nbt},
             {"biomes", kprotocol::FieldType::var_int_array},
             {"chunkData", kprotocol::FieldType::byte_array},
-            {"tail", kprotocol::FieldType::rest_buffer}
+            {"blockEntities", kprotocol::FieldType::optional_nbt_array}
         });
         schema.field_sets.emplace(KnownVersion::v1_18, std::vector<FieldSpec>{
             {"x", kprotocol::FieldType::i32_be},

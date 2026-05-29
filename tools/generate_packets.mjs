@@ -296,6 +296,9 @@ function mapFieldType(type, stateTypes, globalTypes) {
             if (elemMapped.fieldType === 'slot') {
                 return { ok: true, fieldType: 'slot_array' };
             }
+            if (elemMapped.fieldType === 'optional_nbt') {
+                return { ok: true, fieldType: 'optional_nbt_array' };
+            }
             if (elemMapped.fieldType === 'byte_array') {
                 return { ok: true, fieldType: 'byte_array' };
             }

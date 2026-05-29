@@ -122,7 +122,8 @@ Connect with a 1.8 or 1.21 client in offline mode to receive the showcase.
    - Version-aware lookup picks the highest declared field set `<=` the
      requested protocol version.
    - Encodes/decodes using typed `FieldType` values (VarInt, UUID,
-     Position, `rest_buffer` for opaque blobs, …).
+     Position, real anonymous/named NBT blobs, `rest_buffer` for opaque
+     suffixes, …).
    - Legacy `PacketDefinition` registration is still supported and is
      lifted into a schema automatically.
 

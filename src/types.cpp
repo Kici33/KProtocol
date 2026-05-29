@@ -2,118 +2,236 @@
 #include "kprotocol/codec.hpp"
 
 #include <cstring>
+#include <limits>
 #include <stdexcept>
 
 namespace kprotocol {
 
 namespace {
 
-// Minimal NBT tag skip/read for anonOptionalNbt inside slots. Supports the
-// tag kinds commonly seen on item stacks (compound + nested primitives).
-void skip_nbt_payload(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type);
+constexpr std::size_t kMaxNbtDepth = 64;
+constexpr std::int32_t kMaxNbtElements = 1'000'000;
 
-void skip_nbt_value(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type) {
-    switch (tag_type) {
-    case 0: // TAG_End
-        return;
-    case 1: // TAG_Byte
-        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT byte");
-        offset += 1;
-        return;
-    case 2: // TAG_Short
-        if (offset + 2 > input.size()) throw std::runtime_error("Truncated NBT short");
-        offset += 2;
-        return;
-    case 3: // TAG_Int
-        if (offset + 4 > input.size()) throw std::runtime_error("Truncated NBT int");
-        offset += 4;
-        return;
-    case 4: // TAG_Long
-        if (offset + 8 > input.size()) throw std::runtime_error("Truncated NBT long");
-        offset += 8;
-        return;
-    case 5: // TAG_Float
-        if (offset + 4 > input.size()) throw std::runtime_error("Truncated NBT float");
-        offset += 4;
-        return;
-    case 6: // TAG_Double
-        if (offset + 8 > input.size()) throw std::runtime_error("Truncated NBT double");
-        offset += 8;
-        return;
-    case 7: { // TAG_Byte_Array
-        const auto len = codec::read_int(input, offset);
-        if (len < 0 || static_cast<std::size_t>(len) > input.size() - offset) {
-            throw std::runtime_error("Truncated NBT byte array");
-        }
-        offset += static_cast<std::size_t>(len);
-        return;
-    }
-    case 8: { // TAG_String
-        (void)codec::read_string(input, offset);
-        return;
-    }
-    case 9: { // TAG_List
-        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT list");
-        const auto element_type = input[offset++];
-        const auto len = codec::read_int(input, offset);
-        if (len < 0) throw std::runtime_error("Negative NBT list length");
-        for (std::int32_t i = 0; i < len; ++i) {
-            skip_nbt_value(input, offset, element_type);
-        }
-        return;
-    }
-    case 10: // TAG_Compound
-        skip_nbt_payload(input, offset, tag_type);
-        return;
-    case 11: { // TAG_Int_Array
-        const auto len = codec::read_int(input, offset);
-        if (len < 0 || static_cast<std::size_t>(len) * 4U > input.size() - offset) {
-            throw std::runtime_error("Truncated NBT int array");
-        }
-        offset += static_cast<std::size_t>(len) * 4U;
-        return;
-    }
-    case 12: { // TAG_Long_Array
-        const auto len = codec::read_int(input, offset);
-        if (len < 0 || static_cast<std::size_t>(len) * 8U > input.size() - offset) {
-            throw std::runtime_error("Truncated NBT long array");
-        }
-        offset += static_cast<std::size_t>(len) * 8U;
-        return;
-    }
-    default:
+std::uint8_t to_wire_type(const NBTTagType type) {
+    return static_cast<std::uint8_t>(type);
+}
+
+NBTTagType nbt_type_from_wire(const std::uint8_t type) {
+    if (type > to_wire_type(NBTTagType::long_array)) {
         throw std::runtime_error("Unsupported NBT tag type");
     }
+    return static_cast<NBTTagType>(type);
 }
 
-void skip_nbt_payload(std::span<const std::uint8_t> input, std::size_t& offset, std::uint8_t tag_type) {
-    if (tag_type != 10) {
-        skip_nbt_value(input, offset, tag_type);
+void ensure_available(std::span<const std::uint8_t> input, std::size_t offset, std::size_t count, const char* what) {
+    if (count > input.size() - offset) {
+        throw std::runtime_error(std::string("Truncated NBT ") + what);
+    }
+}
+
+std::uint16_t read_nbt_u16(std::span<const std::uint8_t> input, std::size_t& offset) {
+    ensure_available(input, offset, 2, "string length");
+    const auto value = static_cast<std::uint16_t>(
+        (static_cast<std::uint16_t>(input[offset]) << 8U) |
+        static_cast<std::uint16_t>(input[offset + 1]));
+    offset += 2;
+    return value;
+}
+
+void write_nbt_string(std::vector<std::uint8_t>& out, const std::string& value) {
+    if (value.size() > std::numeric_limits<std::uint16_t>::max()) {
+        throw std::runtime_error("NBT string exceeds u16 length limit");
+    }
+    const auto length = static_cast<std::uint16_t>(value.size());
+    codec::write_u16(out, length);
+    out.insert(out.end(), value.begin(), value.end());
+}
+
+std::string read_nbt_string(std::span<const std::uint8_t> input, std::size_t& offset) {
+    const auto length = read_nbt_u16(input, offset);
+    ensure_available(input, offset, length, "string");
+    const auto* begin = reinterpret_cast<const char*>(input.data() + offset);
+    std::string value(begin, begin + length);
+    offset += length;
+    return value;
+}
+
+void validate_count(const std::int32_t count, const char* what) {
+    if (count < 0) {
+        throw std::runtime_error(std::string("Negative NBT ") + what + " length");
+    }
+    if (count > kMaxNbtElements) {
+        throw std::runtime_error(std::string("NBT ") + what + " length exceeds limit");
+    }
+}
+
+NBTValue read_nbt_payload(std::span<const std::uint8_t> input,
+                          std::size_t& offset,
+                          NBTTagType type,
+                          std::size_t depth);
+void write_nbt_payload(std::vector<std::uint8_t>& out, const NBTValue& value);
+
+NBTValue read_nbt_payload(std::span<const std::uint8_t> input,
+                          std::size_t& offset,
+                          const NBTTagType type,
+                          const std::size_t depth) {
+    if (depth > kMaxNbtDepth) {
+        throw std::runtime_error("NBT nesting exceeds limit");
+    }
+
+    NBTValue value;
+    value.type = type;
+    switch (type) {
+    case NBTTagType::end:
+        return value;
+    case NBTTagType::byte:
+        value.byte_value = codec::read_byte(input, offset);
+        return value;
+    case NBTTagType::short_:
+        value.short_value = codec::read_short(input, offset);
+        return value;
+    case NBTTagType::int_:
+        value.int_value = codec::read_int(input, offset);
+        return value;
+    case NBTTagType::long_:
+        value.long_value = codec::read_long(input, offset);
+        return value;
+    case NBTTagType::float_:
+        value.float_value = codec::read_float(input, offset);
+        return value;
+    case NBTTagType::double_:
+        value.double_value = codec::read_double(input, offset);
+        return value;
+    case NBTTagType::byte_array: {
+        const auto count = codec::read_int(input, offset);
+        validate_count(count, "byte array");
+        ensure_available(input, offset, static_cast<std::size_t>(count), "byte array");
+        value.byte_array.assign(
+            input.begin() + static_cast<std::ptrdiff_t>(offset),
+            input.begin() + static_cast<std::ptrdiff_t>(offset + static_cast<std::size_t>(count)));
+        offset += static_cast<std::size_t>(count);
+        return value;
+    }
+    case NBTTagType::string:
+        value.string_value = read_nbt_string(input, offset);
+        return value;
+    case NBTTagType::list: {
+        ensure_available(input, offset, 1, "list type");
+        value.list_element_type = nbt_type_from_wire(input[offset++]);
+        const auto count = codec::read_int(input, offset);
+        validate_count(count, "list");
+        if (value.list_element_type == NBTTagType::end && count > 0) {
+            throw std::runtime_error("NBT list with TAG_End elements cannot be non-empty");
+        }
+        value.list_values.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            value.list_values.push_back(read_nbt_payload(input, offset, value.list_element_type, depth + 1));
+        }
+        return value;
+    }
+    case NBTTagType::compound:
+        while (true) {
+            ensure_available(input, offset, 1, "compound child type");
+            const auto child_type = nbt_type_from_wire(input[offset++]);
+            if (child_type == NBTTagType::end) {
+                return value;
+            }
+            value.compound_names.push_back(read_nbt_string(input, offset));
+            value.compound_values.push_back(read_nbt_payload(input, offset, child_type, depth + 1));
+        }
+    case NBTTagType::int_array: {
+        const auto count = codec::read_int(input, offset);
+        validate_count(count, "int array");
+        value.int_array.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            value.int_array.push_back(codec::read_int(input, offset));
+        }
+        return value;
+    }
+    case NBTTagType::long_array: {
+        const auto count = codec::read_int(input, offset);
+        validate_count(count, "long array");
+        value.long_array.reserve(static_cast<std::size_t>(count));
+        for (std::int32_t i = 0; i < count; ++i) {
+            value.long_array.push_back(codec::read_long(input, offset));
+        }
+        return value;
+    }
+    }
+    throw std::runtime_error("Unsupported NBT tag type");
+}
+
+void write_nbt_payload(std::vector<std::uint8_t>& out, const NBTValue& value) {
+    switch (value.type) {
+    case NBTTagType::end:
+        return;
+    case NBTTagType::byte:
+        codec::write_byte(out, value.byte_value);
+        return;
+    case NBTTagType::short_:
+        codec::write_short(out, value.short_value);
+        return;
+    case NBTTagType::int_:
+        codec::write_int(out, value.int_value);
+        return;
+    case NBTTagType::long_:
+        codec::write_long(out, value.long_value);
+        return;
+    case NBTTagType::float_:
+        codec::write_float(out, value.float_value);
+        return;
+    case NBTTagType::double_:
+        codec::write_double(out, value.double_value);
+        return;
+    case NBTTagType::byte_array:
+        codec::write_int(out, static_cast<std::int32_t>(value.byte_array.size()));
+        out.insert(out.end(), value.byte_array.begin(), value.byte_array.end());
+        return;
+    case NBTTagType::string:
+        write_nbt_string(out, value.string_value);
+        return;
+    case NBTTagType::list:
+        if (value.list_element_type == NBTTagType::end && !value.list_values.empty()) {
+            throw std::runtime_error("NBT list with TAG_End elements cannot be non-empty");
+        }
+        out.push_back(to_wire_type(value.list_element_type));
+        codec::write_int(out, static_cast<std::int32_t>(value.list_values.size()));
+        for (const auto& item : value.list_values) {
+            if (item.type != value.list_element_type) {
+                throw std::runtime_error("NBT list contains mixed tag types");
+            }
+            write_nbt_payload(out, item);
+        }
+        return;
+    case NBTTagType::compound:
+        if (value.compound_names.size() != value.compound_values.size()) {
+            throw std::runtime_error("NBT compound name/value count mismatch");
+        }
+        for (std::size_t i = 0; i < value.compound_values.size(); ++i) {
+            const auto& child = value.compound_values[i];
+            if (child.type == NBTTagType::end) {
+                throw std::runtime_error("NBT compound child cannot be TAG_End");
+            }
+            out.push_back(to_wire_type(child.type));
+            write_nbt_string(out, value.compound_names[i]);
+            write_nbt_payload(out, child);
+        }
+        out.push_back(to_wire_type(NBTTagType::end));
+        return;
+    case NBTTagType::int_array:
+        codec::write_int(out, static_cast<std::int32_t>(value.int_array.size()));
+        for (const auto item : value.int_array) {
+            codec::write_int(out, item);
+        }
+        return;
+    case NBTTagType::long_array:
+        codec::write_int(out, static_cast<std::int32_t>(value.long_array.size()));
+        for (const auto item : value.long_array) {
+            codec::write_long(out, item);
+        }
         return;
     }
-    while (offset < input.size()) {
-        if (offset + 1 > input.size()) throw std::runtime_error("Truncated NBT compound");
-        const auto child_type = input[offset++];
-        if (child_type == 0) {
-            return;
-        }
-        (void)codec::read_string(input, offset);
-        skip_nbt_value(input, offset, child_type);
-    }
-    throw std::runtime_error("Unterminated NBT compound");
-}
-
-NBTBlob read_nbt_tag(std::span<const std::uint8_t> input, std::size_t& offset) {
-    if (offset >= input.size()) {
-        throw std::runtime_error("Unexpected end reading NBT tag");
-    }
-    const auto start = offset;
-    const auto tag_type = input[offset++];
-    skip_nbt_payload(input, offset, tag_type);
-    NBTBlob blob;
-    blob.data.insert(blob.data.end(), input.begin() + static_cast<std::ptrdiff_t>(start),
-                     input.begin() + static_cast<std::ptrdiff_t>(offset));
-    return blob;
+    throw std::runtime_error("Unsupported NBT tag type");
 }
 
 } // namespace
@@ -171,18 +289,66 @@ UUID read_uuid(std::span<const std::uint8_t> input, std::size_t& offset) {
 }
 
 void write_nbt(std::vector<std::uint8_t>& out, const NBTBlob& nbt) {
-    // NBT in many contexts is length-prefixed (VarInt) or raw; here append raw bytes
+    if (!nbt.data.empty()) {
+        std::size_t offset = 0;
+        ensure_available(nbt.data, offset, 1, "root tag type");
+        const auto type = nbt_type_from_wire(nbt.data[offset++]);
+        (void)read_nbt_payload(nbt.data, offset, type, 0);
+        if (offset != nbt.data.size()) {
+            throw std::runtime_error("NBT blob has trailing bytes");
+        }
+    }
     out.insert(out.end(), nbt.data.begin(), nbt.data.end());
 }
 
 NBTBlob read_nbt(std::span<const std::uint8_t> input, std::size_t& offset) {
-    // No length information here — caller must manage boundaries. We'll return remaining bytes from offset.
-    NBTBlob b;
-    if (offset < input.size()) {
-        b.data.insert(b.data.end(), input.begin() + static_cast<std::ptrdiff_t>(offset), input.end());
-        offset = input.size();
+    const auto start = offset;
+    ensure_available(input, offset, 1, "root tag type");
+    const auto type = nbt_type_from_wire(input[offset++]);
+    (void)read_nbt_payload(input, offset, type, 0);
+    NBTBlob blob;
+    blob.data.insert(
+        blob.data.end(),
+        input.begin() + static_cast<std::ptrdiff_t>(start),
+        input.begin() + static_cast<std::ptrdiff_t>(offset));
+    return blob;
+}
+
+void write_named_nbt(std::vector<std::uint8_t>& out, const NBTNamedTag& tag) {
+    if (tag.value.type == NBTTagType::end) {
+        out.push_back(to_wire_type(NBTTagType::end));
+        return;
     }
-    return b;
+    out.push_back(to_wire_type(tag.value.type));
+    write_nbt_string(out, tag.name);
+    write_nbt_payload(out, tag.value);
+}
+
+NBTNamedTag read_named_nbt(std::span<const std::uint8_t> input, std::size_t& offset) {
+    ensure_available(input, offset, 1, "root tag type");
+    const auto type = nbt_type_from_wire(input[offset++]);
+    if (type == NBTTagType::end) {
+        return {};
+    }
+    NBTNamedTag tag;
+    tag.name = read_nbt_string(input, offset);
+    tag.value = read_nbt_payload(input, offset, type, 0);
+    return tag;
+}
+
+NBTBlob encode_named_nbt(const NBTNamedTag& tag) {
+    NBTBlob blob;
+    write_named_nbt(blob.data, tag);
+    return blob;
+}
+
+NBTNamedTag decode_named_nbt(const NBTBlob& blob) {
+    std::size_t offset = 0;
+    const auto tag = read_named_nbt(blob.data, offset);
+    if (offset != blob.data.size()) {
+        throw std::runtime_error("NBT blob has trailing bytes");
+    }
+    return tag;
 }
 
 void write_optional_nbt(std::vector<std::uint8_t>& out, const NBTBlob& nbt) {
@@ -201,7 +367,7 @@ NBTBlob read_optional_nbt(std::span<const std::uint8_t> input, std::size_t& offs
         ++offset;
         return {};
     }
-    return read_nbt_tag(input, offset);
+    return read_nbt(input, offset);
 }
 
 void write_slot(std::vector<std::uint8_t>& out, const Slot& slot) {

@@ -58,7 +58,8 @@ The generator translates minecraft-data's protocol types into kprotocol's
 | `f32`, `f64` | `f32_be`, `f64_be` |
 | `UUID`, `position` | `uuid`, `position` |
 | `[buffer, {countType: varint}]` | `byte_array` |
-| `[array, {countType: varint, type: ...}]` for selected primitives | `var_int_array`, `var_long_array`, `i64_array`, `string_array`, `uuid_array`, `slot_array`, or `byte_array` |
+| `[array, {countType: varint, type: ...}]` for selected primitives | `var_int_array`, `var_long_array`, `i64_array`, `string_array`, `uuid_array`, `slot_array`, `optional_nbt_array`, or `byte_array` |
+| `anonOptionalNbt`, `anonymousNbt`, `optionalNbt`, `nbt` | `optional_nbt` |
 | `restBuffer` | `rest_buffer` |
 
 Simple `switch` fields whose branch is selected by an integer field are emitted
