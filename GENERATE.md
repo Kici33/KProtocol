@@ -19,8 +19,8 @@ The generator emits three artifacts under the `--out` directory:
   startup to register every supported (state, direction, version) tuple.
 - `coverage.json` - per-version stats and per-key status (`ok`,
   `unsupported`, or `rawOnly` when `--raw-policy keep` is used). Useful for
-  tracking how much of the wire format is fully typed and which packet shapes
-  still need native modeling.
+  tracking generated packet coverage and packet shapes that still use opaque
+  suffix fields.
 
 ## Regenerating
 
@@ -69,12 +69,15 @@ Optional scalar values become a `*_present` boolean plus an optional value field
 optional containers are flattened into prefixed optional fields when their inner
 fields are mappable.
 
-Packets that still require unsupported compound shapes (`mapper`, deep nested
-containers, chunk data, complex NBT, etc.) are omitted from the generated
-runtime registry by default and reported as `unsupported` in `coverage.json`.
-This keeps protocol churn from silently turning into whole-packet opaque blobs.
-Pass `--raw-policy keep` to restore the old `rawOnly` fallback, or
-`--raw-policy fail` to stop generation at the first unsupported packet.
+All known packet IDs are registered by default. When minecraft-data exposes a
+complex suffix the generator cannot flatten yet (`mapper`, deep nested
+containers, chunk data, complex NBT, etc.), kprotocol keeps the typed prefix and
+stores the remaining bytes in a named `tail` field. Packets with no
+minecraft-data body schema are registered with a named `payload` field. This
+keeps protocol churn from silently dropping packet IDs while avoiding the old
+whole-packet `raw` fallback. Pass `--raw-policy keep` to restore the old
+`rawOnly` fallback, or `--raw-policy fail` to stop generation at the first
+unmodeled packet.
 
 ## Disabling the committed catalog
 

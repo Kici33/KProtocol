@@ -61,11 +61,11 @@ Or via CMake (requires Node.js on PATH):
 cmake --build build --target kprotocol_generate_packets
 ```
 
-Coverage stats land in `generated/coverage.json`. Supported packets have typed
-schemas (arrays, slots, options, version-specific layouts, and simple action
-switches). Unsupported packet shapes are reported in coverage but are omitted
-from the generated runtime registry by default, so new protocol churn does not
-silently become whole-packet opaque blobs.
+Coverage stats land in `generated/coverage.json`. All known packet IDs are
+registered by default. Supported shapes get typed schemas (arrays, slots,
+options, version-specific layouts, and simple action switches); complex suffixes
+that still need native modeling are preserved as named `tail` fields, and
+packets without a minecraft-data body schema use a named `payload` field.
 
 
 Second project (consumer) quickstart

@@ -19,14 +19,15 @@
 //
 // Mapping strategy:
 //   - All primitive minecraft-data types map to a kprotocol FieldType.
-//   - Packets containing only mappable primitives are emitted with a full
-//     field set per version.
-//   - Packets containing unsupported shapes are omitted from the generated
-//     registry by default and reported as "unsupported" in coverage.json.
-//     Use --raw-policy keep to preserve the old opaque rest_buffer fallback,
-//     or --raw-policy fail to stop generation on the first unsupported packet.
-//   - Packets that lack a body at all (empty container) are emitted with no
-//     fields.
+//   - Packets containing only mappable primitives are emitted with typed field
+//     sets per version.
+//   - Packets with complex suffixes keep their typed prefix and preserve the
+//     remaining bytes as a named `tail` rest_buffer, so the packet key is still
+//     registered instead of omitted.
+//   - Packets missing a minecraft-data schema are registered with a named
+//     `payload` rest_buffer instead of a whole-packet `raw` fallback.
+//   - Use --raw-policy keep to restore the old opaque `raw` fallback, or
+//     --raw-policy fail to stop generation at the first unmodeled packet.
 
 import { promises as fs } from 'node:fs';
 import path from 'node:path';

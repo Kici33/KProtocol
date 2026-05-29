@@ -4,6 +4,7 @@
   "description": "Dev dependency for regenerating the packet catalog from minecraft-data",
   "scripts": {
     "generate": "node tools/generate_packets.mjs --out generated --versions all-known",
+    "check:coverage": "node tools/check_packet_coverage.mjs",
     "embed:translation": "node tools/embed_translation_mappings.mjs"
   },
   "devDependencies": {

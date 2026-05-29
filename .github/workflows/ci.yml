@@ -39,6 +39,9 @@ jobs:
     - name: Generate packets
       run: npm run generate
 
+    - name: Check packet coverage
+      run: npm run check:coverage
+
     - name: Configure CMake (Linux)
       if: runner.os == 'Linux'
       run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
