@@ -105,8 +105,8 @@ int main() {
         schema.key = "test.optional_nbt";
         schema.state = kprotocol::PacketState::play;
         schema.direction = kprotocol::PacketDirection::clientbound;
-        schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x55;
-        schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+        schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x55;
+        schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
             {"nbt", kprotocol::FieldType::optional_nbt},
         };
         registry.register_schema(std::move(schema));
@@ -140,8 +140,8 @@ int main() {
         schema.key = "test.optional_nbt_array";
         schema.state = kprotocol::PacketState::play;
         schema.direction = kprotocol::PacketDirection::clientbound;
-        schema.ids[kprotocol::ProtocolVersion::v1_20_4] = 0x56;
-        schema.field_sets[kprotocol::ProtocolVersion::v1_20_4] = {
+        schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x56;
+        schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
             {"nbt_values", kprotocol::FieldType::optional_nbt_array},
         };
         registry.register_schema(std::move(schema));

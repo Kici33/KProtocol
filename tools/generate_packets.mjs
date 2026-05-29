@@ -392,6 +392,10 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
             if (!mapped.ok || !mapped.fieldType || mapped.expandOption || mapped.voidField) {
                 return { ok: false, reason: mapped.reason || 'unsupported switch branch' };
             }
+            const parsedCaseValue = Number.parseInt(caseValue, 10);
+            if (!Number.isFinite(parsedCaseValue)) {
+                return { ok: false, reason: 'non-numeric switch case' };
+            }
             const key = mapped.fieldType;
             const group = branchGroups.get(key) || {
                 name: fieldName,
@@ -399,7 +403,7 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
                 condition_field: sanitizeFieldName(params.compareTo),
                 condition_values: [],
             };
-            group.condition_values.push(Number.parseInt(caseValue, 10));
+            group.condition_values.push(parsedCaseValue);
             branchGroups.set(key, group);
         }
 

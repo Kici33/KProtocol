@@ -33,6 +33,7 @@ namespace {
     } while (false)
 
 const auto kVersion = kprotocol::ProtocolVersion::v1_20_4;
+const auto kKnownVersion = kprotocol::KnownVersion::v1_20_4;
 const auto kState   = kprotocol::PacketState::play;
 const auto kDir     = kprotocol::PacketDirection::clientbound;
 
@@ -43,8 +44,8 @@ kprotocol::PacketSchema make_schema(const std::string& key,
     schema.key = key;
     schema.state = kState;
     schema.direction = kDir;
-    schema.ids[kVersion] = id;
-    schema.field_sets[kVersion] = std::move(fields);
+    schema.ids[kKnownVersion] = id;
+    schema.field_sets[kKnownVersion] = std::move(fields);
     return schema;
 }
 
@@ -84,7 +85,7 @@ void test_legacy_definition_still_works() {
     def.state = kState;
     def.direction = kDir;
     def.fields = {{"x", kprotocol::FieldType::var_int}};
-    def.ids[kVersion] = 0x70;
+    def.ids[kKnownVersion] = 0x70;
     registry.register_definition(def);
 
     kprotocol::Packet p;
@@ -132,8 +133,8 @@ void test_rest_buffer_consumes_trailing_bytes() {
     schema.key = "test.rest_buffer_after_prefix";
     schema.state = kState;
     schema.direction = kDir;
-    schema.ids[kVersion] = 0x72;
-    schema.field_sets[kVersion] = {
+    schema.ids[kKnownVersion] = 0x72;
+    schema.field_sets[kKnownVersion] = {
         {"version", kprotocol::FieldType::var_int},
         {"payload", kprotocol::FieldType::rest_buffer},
     };

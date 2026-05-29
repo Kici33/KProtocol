@@ -1,18 +1,11 @@
 #include "kprotocol/version.hpp"
 
-#include <array>
 #include <string>
 #include <unordered_map>
 
 namespace kprotocol {
 
 namespace {
-
-constexpr std::array<std::int32_t, static_cast<std::size_t>(KnownVersion::count)> kWireByKnown = {
-#define KPROTOCOL_X(name, wire, display) wire,
-    KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
-#undef KPROTOCOL_X
-};
 
 const std::unordered_map<std::int32_t, std::string_view>& wire_to_name() {
     static const std::unordered_map<std::int32_t, std::string_view> map = [] {
@@ -38,14 +31,6 @@ const std::unordered_map<std::int32_t, KnownVersion>& wire_to_known() {
 }
 
 } // namespace
-
-constexpr std::int32_t wire_number(const KnownVersion version) noexcept {
-    const auto index = static_cast<std::size_t>(version);
-    if (index >= kWireByKnown.size()) {
-        return 0;
-    }
-    return kWireByKnown[index];
-}
 
 std::optional<KnownVersion> try_from_wire(const WireProtocol wire) noexcept {
     const auto& m = wire_to_known();

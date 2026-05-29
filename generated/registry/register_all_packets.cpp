@@ -3777,17 +3777,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"y", kprotocol::FieldType::f64_be},
             {"z", kprotocol::FieldType::f64_be},
             {"isEntity", kprotocol::FieldType::boolean},
-            {"entityId", kprotocol::FieldType::var_int, "", "isEntity", {NaN}},
-            {"entity_feet_eyes", kprotocol::FieldType::string, "", "isEntity", {NaN}}
-        });
-        schema.field_sets.emplace(KnownVersion::v1_20_4, std::vector<FieldSpec>{
-            {"feet_eyes", kprotocol::FieldType::var_int},
-            {"x", kprotocol::FieldType::f64_be},
-            {"y", kprotocol::FieldType::f64_be},
-            {"z", kprotocol::FieldType::f64_be},
-            {"isEntity", kprotocol::FieldType::boolean},
-            {"entityId", kprotocol::FieldType::var_int, "", "isEntity", {NaN}},
-            {"entity_feet_eyes", kprotocol::FieldType::var_int, "", "isEntity", {NaN}}
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -5174,7 +5164,7 @@ static void register_generated_packets_batch_3(PacketRegistry& registry) {
             {"inventoryType", kprotocol::FieldType::string},
             {"windowTitle", kprotocol::FieldType::string},
             {"slotCount", kprotocol::FieldType::u8},
-            {"entityId", kprotocol::FieldType::i32_be, "", "inventoryType", {NaN}}
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         schema.field_sets.emplace(KnownVersion::v1_14, std::vector<FieldSpec>{
             {"windowId", kprotocol::FieldType::var_int},
@@ -6314,9 +6304,7 @@ static void register_generated_packets_batch_4(PacketRegistry& registry) {
         schema.field_sets.emplace(KnownVersion::v1_17, std::vector<FieldSpec>{
             {"sourcePosition", kprotocol::FieldType::position},
             {"destinationIdentifier", kprotocol::FieldType::string},
-            {"destination", kprotocol::FieldType::position, "", "destinationIdentifier", {NaN}},
-            {"destination", kprotocol::FieldType::var_int, "", "destinationIdentifier", {NaN}},
-            {"arrivalTicks", kprotocol::FieldType::var_int}
+            {"tail", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }

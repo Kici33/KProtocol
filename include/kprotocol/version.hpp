@@ -86,7 +86,16 @@ enum class ProtocolVersion : std::int32_t {
 #undef KPROTOCOL_X
 };
 
-[[nodiscard]] constexpr std::int32_t wire_number(KnownVersion version) noexcept;
+[[nodiscard]] constexpr std::int32_t wire_number(const KnownVersion version) noexcept {
+    switch (version) {
+#define KPROTOCOL_X(name, wire, display) case KnownVersion::name: return wire;
+        KPROTOCOL_FOR_EACH_KNOWN_VERSION(KPROTOCOL_X)
+#undef KPROTOCOL_X
+    case KnownVersion::count:
+        return 0;
+    }
+    return 0;
+}
 [[nodiscard]] constexpr std::int32_t wire_number(WireProtocol wire) noexcept { return wire.value; }
 [[nodiscard]] constexpr std::int32_t protocol_number(const ProtocolVersion version) noexcept {
     return static_cast<std::int32_t>(version);
