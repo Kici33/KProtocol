@@ -119,13 +119,19 @@ struct PacketFields {
     [[nodiscard]] auto begin() const noexcept { return named.begin(); }
     [[nodiscard]] auto cend() const noexcept { return named.cend(); }
     [[nodiscard]] auto cbegin() const noexcept { return named.cbegin(); }
+    [[nodiscard]] std::size_t size() const noexcept { return named.size(); }
     [[nodiscard]] bool empty() const noexcept { return named.empty() && indexed.empty(); }
+
+    FieldValue& operator[](const std::string& name) { return named[name]; }
+    const FieldValue& at(const std::string& name) const { return named.at(name); }
 };
 
 struct FieldSpec {
     std::string name;
     FieldType type{};
     std::string optional_if;
+    std::string condition_field;
+    std::vector<std::int32_t> condition_values;
 };
 
 struct PacketDefinition {

@@ -1,0 +1,11 @@
+.git
+.github
+build
+cmake-build-*
+node_modules
+npm-debug.log*
+*.log
+.vs
+.vscode
+out
+dist

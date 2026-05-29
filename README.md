@@ -37,9 +37,10 @@ ctest --test-dir build --output-on-failure
 ```
 
 By default the library compiles the committed multi-version packet catalog under
-`generated/` (packet keys across 17 anchor versions from 1.8 through 1.21.11,
-wire 47–774). Unknown future client wires (e.g. 1.26 when minecraft-data adds it)
-resolve to the nearest compiled catalog anchor until you regenerate.
+`generated/` (packet keys across every known catalog version from 1.8 through
+1.21.11, wire 47–774). Unknown future client wires (e.g. 1.26 when
+minecraft-data adds it) resolve to the nearest compiled catalog anchor until you
+regenerate.
 Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
 hand-rolled baseline set.
 
@@ -51,7 +52,7 @@ See [GENERATE.md](GENERATE.md) for full details. Quick version:
 npm install minecraft-data
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11
+    --versions all-known
 ```
 
 Or via CMake (requires Node.js on PATH):
@@ -60,10 +61,10 @@ Or via CMake (requires Node.js on PATH):
 cmake --build build --target kprotocol_generate_packets
 ```
 
-Coverage stats land in `generated/coverage.json`. At the baseline versions
-most packets now have full typed schemas (arrays, slots, options, etc.); the
-remainder stay as opaque `rest_buffer` blobs where minecraft-data uses
-switch/NBT/chunk shapes not yet modeled.
+Coverage stats land in `generated/coverage.json`. Most packets now have full
+typed schemas (arrays, slots, options, version-specific layouts, and simple
+action switches); the remainder stay as opaque `rest_buffer` blobs where
+minecraft-data uses NBT/chunk or deeply compound shapes not yet modeled.
 
 
 Second project (consumer) quickstart

@@ -2,27 +2,36 @@ FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Node.js 18 and build tools. Use NodeSource for stable Node LTS.
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl ca-certificates gnupg lsb-release software-properties-common \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y --no-install-recommends nodejs build-essential cmake git wget zlib1g-dev \
+    ca-certificates \
+    cmake \
+    curl \
+    git \
+    gnupg \
+    lsb-release \
+    software-properties-common \
+    wget \
+    zlib1g-dev \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-COPY . /workspace
 
-# Install npm dependency used by the generator
-RUN npm ci || true
+COPY package.json package-lock.json ./
+RUN npm ci
 
-# Generate packets (best-effort)
-RUN node generate_packets_v3.js --out generated --versions 1.8,1.12.2,1.16.5,1.20.4,1.21.1 || true
+COPY . .
 
-# Configure and build
-RUN cmake -S . -B build -DCMAKE_BUILD_TYPE=Release \
-    && cmake --build build --config Release -j$(nproc) || true
+RUN npm run generate
 
-# Run tests (non-fatal)
-RUN ctest --test-dir build --output-on-failure || true
+RUN cmake -S . -B build \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKPROTOCOL_BUILD_EXAMPLES=OFF \
+    && cmake --build build --config Release -j$(nproc)
+
+RUN ctest --test-dir build --output-on-failure
 
 CMD ["/bin/bash"]

@@ -5,7 +5,9 @@
 
 #include <cstring>
 #include <functional>
+#include <optional>
 #include <stdexcept>
+#include <type_traits>
 
 namespace kprotocol {
 
@@ -23,6 +25,42 @@ bool field_present(const PacketFields& fields, const std::string& optional_if) {
         return *flag;
     }
     return false;
+}
+
+std::optional<std::int64_t> integral_field_value(const FieldValue& value) {
+    return std::visit([](const auto& v) -> std::optional<std::int64_t> {
+        using T = std::decay_t<decltype(v)>;
+        if constexpr (std::is_integral_v<T> && !std::is_same_v<T, bool>) {
+            return static_cast<std::int64_t>(v);
+        } else {
+            return std::nullopt;
+        }
+    }, value);
+}
+
+bool field_condition_matches(const PacketFields& fields, const FieldSpec& spec) {
+    if (spec.condition_field.empty()) {
+        return true;
+    }
+    const auto it = fields.named.find(spec.condition_field);
+    if (it == fields.named.end()) {
+        return false;
+    }
+    const auto actual = integral_field_value(it->second);
+    if (!actual.has_value()) {
+        return false;
+    }
+    for (const auto expected : spec.condition_values) {
+        if (*actual == expected) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool should_process_field(const PacketFields& fields, const FieldSpec& spec) {
+    return (spec.optional_if.empty() || field_present(fields, spec.optional_if))
+        && field_condition_matches(fields, spec);
 }
 
 void write_field(std::vector<std::uint8_t>& out, const FieldSpec& spec, const FieldValue& value) {
@@ -398,7 +436,7 @@ std::vector<std::uint8_t> PacketRegistry::encode_packet(
     std::vector<std::uint8_t> payload;
     for (std::size_t i = 0; i < field_set->size(); ++i) {
         const auto& field = (*field_set)[i];
-        if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
+        if (!should_process_field(packet.fields, field)) {
             continue;
         }
         const auto* value = field_at(packet.fields, *field_set, i);
@@ -442,7 +480,7 @@ Packet PacketRegistry::decode_packet(
     const std::span<const std::uint8_t> payload(frame.payload.data(), frame.payload.size());
     for (std::size_t i = 0; i < field_set->size(); ++i) {
         const auto& field = (*field_set)[i];
-        if (!field.optional_if.empty() && !field_present(packet.fields, field.optional_if)) {
+        if (!should_process_field(packet.fields, field)) {
             continue;
         }
         FieldValue value = read_field(payload, offset, field);

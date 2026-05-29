@@ -43,6 +43,7 @@ function parseArgs(argv) {
         else if (a === '--versions') args.versions = argv[++i].split(',').map(s => s.trim()).filter(Boolean);
         else if (a === '--help' || a === '-h') {
             console.log('Usage: node tools/generate_packets.mjs --out <dir> --versions v1,v2,...');
+            console.log('       node tools/generate_packets.mjs --out <dir> --versions all-known');
             process.exit(0);
         } else {
             console.error(`Unknown argument: ${a}`);
@@ -109,6 +110,15 @@ const VERSION_TABLE = [
 
 function findVersion(display) {
     return VERSION_TABLE.find(v => v.display === display);
+}
+
+function canonicalVersionDisplays() {
+    const displayFromEnumerator = (enumerator) => enumerator
+        .replace(/^v/, '')
+        .replace(/_/g, '.');
+    return VERSION_TABLE
+        .filter(row => row.display === displayFromEnumerator(row.enumerator))
+        .map(row => row.display);
 }
 
 // Mojang wire number -> KnownVersion enumerator (last duplicate wire wins).
@@ -321,6 +331,37 @@ function looksLikeSlotContainer(containerFields) {
 // `tail` so the packet can still round-trip.
 function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOnComplex = false) {
     const fields = [];
+    const pushConditionalSwitchFields = (fieldName, params) => {
+        if (!params.compareTo || params.default !== 'void' || !params.fields) {
+            return { ok: false, reason: 'unsupported switch' };
+        }
+
+        const branchGroups = new Map();
+        for (const [caseValue, branchType] of Object.entries(params.fields)) {
+            if (branchType === 'void') {
+                continue;
+            }
+            const mapped = mapFieldType(branchType, stateTypes, globalTypes);
+            if (!mapped.ok || !mapped.fieldType || mapped.expandOption || mapped.voidField) {
+                return { ok: false, reason: mapped.reason || 'unsupported switch branch' };
+            }
+            const key = mapped.fieldType;
+            const group = branchGroups.get(key) || {
+                name: fieldName,
+                type: mapped.fieldType,
+                condition_field: sanitizeFieldName(params.compareTo),
+                condition_values: [],
+            };
+            group.condition_values.push(Number.parseInt(caseValue, 10));
+            branchGroups.set(key, group);
+        }
+
+        if (branchGroups.size === 0) {
+            return { ok: true, fields: [] };
+        }
+        return { ok: true, fields: [...branchGroups.values()] };
+    };
+
     for (const fieldEntry of containerFields) {
         const fname = sanitizeFieldName(fieldEntry.name || 'anon');
         const resolved = resolveType(fieldEntry.type, stateTypes, globalTypes);
@@ -351,6 +392,42 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
 
         const mapped = mapFieldType(fieldEntry.type, stateTypes, globalTypes);
         if (!mapped.ok) {
+            if (Array.isArray(resolved) && resolved[0] === 'switch') {
+                const params = resolved[1] || {};
+                if (params.compareTo === 'present' && params.fields?.false === 'void') {
+                    const trueBranch = params.fields.true;
+                    const innerFields = (Array.isArray(trueBranch) && trueBranch[0] === 'container')
+                        ? (trueBranch[1] || [])
+                        : [];
+                    for (const inner of innerFields) {
+                        const innerName = sanitizeFieldName(inner.name);
+                        const innerMapped = mapFieldType(inner.type, stateTypes, globalTypes);
+                        if (!innerMapped.ok || !innerMapped.fieldType) {
+                            if (tailOnComplex) {
+                                fields.push({ name: 'tail', type: 'rest_buffer' });
+                                return { ok: true, fields };
+                            }
+                            return { ok: false, reason: `field ${inner.name}: ${innerMapped.reason}`, fields: [] };
+                        }
+                        fields.push({
+                            name: innerName,
+                            type: innerMapped.fieldType,
+                            optional_if: 'present',
+                        });
+                    }
+                    continue;
+                }
+                const switched = pushConditionalSwitchFields(fname, params);
+                if (switched.ok) {
+                    fields.push(...switched.fields);
+                    continue;
+                }
+                if (tailOnComplex) {
+                    fields.push({ name: 'tail', type: 'rest_buffer' });
+                    return { ok: true, fields };
+                }
+                return { ok: false, reason: `field ${fieldEntry.name}: ${switched.reason}`, fields: [] };
+            }
             if (tailOnComplex) {
                 fields.push({ name: 'tail', type: 'rest_buffer' });
                 return { ok: true, fields };
@@ -415,11 +492,16 @@ function flattenContainerFields(containerFields, stateTypes, globalTypes, tailOn
                 }
                 continue;
             }
+            const switched = pushConditionalSwitchFields(fname, params);
+            if (switched.ok) {
+                fields.push(...switched.fields);
+                continue;
+            }
             if (tailOnComplex) {
                 fields.push({ name: 'tail', type: 'rest_buffer' });
                 return { ok: true, fields };
             }
-            return { ok: false, reason: `field ${fieldEntry.name}: unsupported switch`, fields: [] };
+            return { ok: false, reason: `field ${fieldEntry.name}: ${switched.reason}`, fields: [] };
         }
         fields.push({ name: fname, type: mapped.fieldType });
     }
@@ -560,7 +642,9 @@ function fieldsEqual(a, b) {
     if (a.length !== b.length) return false;
     for (let i = 0; i < a.length; ++i) {
         if (a[i].name !== b[i].name || a[i].type !== b[i].type
-            || (a[i].optional_if || '') !== (b[i].optional_if || '')) {
+            || (a[i].optional_if || '') !== (b[i].optional_if || '')
+            || (a[i].condition_field || '') !== (b[i].condition_field || '')
+            || JSON.stringify(a[i].condition_values || []) !== JSON.stringify(b[i].condition_values || [])) {
             return false;
         }
     }
@@ -619,6 +703,10 @@ function emitFieldsLiteral(fields, indent) {
     if (fields.length === 0) return '{}';
     const pad = ' '.repeat(indent);
     const inner = fields.map(f => {
+        if (f.condition_field) {
+            const values = (f.condition_values || []).join(', ');
+            return `${pad}    {${cppStringLiteral(f.name)}, kprotocol::FieldType::${f.type}, ${cppStringLiteral(f.optional_if || '')}, ${cppStringLiteral(f.condition_field)}, {${values}}}`;
+        }
         const opt = f.optional_if
             ? `, ${cppStringLiteral(f.optional_if)}`
             : '';
@@ -722,6 +810,9 @@ function emitCoverageJson(perVersion, schemas) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
+    if (args.versions.length === 1 && args.versions[0] === 'all-known') {
+        args.versions = canonicalVersionDisplays();
+    }
 
     let mcd;
     try {

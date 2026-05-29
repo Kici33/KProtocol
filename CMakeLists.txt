@@ -15,7 +15,7 @@ if(BUILD_EXAMPLE)
     set(KPROTOCOL_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
 endif()
 
-set(KPROTOCOL_GENERATE_VERSIONS "1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11"
+set(KPROTOCOL_GENERATE_VERSIONS "all-known"
     CACHE STRING
     "Comma-separated Minecraft versions to pass to tools/generate_packets.mjs (used by the kprotocol_generate_packets target)")
 

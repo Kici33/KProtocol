@@ -179,6 +179,62 @@ void test_repeated_register_merges() {
     std::cout << "ok\n";
 }
 
+void test_condition_field_controls_switch_payload() {
+    std::cout << "  condition fields encode/decode switch-shaped payloads... ";
+    kprotocol::PacketRegistry registry;
+    kprotocol::PacketSchema schema;
+    schema.key = "play.test.conditional";
+    schema.state = kprotocol::PacketState::play;
+    schema.direction = kprotocol::PacketDirection::clientbound;
+    schema.ids[kprotocol::KnownVersion::v1_20_4] = 0x32;
+    schema.field_sets[kprotocol::KnownVersion::v1_20_4] = {
+        {"action", kprotocol::FieldType::var_int},
+        {"title", kprotocol::FieldType::string, "", "action", {0, 3}},
+        {"health", kprotocol::FieldType::f32_be, "", "action", {0, 2}},
+    };
+    registry.register_schema(std::move(schema));
+
+    {
+        kprotocol::Packet p;
+        p.key = "play.test.conditional";
+        p.state = kprotocol::PacketState::play;
+        p.direction = kprotocol::PacketDirection::clientbound;
+        p.fields["action"] = std::int32_t{2};
+        p.fields["health"] = 0.75F;
+
+        const auto encoded = registry.encode_packet(p, kprotocol::KnownVersion::v1_20_4);
+        kprotocol::codec::EncodedFrame frame;
+        std::size_t consumed = 0;
+        assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+        const auto decoded = registry.decode_packet(
+            frame, kprotocol::KnownVersion::v1_20_4,
+            kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
+        assert(decoded.fields.size() == 2);
+        assert(std::get<std::int32_t>(decoded.fields.at("action")) == 2);
+        assert(std::get<float>(decoded.fields.at("health")) == 0.75F);
+        assert(decoded.fields.find("title") == decoded.fields.end());
+    }
+
+    {
+        kprotocol::Packet p;
+        p.key = "play.test.conditional";
+        p.state = kprotocol::PacketState::play;
+        p.direction = kprotocol::PacketDirection::clientbound;
+        p.fields["action"] = std::int32_t{1};
+
+        const auto encoded = registry.encode_packet(p, kprotocol::KnownVersion::v1_20_4);
+        kprotocol::codec::EncodedFrame frame;
+        std::size_t consumed = 0;
+        assert(kprotocol::codec::try_decode_frame(encoded, consumed, frame));
+        const auto decoded = registry.decode_packet(
+            frame, kprotocol::KnownVersion::v1_20_4,
+            kprotocol::PacketState::play, kprotocol::PacketDirection::clientbound);
+        assert(decoded.fields.size() == 1);
+        assert(std::get<std::int32_t>(decoded.fields.at("action")) == 1);
+    }
+    std::cout << "ok\n";
+}
+
 void test_conflicting_state_rejected() {
     std::cout << "  re-registering with conflicting state throws... ";
     kprotocol::PacketRegistry registry;
@@ -238,6 +294,7 @@ int main() {
     test_per_version_field_layout_selected();
     test_below_minimum_declared_version_is_unsupported();
     test_repeated_register_merges();
+    test_condition_field_controls_switch_payload();
     test_conflicting_state_rejected();
     test_id_collision_across_keys_rejected();
     std::cout << "All versioned schema tests passed.\n";

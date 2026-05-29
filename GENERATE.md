@@ -29,12 +29,11 @@ Prerequisites: Node.js 18+ on PATH.
 # 1. Install the upstream data package (one-time)
 npm install minecraft-data
 
-# 2. Regenerate. Versions must be a comma-separated list of values that
-#    appear in kprotocol's KPROTOCOL_FOR_EACH_KNOWN_VERSION (see
-#    include/kprotocol/version.hpp).
+# 2. Regenerate every canonical version in
+#    KPROTOCOL_FOR_EACH_KNOWN_VERSION (see include/kprotocol/version.hpp).
 node tools/generate_packets.mjs \
     --out generated \
-    --versions 1.8,1.12.2,1.13,1.14,1.16.5,1.17,1.18,1.19,1.20.2,1.20.4,1.21.1,1.21.4,1.21.5,1.21.6,1.21.7,1.21.9,1.21.11
+    --versions all-known
 ```
 
 The CMake build exposes a convenience target that performs the same step:
@@ -44,7 +43,7 @@ cmake --build <build-dir> --target kprotocol_generate_packets
 ```
 
 The target uses the versions listed in the `KPROTOCOL_GENERATE_VERSIONS`
-CMake cache variable (default: full anchor list through 1.21.11 / wire 774).
+CMake cache variable.
 
 ## Type mapping
 
@@ -60,12 +59,14 @@ The generator translates minecraft-data's protocol types into kprotocol's
 | `[buffer, {countType: varint}]` | `byte_array` |
 | `restBuffer` | `rest_buffer` |
 
-Any packet whose container references compound types (`switch`, `array`,
-`option`, nested `container`, `mapper`, ...) cannot be fully modeled in
-Wave 2. The generator falls back to a single `rest_buffer` field named
-`raw` so the packet can still round-trip byte-exact as an opaque blob. These
-entries are flagged `rawOnly` in `coverage.json`; a later wave will extend
-`FieldType` with compound primitives so coverage can grow.
+Simple `switch` fields whose branch is selected by an integer field are emitted
+as conditional `FieldSpec` entries. For example, a boss-bar `title` field can be
+typed but only read/written when `action` is `0` or `3`.
+
+Packets that still require unsupported compound shapes (`mapper`, deep nested
+containers, chunk data, complex NBT, etc.) fall back to a single `rest_buffer`
+field named `raw` so the packet can still round-trip byte-exact as an opaque
+blob. These entries are flagged `rawOnly` in `coverage.json`.
 
 ## Disabling the committed catalog
 
@@ -112,7 +113,7 @@ node tools/embed_metadata_registry.mjs
 Commit the `.bin.gz` only; the raw `.bin` is gitignored. At runtime
 `translation_mappings_loader.cpp` gunzips the blob and binary-searches
 `(KnownVersion from, KnownVersion to, block id)` — pair indices match
-`KPROTOCOL_FOR_EACH_KNOWN_VERSION` order, not the 17-version CI generate list.
+`KPROTOCOL_FOR_EACH_KNOWN_VERSION` order.
 
 CMake defines `KPROTOCOL_BLOCK_MAPPINGS_GZ` when the file is present and
 installs it under `share/kprotocol/`.
