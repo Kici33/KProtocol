@@ -132,6 +132,7 @@ int main() {
 
         kprotocol::PacketTranslator bootstrap;
         kprotocol::TranslationRegistry::initialize_all(bootstrap);
+        assert(kprotocol::TranslationRegistry::block_mappings_available());
 
         const auto block_mapped = kprotocol::TranslationRegistry::map_block_id(
             kprotocol::ProtocolVersion::v1_20_4,
@@ -246,6 +247,20 @@ int main() {
             threw = true;
         }
         assert(threw);
+        translator.set_require_explicit_translation(false);
+
+        threw = false;
+        try {
+            (void)translator.translate_checked(
+                packet,
+                kprotocol::ProtocolVersion::v1_20_4,
+                kprotocol::ProtocolVersion::v1_16_5,
+                true);
+        } catch (const kprotocol::MissingTranslationError&) {
+            threw = true;
+        }
+        assert(threw);
+        assert(!translator.require_explicit_translation());
 
         std::cout << "  ✓ strict diagnostics work\n";
     }

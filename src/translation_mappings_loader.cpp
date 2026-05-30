@@ -4,11 +4,27 @@
 
 #include <cstdint>
 #include <cstring>
+#include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <memory>
+#include <mutex>
 #include <optional>
 #include <span>
+#include <string>
+#include <utility>
 #include <vector>
+
+#if defined(_WIN32)
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#include <unistd.h>
+#else
+#include <unistd.h>
+#endif
 
 namespace kprotocol::detail {
 namespace {
@@ -30,12 +46,14 @@ struct BlockMappingTable {
 
 std::vector<std::uint8_t> g_blob;
 bool g_loaded = false;
+std::optional<std::filesystem::path> g_configured_path;
+std::mutex g_mutex;
 
 std::uint16_t known_index(KnownVersion version) noexcept {
     return static_cast<std::uint16_t>(version);
 }
 
-bool load_blob_from_gzip(const char* path) {
+bool load_blob_from_gzip(const std::filesystem::path& path) {
     std::ifstream in(path, std::ios::binary);
     if (!in) {
         return false;
@@ -80,16 +98,101 @@ bool load_blob_from_gzip(const char* path) {
     return true;
 }
 
+std::optional<std::filesystem::path> executable_path() {
+#if defined(_WIN32)
+    std::wstring buffer(MAX_PATH, L'\0');
+    for (;;) {
+        const DWORD size = GetModuleFileNameW(
+            nullptr,
+            buffer.data(),
+            static_cast<DWORD>(buffer.size()));
+        if (size == 0) {
+            return std::nullopt;
+        }
+        if (size < buffer.size()) {
+            buffer.resize(size);
+            return std::filesystem::path(buffer);
+        }
+        buffer.resize(buffer.size() * 2);
+    }
+#elif defined(__APPLE__)
+    std::vector<char> buffer(1024);
+    std::uint32_t size = static_cast<std::uint32_t>(buffer.size());
+    if (_NSGetExecutablePath(buffer.data(), &size) != 0) {
+        buffer.resize(size);
+        if (_NSGetExecutablePath(buffer.data(), &size) != 0) {
+            return std::nullopt;
+        }
+    }
+    std::error_code ec;
+    auto canonical = std::filesystem::weakly_canonical(buffer.data(), ec);
+    if (ec) {
+        return std::filesystem::path(buffer.data());
+    }
+    return canonical;
+#else
+    std::vector<char> buffer(1024);
+    for (;;) {
+        const ssize_t size = readlink("/proc/self/exe", buffer.data(), buffer.size());
+        if (size < 0) {
+            return std::nullopt;
+        }
+        if (static_cast<std::size_t>(size) < buffer.size()) {
+            return std::filesystem::path(
+                std::string(buffer.data(), static_cast<std::size_t>(size)));
+        }
+        buffer.resize(buffer.size() * 2);
+    }
+#endif
+}
+
+std::vector<std::filesystem::path> mapping_candidates() {
+    constexpr auto filename = "translation_mappings.bin.gz";
+    std::vector<std::filesystem::path> candidates;
+
+    if (g_configured_path.has_value()) {
+        candidates.push_back(*g_configured_path);
+    }
+
+    if (const char* env = std::getenv("KPROTOCOL_TRANSLATION_MAPPINGS");
+        env != nullptr && env[0] != '\0') {
+        candidates.emplace_back(env);
+    }
+
+#ifdef KPROTOCOL_BLOCK_MAPPINGS_GZ
+    candidates.emplace_back(KPROTOCOL_BLOCK_MAPPINGS_GZ);
+#endif
+
+    if (const auto exe = executable_path(); exe.has_value()) {
+        const auto exe_dir = exe->parent_path();
+        candidates.emplace_back(exe_dir / ".." / "share" / "kprotocol" / filename);
+        candidates.emplace_back(exe_dir / "share" / "kprotocol" / filename);
+    }
+
+    candidates.emplace_back(std::filesystem::path("share") / "kprotocol" / filename);
+    candidates.emplace_back(std::filesystem::path("data") / filename);
+
+    return candidates;
+}
+
 bool ensure_loaded() {
     if (g_loaded) {
         return !g_blob.empty();
     }
     g_loaded = true;
-#ifdef KPROTOCOL_BLOCK_MAPPINGS_GZ
-    if (load_blob_from_gzip(KPROTOCOL_BLOCK_MAPPINGS_GZ)) {
-        return true;
+
+    try {
+        for (const auto& candidate : mapping_candidates()) {
+            std::error_code ec;
+            const auto normalized = std::filesystem::weakly_canonical(candidate, ec);
+            const auto& path = ec ? candidate : normalized;
+            if (load_blob_from_gzip(path)) {
+                return true;
+            }
+        }
+    } catch (...) {
+        return false;
     }
-#endif
     return false;
 }
 
@@ -147,11 +250,40 @@ const BlockMappingEntry* entries_slice(const BlockMappingTable& table) noexcept 
 
 } // namespace
 
+void set_block_mapping_path(std::string path) {
+    std::lock_guard lock(g_mutex);
+    g_configured_path = std::filesystem::path(std::move(path));
+    g_blob.clear();
+    g_loaded = false;
+}
+
+void clear_block_mapping_path() {
+    std::lock_guard lock(g_mutex);
+    g_configured_path.reset();
+    g_blob.clear();
+    g_loaded = false;
+}
+
+bool block_mappings_available() noexcept {
+    try {
+        std::lock_guard lock(g_mutex);
+        return ensure_loaded();
+    } catch (...) {
+        return false;
+    }
+}
+
 std::optional<std::int32_t> lookup_block_mapping(
     KnownVersion from,
     KnownVersion to,
     std::int32_t source_id) noexcept {
 
+    std::unique_lock lock(g_mutex, std::defer_lock);
+    try {
+        lock.lock();
+    } catch (...) {
+        return std::nullopt;
+    }
     if (!ensure_loaded()) {
         return std::nullopt;
     }

@@ -39,7 +39,17 @@ public:
     void set_require_explicit_translation(bool enabled) noexcept { require_explicit_translation_ = enabled; }
     [[nodiscard]] bool require_explicit_translation() const noexcept { return require_explicit_translation_; }
     [[nodiscard]] Result translate_checked(const Packet& packet, ProtocolVersion from, ProtocolVersion to) const;
+    [[nodiscard]] Result translate_checked(
+        const Packet& packet,
+        ProtocolVersion from,
+        ProtocolVersion to,
+        bool require_explicit_translation) const;
     Packet translate(const Packet& packet, ProtocolVersion from, ProtocolVersion to) const;
+    Packet translate(
+        const Packet& packet,
+        ProtocolVersion from,
+        ProtocolVersion to,
+        bool require_explicit_translation) const;
 
 private:
     struct TranslationKey {

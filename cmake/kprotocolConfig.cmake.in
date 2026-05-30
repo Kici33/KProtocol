@@ -6,7 +6,12 @@ find_dependency(ZLIB)
 include("${CMAKE_CURRENT_LIST_DIR}/kprotocolTargets.cmake")
 
 set(kprotocol_DATA_DIR "@PACKAGE_CMAKE_INSTALL_DATADIR@/kprotocol")
-set(kprotocol_TRANSLATION_MAPPINGS
-    "${kprotocol_DATA_DIR}/translation_mappings.bin.gz")
+set(kprotocol_HAS_TRANSLATION_MAPPINGS FALSE)
+set(kprotocol_TRANSLATION_MAPPINGS "")
+if(EXISTS "${kprotocol_DATA_DIR}/translation_mappings.bin.gz")
+    set(kprotocol_HAS_TRANSLATION_MAPPINGS TRUE)
+    set(kprotocol_TRANSLATION_MAPPINGS
+        "${kprotocol_DATA_DIR}/translation_mappings.bin.gz")
+endif()
 
 check_required_components(kprotocol)

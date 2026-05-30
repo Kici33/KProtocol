@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # ------------------------- Options --------------------------------------------
-option(KPROTOCOL_BUILD_TESTS    "Build kprotocol unit + integration tests" ON)
+set(KPROTOCOL_BUILD_TESTS_DEFAULT ${PROJECT_IS_TOP_LEVEL})
+option(KPROTOCOL_BUILD_TESTS    "Build kprotocol unit + integration tests" ${KPROTOCOL_BUILD_TESTS_DEFAULT})
 option(KPROTOCOL_BUILD_EXAMPLES "Build kprotocol example binaries"         OFF)
 option(KPROTOCOL_BUILD_REAL_CLIENT_TESTS
        "Add opt-in tests that run an external real Minecraft client against kprotocol_play_demo" OFF)
@@ -41,13 +42,23 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL
 find_package(ZLIB REQUIRED)
 include(GNUInstallDirs)
 
-set(GENERATED_DIR "${CMAKE_SOURCE_DIR}/generated")
+set(KPROTOCOL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}")
+set(KPROTOCOL_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}")
+set(GENERATED_DIR "${KPROTOCOL_SOURCE_DIR}/generated")
 
 function(kprotocol_apply_warnings target)
     if(MSVC)
         target_compile_options(${target} PRIVATE /W4 /permissive-)
     else()
         target_compile_options(${target} PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endfunction()
+
+function(kprotocol_enable_asserts target)
+    if(MSVC)
+        target_compile_options(${target} PRIVATE /UNDEBUG)
+    else()
+        target_compile_options(${target} PRIVATE -UNDEBUG)
     endif()
 endfunction()
 
@@ -61,7 +72,7 @@ add_library(kprotocol_codec
 set_target_properties(kprotocol_codec PROPERTIES EXPORT_NAME codec)
 target_compile_features(kprotocol_codec PUBLIC cxx_std_20)
 target_include_directories(kprotocol_codec PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
+    $<BUILD_INTERFACE:${KPROTOCOL_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(kprotocol_codec PUBLIC ZLIB::ZLIB)
@@ -89,9 +100,9 @@ add_library(kprotocol_core
 )
 set_target_properties(kprotocol_core PROPERTIES EXPORT_NAME core)
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
-if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+if(EXISTS "${KPROTOCOL_SOURCE_DIR}/data/translation_mappings.bin.gz")
     target_compile_definitions(kprotocol_core PRIVATE
-        KPROTOCOL_BLOCK_MAPPINGS_GZ="${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
+        KPROTOCOL_BLOCK_MAPPINGS_GZ="${KPROTOCOL_SOURCE_DIR}/data/translation_mappings.bin.gz")
 endif()
 kprotocol_apply_warnings(kprotocol_core)
 add_library(kprotocol::core ALIAS kprotocol_core)
@@ -140,17 +151,17 @@ find_program(KPROTOCOL_NODE_EXECUTABLE NAMES node nodejs)
 if(KPROTOCOL_NODE_EXECUTABLE)
     add_custom_target(kprotocol_generate_packets
         COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
-                ${CMAKE_SOURCE_DIR}/tools/generate_packets.mjs
+                ${KPROTOCOL_SOURCE_DIR}/tools/generate_packets.mjs
                 --out      ${GENERATED_DIR}
                 --versions ${KPROTOCOL_GENERATE_VERSIONS}
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        WORKING_DIRECTORY ${KPROTOCOL_SOURCE_DIR}
         COMMENT "Regenerating packet catalog into ${GENERATED_DIR} (versions: ${KPROTOCOL_GENERATE_VERSIONS})"
         VERBATIM
     )
     add_custom_target(kprotocol_embed_translation_mappings
         COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
-                ${CMAKE_SOURCE_DIR}/tools/embed_translation_mappings.mjs
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+                ${KPROTOCOL_SOURCE_DIR}/tools/embed_translation_mappings.mjs
+        WORKING_DIRECTORY ${KPROTOCOL_SOURCE_DIR}
         COMMENT "Building data/translation_mappings.bin.gz from tools/translation_mappings.json"
         VERBATIM
     )
@@ -264,6 +275,7 @@ if(KPROTOCOL_BUILD_TESTS)
         translation_tests
         compression_tests
         integration_tests
+        assert_config_tests
         varint_property_tests
         frame_malformed_tests
         version_tests
@@ -286,49 +298,36 @@ if(KPROTOCOL_BUILD_TESTS)
         ui_tests
     )
 
+    set(KPROTOCOL_GENERATED_REQUIRED_TESTS
+        generated_packets_tests
+        version_range_tests
+        server_login_tests
+        configuration_phase_tests
+        gameplay_integration_tests
+        server_play_demo_tests
+        blocks_metadata_tests
+        easy_use_tests
+        ui_tests
+    )
+
+    set(KPROTOCOL_GENERATED_TESTS_AVAILABLE OFF)
+    if(KPROTOCOL_BUILD_GENERATED_PACKETS
+            AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp")
+        set(KPROTOCOL_GENERATED_TESTS_AVAILABLE ON)
+    endif()
+
     foreach(test_name IN LISTS KPROTOCOL_TEST_NAMES)
         # Tests that reference register_generated_packets need the committed
         # generator output to be compiled in. Skip them if the user opted out.
-        if(test_name STREQUAL "generated_packets_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+        if(test_name IN_LIST KPROTOCOL_GENERATED_REQUIRED_TESTS
+                AND NOT KPROTOCOL_GENERATED_TESTS_AVAILABLE)
             continue()
         endif()
-        if(test_name STREQUAL "version_range_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "server_login_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "configuration_phase_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "gameplay_integration_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "server_play_demo_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "blocks_metadata_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "easy_use_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        if(test_name STREQUAL "ui_tests"
-                AND NOT (KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
-            continue()
-        endif()
-        set(test_path "${CMAKE_SOURCE_DIR}/tests/${test_name}.cpp")
+        set(test_path "${KPROTOCOL_SOURCE_DIR}/tests/${test_name}.cpp")
         if(EXISTS "${test_path}")
             add_executable(kprotocol_${test_name} ${test_path})
             target_link_libraries(kprotocol_${test_name} PRIVATE kprotocol::kprotocol)
+            kprotocol_enable_asserts(kprotocol_${test_name})
             add_test(NAME kprotocol_${test_name} COMMAND kprotocol_${test_name})
         endif()
     endforeach()
@@ -343,7 +342,7 @@ if(KPROTOCOL_BUILD_TESTS)
         add_test(
             NAME kprotocol_real_client_smoke
             COMMAND ${KPROTOCOL_NODE_EXECUTABLE}
-                    ${CMAKE_SOURCE_DIR}/tools/real_client_smoke.mjs
+                    ${KPROTOCOL_SOURCE_DIR}/tools/real_client_smoke.mjs
                     --server $<TARGET_FILE:kprotocol_play_demo>
                     --client-cmd ${KPROTOCOL_REAL_CLIENT_CMD}
                     --versions ${KPROTOCOL_REAL_CLIENT_VERSIONS}
@@ -377,8 +376,8 @@ install(DIRECTORY "${KPROTOCOL_ASIO_INCLUDE_DIR}/"
             PATTERN "*.hpp"
             PATTERN "*.ipp")
 
-if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
-    install(FILES data/translation_mappings.bin.gz
+if(EXISTS "${KPROTOCOL_SOURCE_DIR}/data/translation_mappings.bin.gz")
+    install(FILES "${KPROTOCOL_SOURCE_DIR}/data/translation_mappings.bin.gz"
             DESTINATION ${CMAKE_INSTALL_DATADIR}/kprotocol)
 endif()
 
@@ -409,9 +408,9 @@ configure_package_config_file(
 
 if(KPROTOCOL_BUILD_TESTS)
     set(KPROTOCOL_INSTALL_SMOKE_PREFIX
-        "${CMAKE_CURRENT_BINARY_DIR}/install-smoke/prefix")
+        "${KPROTOCOL_BINARY_DIR}/install-smoke/prefix")
     set(KPROTOCOL_INSTALL_SMOKE_BUILD
-        "${CMAKE_CURRENT_BINARY_DIR}/install-smoke/consumer-build")
+        "${KPROTOCOL_BINARY_DIR}/install-smoke/consumer-build")
     configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/cmake/install_consumer_smoke.cmake.in"
         "${CMAKE_CURRENT_BINARY_DIR}/install_consumer_smoke.cmake"

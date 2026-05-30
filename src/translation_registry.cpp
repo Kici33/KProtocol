@@ -3,12 +3,18 @@
 #include "kprotocol/packet.hpp"
 #include "kprotocol/version.hpp"
 
+#include <utility>
+
 namespace kprotocol::detail {
 
 std::optional<std::int32_t> lookup_block_mapping(
     KnownVersion from,
     KnownVersion to,
     std::int32_t source_id) noexcept;
+
+void set_block_mapping_path(std::string path);
+void clear_block_mapping_path();
+bool block_mappings_available() noexcept;
 
 } // namespace kprotocol::detail
 
@@ -71,6 +77,18 @@ void TranslationRegistry::initialize_all(PacketTranslator& translator) {
         ProtocolVersion::v1_8,
         ProtocolVersion::v1_21_1,
         [](const PacketFields& fields) -> PacketFields { return fields; });
+}
+
+void TranslationRegistry::set_block_mappings_path(std::string path) {
+    detail::set_block_mapping_path(std::move(path));
+}
+
+void TranslationRegistry::clear_block_mappings_path() {
+    detail::clear_block_mapping_path();
+}
+
+bool TranslationRegistry::block_mappings_available() noexcept {
+    return detail::block_mappings_available();
 }
 
 std::int32_t TranslationRegistry::map_block_id(

@@ -1,0 +1,17 @@
+* text=auto
+
+*.cpp text eol=crlf
+*.hpp text eol=crlf
+*.h text eol=crlf
+*.c text eol=crlf
+*.cmake text eol=crlf
+*.cmake.in text eol=crlf
+CMakeLists.txt text eol=crlf
+*.md text eol=crlf
+*.mjs text eol=crlf
+*.json text eol=crlf
+*.yml text eol=crlf
+*.yaml text eol=crlf
+
+*.bin binary
+*.gz binary

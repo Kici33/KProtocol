@@ -34,9 +34,15 @@ npm ci
 #    KPROTOCOL_FOR_EACH_KNOWN_VERSION (see include/kprotocol/version.hpp).
 npm run generate
 
-# 3. Verify no generated packet ID fell back to unsupported/raw-only coverage.
+# 3. Verify coverage totals and generated-catalog structure.
 npm run check:coverage
 ```
+
+`check:coverage` verifies no generated packet ID fell back to unsupported or
+raw-only coverage. It also checks that version wires are unique and ordered,
+per-key statuses match per-version totals, generated packet key constants match
+`coverage.json`, and `register_all_packets.cpp` registers exactly the covered
+packet keys.
 
 The CMake build exposes a convenience target that performs the same step:
 
@@ -138,4 +144,10 @@ Commit the `.bin.gz` only; the raw `.bin` is gitignored. At runtime
 `KPROTOCOL_FOR_EACH_KNOWN_VERSION` order.
 
 CMake defines `KPROTOCOL_BLOCK_MAPPINGS_GZ` when the file is present and
-installs it under `share/kprotocol/`.
+installs it under `share/kprotocol/`. Runtime lookup also checks the
+`KPROTOCOL_TRANSLATION_MAPPINGS` environment variable and installed layouts such
+as `<prefix>/share/kprotocol/translation_mappings.bin.gz` relative to the
+executable. For nonstandard layouts, call
+`TranslationRegistry::set_block_mappings_path(path)` before mapping block IDs;
+`TranslationRegistry::block_mappings_available()` reports whether the blob can
+be loaded.

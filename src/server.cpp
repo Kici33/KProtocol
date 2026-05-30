@@ -52,6 +52,7 @@ struct ClientSession::Shared {
     ProtocolVersion internal_version{ProtocolVersion::v1_21_1};
     FrameDecoder inbound_decoder;
     std::int32_t outbound_compression_threshold{-1};
+    bool require_explicit_translations{false};
     PacketRegistry* registry{nullptr};
     PacketTranslator* translator{nullptr};
     std::string remote;
@@ -84,7 +85,10 @@ bool ClientSession::send_packet(const Packet& packet) const {
         translated.direction = PacketDirection::clientbound;
         translated.state = shared_->state.load();
         translated = shared_->translator->translate(
-            translated, shared_->internal_version, client_protocol_version());
+            translated,
+            shared_->internal_version,
+            client_protocol_version(),
+            shared_->require_explicit_translations);
 
         return send_packet_direct(translated, client_protocol_version());
     } catch (const std::exception&) {
@@ -534,7 +538,11 @@ struct MinecraftServer::Impl {
             const auto client_ver = catalog_anchor_for(WireProtocol{shared->client_wire.load()});
             Packet packet = registry.decode_packet(
                 frame, client_ver, shared->state.load(), PacketDirection::serverbound);
-            packet = translator.translate(packet, client_ver, internal_version);
+            packet = translator.translate(
+                packet,
+                client_ver,
+                internal_version,
+                shared->require_explicit_translations);
             apply_set_compression(packet, shared);
             update_session_state(packet, shared);
             update_gameplay_session(packet, shared);
@@ -666,6 +674,7 @@ struct MinecraftServer::Impl {
             shared->internal_version = internal_version;
             shared->inbound_decoder = FrameDecoder{-1};
             shared->outbound_compression_threshold = default_compression_threshold_;
+            shared->require_explicit_translations = options.require_explicit_translations;
             const auto now = monotonic_ms();
             shared->connected_ms.store(now, std::memory_order_relaxed);
             shared->last_activity_ms.store(now, std::memory_order_relaxed);
@@ -767,7 +776,6 @@ bool MinecraftServer::start(
     }
     impl_->internal_version = internal_version;
     impl_->default_compression_threshold_ = compression_threshold;
-    impl_->translator.set_require_explicit_translation(impl_->options.require_explicit_translations);
     if (!impl_->bind_and_listen(port)) {
         return false;
     }
@@ -807,7 +815,6 @@ bool MinecraftServer::set_runtime_options(ServerRuntimeOptions options) {
         options.max_inbound_buffer = min_buffer;
     }
     impl_->options = options;
-    impl_->translator.set_require_explicit_translation(options.require_explicit_translations);
     return true;
 }
 

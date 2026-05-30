@@ -3,6 +3,15 @@
 #include <iostream>
 
 int main() {
+#ifdef KPROTOCOL_CONSUMER_TRANSLATION_MAPPINGS
+    kprotocol::TranslationRegistry::set_block_mappings_path(
+        KPROTOCOL_CONSUMER_TRANSLATION_MAPPINGS);
+    if (!kprotocol::TranslationRegistry::block_mappings_available()) {
+        std::cerr << "kprotocol consumer example: translation mappings are not loadable\n";
+        return 1;
+    }
+#endif
+
     kprotocol::ProtocolRuntime runtime;
 
     const auto handshake = kprotocol::C00HandshakePacket{

@@ -4,6 +4,11 @@ on:
   push:
   pull_request:
 
+env:
+  ASIO_COMMIT: 42a93679dc4c8c5caf3d3082542f1bfa2438271d
+  ASIO_SOURCE_DIR: ${{ github.workspace }}/.deps/asio
+  VCPKG_BINARY_SOURCES: clear;files,${{ github.workspace }}/.vcpkg-cache,readwrite
+
 jobs:
   build:
     strategy:
@@ -21,12 +26,46 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
+        cache: npm
+        cache-dependency-path: package-lock.json
+
+    - name: Cache Asio source
+      uses: actions/cache@v4
+      with:
+        path: .deps/asio
+        key: asio-${{ env.ASIO_COMMIT }}
+
+    - name: Prepare pinned Asio source
+      shell: bash
+      run: |
+        mkdir -p "$(dirname "$ASIO_SOURCE_DIR")"
+        if [ ! -d "$ASIO_SOURCE_DIR/.git" ]; then
+          rm -rf "$ASIO_SOURCE_DIR"
+          git clone --filter=blob:none https://github.com/chriskohlhoff/asio.git "$ASIO_SOURCE_DIR"
+        fi
+        git -C "$ASIO_SOURCE_DIR" fetch --depth 1 origin "$ASIO_COMMIT"
+        git -C "$ASIO_SOURCE_DIR" checkout --detach "$ASIO_COMMIT"
+        test -d "$ASIO_SOURCE_DIR/asio/include"
 
     - name: Install system deps (Linux)
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake build-essential zlib1g-dev
+
+    - name: Cache vcpkg binaries
+      if: runner.os == 'Windows'
+      uses: actions/cache@v4
+      with:
+        path: .vcpkg-cache
+        key: vcpkg-${{ runner.os }}-zlib-${{ hashFiles('.github/workflows/ci.yml') }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-zlib-
+
+    - name: Prepare vcpkg binary cache
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: New-Item -ItemType Directory -Force .vcpkg-cache | Out-Null
 
     - name: Install system deps (Windows)
       if: runner.os == 'Windows'
@@ -42,17 +81,129 @@ jobs:
     - name: Check packet coverage
       run: npm run check:coverage
 
+    - name: Check generated output is current
+      if: runner.os == 'Linux'
+      run: git diff --exit-code -- generated
+
     - name: Configure CMake (Linux)
       if: runner.os == 'Linux'
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+      run: >
+        cmake -S . -B build
+        -DCMAKE_BUILD_TYPE=Release
+        -DKPROTOCOL_FETCH_ASIO=OFF
+        -DKPROTOCOL_ASIO_SOURCE_DIR="$ASIO_SOURCE_DIR"
 
     - name: Configure CMake (Windows)
       if: runner.os == 'Windows'
       shell: pwsh
-      run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
+      run: >
+        cmake -S . -B build
+        -DCMAKE_BUILD_TYPE=Release
+        -DKPROTOCOL_FETCH_ASIO=OFF
+        -DKPROTOCOL_ASIO_SOURCE_DIR="$env:ASIO_SOURCE_DIR"
+        -DCMAKE_TOOLCHAIN_FILE="$env:VCPKG_INSTALLATION_ROOT/scripts/buildsystems/vcpkg.cmake"
 
     - name: Build
       run: cmake --build build --config Release --parallel
 
     - name: Run tests
       run: ctest --test-dir build -C Release --output-on-failure
+
+  packaging:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: npm
+        cache-dependency-path: package-lock.json
+
+    - name: Cache Asio source
+      uses: actions/cache@v4
+      with:
+        path: .deps/asio
+        key: asio-${{ env.ASIO_COMMIT }}
+
+    - name: Prepare pinned Asio source
+      run: |
+        mkdir -p "$(dirname "$ASIO_SOURCE_DIR")"
+        if [ ! -d "$ASIO_SOURCE_DIR/.git" ]; then
+          rm -rf "$ASIO_SOURCE_DIR"
+          git clone --filter=blob:none https://github.com/chriskohlhoff/asio.git "$ASIO_SOURCE_DIR"
+        fi
+        git -C "$ASIO_SOURCE_DIR" fetch --depth 1 origin "$ASIO_COMMIT"
+        git -C "$ASIO_SOURCE_DIR" checkout --detach "$ASIO_COMMIT"
+        test -d "$ASIO_SOURCE_DIR/asio/include"
+
+    - name: Install system deps
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake build-essential git zlib1g-dev
+
+    - name: Install npm deps
+      run: npm ci
+
+    - name: Generate packets
+      run: npm run generate
+
+    - name: Baseline-only build
+      run: |
+        cmake -S . -B build/baseline \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF \
+          -DKPROTOCOL_FETCH_ASIO=OFF \
+          -DKPROTOCOL_ASIO_SOURCE_DIR="$ASIO_SOURCE_DIR"
+        cmake --build build/baseline --config Release --parallel
+        ctest --test-dir build/baseline -C Release --output-on-failure
+
+    - name: add_subdirectory consumer
+      run: |
+        mkdir -p build/add-subdirectory-consumer
+        cat > build/add-subdirectory-consumer/CMakeLists.txt <<'EOF'
+        cmake_minimum_required(VERSION 3.21)
+        project(kprotocol_add_subdirectory_consumer LANGUAGES CXX)
+
+        set(KPROTOCOL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+        set(KPROTOCOL_FETCH_ASIO OFF CACHE BOOL "" FORCE)
+        set(KPROTOCOL_ASIO_SOURCE_DIR "${KPROTOCOL_ASIO_ROOT}" CACHE PATH "" FORCE)
+
+        add_subdirectory("${KPROTOCOL_ROOT}" kprotocol_build)
+
+        add_executable(add_subdirectory_consumer main.cpp)
+        target_link_libraries(add_subdirectory_consumer PRIVATE kprotocol::kprotocol)
+        EOF
+        cat > build/add-subdirectory-consumer/main.cpp <<'EOF'
+        #include "kprotocol/kprotocol.hpp"
+
+        int main() {
+            kprotocol::ProtocolRuntime runtime;
+            return runtime.registry.empty() ? 1 : 0;
+        }
+        EOF
+        cmake -S build/add-subdirectory-consumer -B build/add-subdirectory-consumer-build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DKPROTOCOL_ROOT="$PWD" \
+          -DKPROTOCOL_ASIO_ROOT="$ASIO_SOURCE_DIR"
+        cmake --build build/add-subdirectory-consumer-build --config Release --parallel
+        ./build/add-subdirectory-consumer-build/add_subdirectory_consumer
+
+    - name: Installed package relocation
+      run: |
+        cmake -S . -B build/package \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DKPROTOCOL_BUILD_TESTS=OFF \
+          -DKPROTOCOL_FETCH_ASIO=OFF \
+          -DKPROTOCOL_ASIO_SOURCE_DIR="$ASIO_SOURCE_DIR"
+        cmake --build build/package --config Release --parallel
+        cmake --install build/package --config Release --prefix build/install-prefix
+        mv build/install-prefix build/relocated-prefix
+        cmake -S examples/consumer -B build/relocated-consumer \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_PREFIX_PATH="$PWD/build/relocated-prefix"
+        cmake --build build/relocated-consumer --config Release --parallel
+        ./build/relocated-consumer/consumer

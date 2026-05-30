@@ -1,0 +1,20 @@
+Checks: >
+  clang-analyzer-*,
+  bugprone-*,
+  performance-*,
+  portability-*,
+  readability-*,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -readability-identifier-length,
+  -readability-magic-numbers,
+  -cppcoreguidelines-*,
+  -hicpp-*
+WarningsAsErrors: ''
+HeaderFilterRegex: '^(include|src|tests|examples)/'
+FormatStyle: file
+CheckOptions:
+  - key: readability-function-cognitive-complexity.Threshold
+    value: '35'
+  - key: readability-function-size.LineThreshold
+    value: '120'

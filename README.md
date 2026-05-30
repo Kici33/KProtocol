@@ -161,7 +161,16 @@ The installed package also defines:
 | Variable | Meaning |
 |---|---|
 | `kprotocol_DATA_DIR` | Installed `share/kprotocol` data directory. |
+| `kprotocol_HAS_TRANSLATION_MAPPINGS` | True when the installed mapping blob is present. |
 | `kprotocol_TRANSLATION_MAPPINGS` | Path to `translation_mappings.bin.gz` when installed. |
+
+At runtime, block translation loads mappings from `KPROTOCOL_TRANSLATION_MAPPINGS`
+when that environment variable is set, then from the source-tree data path for
+in-tree builds, and finally from installed layouts such as
+`<prefix>/share/kprotocol/translation_mappings.bin.gz` relative to the
+executable. Applications with custom layouts can call
+`TranslationRegistry::set_block_mappings_path(path)` and verify it with
+`TranslationRegistry::block_mappings_available()`.
 
 The default test suite includes `kprotocol_install_consumer_smoke`, which
 installs into a temporary prefix and builds `examples/consumer` through
@@ -464,3 +473,7 @@ if (result.missing()) {
     // Decide whether this packet is safe to pass through unchanged.
 }
 ```
+
+## License
+
+KProtocol is distributed under the MIT License. See [LICENSE](LICENSE).

@@ -38,7 +38,9 @@ struct ServerRuntimeOptions {
     // Reject login_start usernames that do not match the Java Edition limits
     // used by offline and online-mode login names.
     bool validate_login_usernames{true};
-    // Enable PacketTranslator strict mode while this server is running.
+    // Require explicit packet translations for this server's send/receive path.
+    // Scoped to sessions created by this server; it does not mutate the shared
+    // PacketTranslator object.
     bool require_explicit_translations{false};
 };
 

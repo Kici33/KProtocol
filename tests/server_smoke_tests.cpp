@@ -50,7 +50,10 @@ int main() {
     options.max_connections = 4;
     options.max_inbound_buffer = 4096;
     options.disconnect_on_packet_error = true;
+    options.require_explicit_translations = true;
     KPC_CHECK(server.set_runtime_options(options), "set runtime options before start");
+    KPC_CHECK(!translator.require_explicit_translation(),
+              "server options do not mutate shared translator strict mode");
     KPC_CHECK(server.runtime_options().max_connections == 4, "runtime options max_connections");
     KPC_CHECK(server.runtime_options().max_inbound_buffer == 4096, "runtime options inbound buffer");
 
@@ -74,6 +77,8 @@ int main() {
     });
 
     KPC_CHECK(server.start(0, kprotocol::ProtocolVersion::v1_21_1), "server.start");
+    KPC_CHECK(!translator.require_explicit_translation(),
+              "server start does not mutate shared translator strict mode");
     KPC_CHECK(!server.set_runtime_options(options), "runtime options locked while running");
     const auto port = server.listen_port();
     KPC_CHECK(port != 0, "ephemeral port assigned");

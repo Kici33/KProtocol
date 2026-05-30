@@ -44,13 +44,21 @@ PacketTranslator::Result PacketTranslator::translate_checked(
     const Packet& packet,
     const ProtocolVersion from,
     const ProtocolVersion to) const {
+    return translate_checked(packet, from, to, require_explicit_translation_);
+}
+
+PacketTranslator::Result PacketTranslator::translate_checked(
+    const Packet& packet,
+    const ProtocolVersion from,
+    const ProtocolVersion to,
+    const bool require_explicit_translation) const {
     if (from == to) {
         return Result{packet, Status::identity};
     }
 
     const auto handle = internal::PacketKeyInterner::instance().find(packet.key);
     if (!handle.has_value()) {
-        if (require_explicit_translation_) {
+        if (require_explicit_translation) {
             throw MissingTranslationError("No translation registered for uninterned packet key: " + packet.key);
         }
         return Result{packet, Status::missing_packet_key};
@@ -59,7 +67,7 @@ PacketTranslator::Result PacketTranslator::translate_checked(
     const TranslationKey key{*handle, from, to};
     const auto it = translations_.find(key);
     if (it == translations_.end()) {
-        if (require_explicit_translation_) {
+        if (require_explicit_translation) {
             throw MissingTranslationError("No translation registered for packet key: " + packet.key);
         }
         return Result{packet, Status::missing_rule};
@@ -72,6 +80,14 @@ PacketTranslator::Result PacketTranslator::translate_checked(
 
 Packet PacketTranslator::translate(const Packet& packet, const ProtocolVersion from, const ProtocolVersion to) const {
     return translate_checked(packet, from, to).packet;
+}
+
+Packet PacketTranslator::translate(
+    const Packet& packet,
+    const ProtocolVersion from,
+    const ProtocolVersion to,
+    const bool require_explicit_translation) const {
+    return translate_checked(packet, from, to, require_explicit_translation).packet;
 }
 
 } // namespace kprotocol
