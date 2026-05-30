@@ -27,14 +27,15 @@ The generator emits three artifacts under the `--out` directory:
 Prerequisites: Node.js 18+ on PATH.
 
 ```bash
-# 1. Install the upstream data package (one-time)
-npm install minecraft-data
+# 1. Install the locked upstream data package.
+npm ci
 
 # 2. Regenerate every canonical version in
 #    KPROTOCOL_FOR_EACH_KNOWN_VERSION (see include/kprotocol/version.hpp).
-node tools/generate_packets.mjs \
-    --out generated \
-    --versions all-known
+npm run generate
+
+# 3. Verify no generated packet ID fell back to unsupported/raw-only coverage.
+npm run check:coverage
 ```
 
 The CMake build exposes a convenience target that performs the same step:
@@ -45,6 +46,10 @@ cmake --build <build-dir> --target kprotocol_generate_packets
 
 The target uses the versions listed in the `KPROTOCOL_GENERATE_VERSIONS`
 CMake cache variable.
+
+`minecraft-data` is pinned in `package-lock.json`. Update both `package.json`
+and the lockfile intentionally when you want a new upstream protocol dataset,
+then regenerate and review `generated/coverage.json`.
 
 ## Type mapping
 
@@ -79,6 +84,11 @@ keeps protocol churn from silently dropping packet IDs while avoiding the old
 whole-packet `raw` fallback. Pass `--raw-policy keep` to restore the old
 `rawOnly` fallback, or `--raw-policy fail` to stop generation at the first
 unmodeled packet.
+
+The normal repository policy is `rawOnly=0` and `unsupported=0` in
+`generated/coverage.json`. A packet can still contain named `tail` or `payload`
+bytes when minecraft-data does not expose a fully typed semantic shape, but the
+packet ID remains registered and decodeable through the catalog.
 
 ## Disabling the committed catalog
 
