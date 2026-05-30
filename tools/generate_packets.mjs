@@ -898,7 +898,6 @@ function emitSchemasSource(schemas) {
 
 function emitCoverageJson(perVersion, schemas) {
     const out = {
-        generatedAt: new Date().toISOString(),
         versions: [],
         keys: [],
         unsupported: [],
