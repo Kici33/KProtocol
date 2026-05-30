@@ -15,6 +15,26 @@ This repository ships the committed generated Minecraft packet catalog, a
 hand-written ergonomic packet layer for common flows, and extension points for
 application-specific packets.
 
+### What is covered
+
+| Area | Status | Main API |
+|---|---|---|
+| Packet encode/decode | Generated schemas for all known packet IDs from 1.8 through 1.21.11 | `PacketRegistry`, `ProtocolRuntime` |
+| Cross-version packet keys | One logical key per packet across versions | `kprotocol::packet_keys`, `kprotocol::generated::packet_keys` |
+| Version translation | Implemented for common UI/block/demo flows; strict mode exposes missing rules | `PacketTranslator`, `TranslationRegistry` |
+| NBT and field types | Real NBT blobs plus typed scalar, array, slot, UUID, position support | `FieldType`, `NBTBlob`, `NBTNamedTag` |
+| Login/configuration/play states | Modern 1.20.2+ configuration phase is tracked | `MinecraftServer`, `configuration.hpp` |
+| Runtime guardrails | Connection limits, frame buffer cap, idle/handshake timeouts, packet/byte rate caps | `ServerRuntimeOptions` |
+| Install/export | CMake package exports public targets and installed consumer smoke test verifies `find_package` | `kprotocolConfig.cmake` |
+
+### Boundaries
+
+KProtocol is a protocol library and lightweight server runtime, not a complete
+game server. It does not implement Mojang authentication/session servers,
+world/chunk simulation, permissions, persistence, inventory semantics, or full
+gameplay rules. Generated packets cover wire IDs and field shapes; complex
+packet semantics still need application-level validation and translation rules.
+
 ### Version model
 
 - **`WireProtocol`** — client handshake number (any int).
@@ -62,15 +82,26 @@ regenerate.
 Disable it with `-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` if you only need the
 hand-rolled baseline set.
 
+### CMake options
+
+| Option | Default | Notes |
+|---|---:|---|
+| `KPROTOCOL_BUILD_TESTS` | `ON` | Builds unit, integration, and install-consumer smoke tests. |
+| `KPROTOCOL_BUILD_EXAMPLES` | `OFF` | Builds `examples/minimal_server.cpp` and `examples/play_demo_server.cpp`. |
+| `KPROTOCOL_BUILD_GENERATED_PACKETS` | `ON` | Compiles the generated catalog; fails fast if `generated/` is incomplete. |
+| `KPROTOCOL_FETCH_ASIO` | `ON` | Allows CMake to fetch standalone Asio when no local source path is supplied. |
+| `KPROTOCOL_ASIO_SOURCE_DIR` | empty | Points to a local Asio checkout containing `asio/include`. |
+| `KPROTOCOL_BUILD_REAL_CLIENT_TESTS` | `OFF` | Enables opt-in tests that run an external Minecraft client/bot command. |
+| `KPROTOCOL_REAL_CLIENT_CMD` | empty | Command template used by the opt-in real-client test. |
+
 ### Regenerating the packet catalog
 
 See [GENERATE.md](GENERATE.md) for full details. Quick version:
 
 ```bash
-npm install minecraft-data
-node tools/generate_packets.mjs \
-    --out generated \
-    --versions all-known
+npm ci
+npm run generate
+npm run check:coverage
 ```
 
 Or via CMake (requires Node.js on PATH):
@@ -101,8 +132,10 @@ target_link_libraries(my_server PRIVATE kprotocol::kprotocol)
 **Option B — find_package (installed build)**
 
 ```bash
-cmake -S . -B build -DCMAKE_PREFIX_PATH=/path/to/kprotocol/install
-cmake --build build
+cmake --install build/release --prefix /path/to/kprotocol/install
+cmake -S examples/consumer -B build/consumer \
+  -DCMAKE_PREFIX_PATH=/path/to/kprotocol/install
+cmake --build build/consumer
 ```
 
 ```cmake
@@ -116,6 +149,23 @@ target_link_libraries(example PRIVATE kprotocol::kprotocol)
 See `examples/consumer/` for a minimal installed-consumer layout (`main.cpp` +
 `CMakeLists.txt`). After `cmake --install` from the kprotocol build tree, point
 `CMAKE_PREFIX_PATH` at the install prefix and configure that example.
+
+Installed packages export the same public targets as the in-tree build:
+`kprotocol::kprotocol`, `kprotocol::codec`, `kprotocol::core`,
+`kprotocol::packets`, `kprotocol::server`, and `kprotocol::asio`. Standalone
+Asio headers used by the server runtime are installed with the package, so
+consumers do not need a separate Asio checkout just to use `kprotocol::server`.
+
+The installed package also defines:
+
+| Variable | Meaning |
+|---|---|
+| `kprotocol_DATA_DIR` | Installed `share/kprotocol` data directory. |
+| `kprotocol_TRANSLATION_MAPPINGS` | Path to `translation_mappings.bin.gz` when installed. |
+
+The default test suite includes `kprotocol_install_consumer_smoke`, which
+installs into a temporary prefix and builds `examples/consumer` through
+`find_package(kprotocol CONFIG REQUIRED)`.
 
 ### Play demo server
 
@@ -196,6 +246,31 @@ and exit `0` on success.
      `login_acknowledged` and `configuration.finish_configuration`.
    - Exposes a lightweight `GameplaySession` per client for profile, entity id,
      gamemode, dimension, position, and login/config/play lifecycle flags.
+
+4. `kprotocol::ProtocolRuntime` and `kprotocol::ProtocolServer`
+   - `ProtocolRuntime` owns an initialized registry/translator pair.
+   - `ProtocolServer` combines `ProtocolRuntime` with `MinecraftServer` for
+     the common "start a protocol server" path.
+
+## Test Matrix
+
+Default CTest coverage includes codec/property tests, generated packet coverage,
+versioned schema tests, NBT tests, translation tests, server smoke tests,
+runtime guardrail tests, login/configuration flow tests, gameplay session tests,
+play-demo integration tests, UI/block helper tests, and installed-consumer
+packaging smoke tests.
+
+Useful commands:
+
+```bash
+npm run check:coverage
+ctest --preset release
+ctest --preset release -R kprotocol_install_consumer_smoke --output-on-failure
+docker build -t kprotocol-build .
+```
+
+Real-client tests are intentionally opt-in because they require an external
+client runner and usually machine-specific assets or credentials.
 
 ## Packet class naming
 
@@ -306,6 +381,9 @@ server.on_packet([](const kprotocol::ClientSession& client, const kprotocol::Pac
 
 For registry payloads, use `SRegistryDataPacket`: `codec` is used by 1.20.2
 style schemas, while `id` + `entries` is used by newer registry-data packets.
+Applications that need a real client to enter a world must still send
+version-appropriate registry/tag/join packets with semantically valid contents;
+the helper covers the phase boundary, not world bootstrap policy.
 
 Login/security helpers are available when implementing online-mode or custom
 authentication flows:
@@ -324,6 +402,11 @@ kprotocol::send_login_encryption_request(client, challenge);
 // kprotocol::verify_login_token(response, challenge.verify_token)
 kprotocol::send_login_set_compression(client, 256);
 ```
+
+`send_login_encryption_request` and `verify_login_token` help with the packet
+and token pieces of online-mode login. They do not contact Mojang services or
+decrypt RSA payloads for you; applications own private-key handling, session
+server verification, profile properties, bans, and rate-limit policy.
 
 ## Adding a new packet
 

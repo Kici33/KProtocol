@@ -39,6 +39,7 @@ set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL
     "Do not update already-populated FetchContent dependencies during configure" FORCE)
 
 find_package(ZLIB REQUIRED)
+include(GNUInstallDirs)
 
 set(GENERATED_DIR "${CMAKE_SOURCE_DIR}/generated")
 
@@ -57,10 +58,11 @@ add_library(kprotocol_codec
     src/codec.cpp
     src/version.cpp
 )
+set_target_properties(kprotocol_codec PROPERTIES EXPORT_NAME codec)
 target_compile_features(kprotocol_codec PUBLIC cxx_std_20)
 target_include_directories(kprotocol_codec PUBLIC
     $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 target_link_libraries(kprotocol_codec PUBLIC ZLIB::ZLIB)
 kprotocol_apply_warnings(kprotocol_codec)
@@ -85,6 +87,7 @@ add_library(kprotocol_core
     src/block_registry_data.cpp
     src/metadata_registry_data.cpp
 )
+set_target_properties(kprotocol_core PROPERTIES EXPORT_NAME core)
 target_link_libraries(kprotocol_core PUBLIC kprotocol_codec)
 if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
     target_compile_definitions(kprotocol_core PRIVATE
@@ -102,6 +105,7 @@ add_library(kprotocol_packets
     src/initialize.cpp
     src/runtime.cpp
 )
+set_target_properties(kprotocol_packets PROPERTIES EXPORT_NAME packets)
 target_link_libraries(kprotocol_packets PUBLIC kprotocol_core)
 
 # The committed generator output lives under generated/include and
@@ -162,13 +166,16 @@ if(KPROTOCOL_ASIO_SOURCE_DIR)
             "KPROTOCOL_ASIO_SOURCE_DIR must point to an Asio source tree "
             "containing asio/include")
     endif()
+    set(KPROTOCOL_ASIO_INCLUDE_DIR "${KPROTOCOL_ASIO_SOURCE_DIR}/asio/include")
     add_library(kprotocol_asio INTERFACE)
     target_include_directories(kprotocol_asio SYSTEM INTERFACE
-        $<BUILD_INTERFACE:${KPROTOCOL_ASIO_SOURCE_DIR}/asio/include>)
+        $<BUILD_INTERFACE:${KPROTOCOL_ASIO_INCLUDE_DIR}>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
     target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
     if(WIN32)
         target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
     endif()
+    set_target_properties(kprotocol_asio PROPERTIES EXPORT_NAME asio)
     add_library(kprotocol::asio ALIAS kprotocol_asio)
 else()
     if(NOT KPROTOCOL_FETCH_ASIO)
@@ -187,15 +194,18 @@ else()
     if(NOT kprotocol_asio_POPULATED)
         FetchContent_MakeAvailable(kprotocol_asio)
     endif()
+    set(KPROTOCOL_ASIO_INCLUDE_DIR "${kprotocol_asio_SOURCE_DIR}/asio/include")
     if(NOT TARGET kprotocol_asio)
         add_library(kprotocol_asio INTERFACE)
         target_include_directories(kprotocol_asio SYSTEM INTERFACE
-            $<BUILD_INTERFACE:${kprotocol_asio_SOURCE_DIR}/asio/include>)
+            $<BUILD_INTERFACE:${KPROTOCOL_ASIO_INCLUDE_DIR}>
+            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
         target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
         if(WIN32)
             target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
         endif()
     endif()
+    set_target_properties(kprotocol_asio PROPERTIES EXPORT_NAME asio)
     add_library(kprotocol::asio ALIAS kprotocol_asio)
 endif()
 
@@ -210,6 +220,7 @@ add_library(kprotocol_server
     src/play_demo.cpp
     src/protocol_server.cpp
 )
+set_target_properties(kprotocol_server PROPERTIES EXPORT_NAME server)
 target_link_libraries(kprotocol_server PUBLIC kprotocol_core kprotocol_asio)
 if(WIN32)
     target_link_libraries(kprotocol_server PRIVATE ws2_32 mswsock)
@@ -223,6 +234,7 @@ add_library(kprotocol::server ALIAS kprotocol_server)
 # sub-target it needs.
 # ============================================================================
 add_library(kprotocol INTERFACE)
+set_target_properties(kprotocol PROPERTIES EXPORT_NAME kprotocol)
 target_link_libraries(kprotocol INTERFACE
     kprotocol_codec
     kprotocol_core
@@ -346,7 +358,6 @@ endif()
 # ============================================================================
 # Install / export
 # ============================================================================
-include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 install(TARGETS
@@ -359,6 +370,12 @@ install(TARGETS
 )
 
 install(DIRECTORY include/ DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} FILES_MATCHING PATTERN "*.hpp")
+
+install(DIRECTORY "${KPROTOCOL_ASIO_INCLUDE_DIR}/"
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        FILES_MATCHING
+            PATTERN "*.hpp"
+            PATTERN "*.ipp")
 
 if(EXISTS "${CMAKE_SOURCE_DIR}/data/translation_mappings.bin.gz")
     install(FILES data/translation_mappings.bin.gz
@@ -383,13 +400,28 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
 )
 
-file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/kprotocolConfig.cmake"
-"include(CMakeFindDependencyMacro)
-find_dependency(ZLIB)
-include(\"\${CMAKE_CURRENT_LIST_DIR}/kprotocolTargets.cmake\")
-# kprotocol::asio is exported alongside the library targets (standalone Asio).
-# Consumers linking kprotocol::server or kprotocol::kprotocol receive it transitively.
-")
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/kprotocolConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/kprotocolConfig.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/kprotocol
+    PATH_VARS CMAKE_INSTALL_DATADIR
+)
+
+if(KPROTOCOL_BUILD_TESTS)
+    set(KPROTOCOL_INSTALL_SMOKE_PREFIX
+        "${CMAKE_CURRENT_BINARY_DIR}/install-smoke/prefix")
+    set(KPROTOCOL_INSTALL_SMOKE_BUILD
+        "${CMAKE_CURRENT_BINARY_DIR}/install-smoke/consumer-build")
+    configure_file(
+        "${CMAKE_CURRENT_SOURCE_DIR}/cmake/install_consumer_smoke.cmake.in"
+        "${CMAKE_CURRENT_BINARY_DIR}/install_consumer_smoke.cmake"
+        @ONLY)
+    add_test(
+        NAME kprotocol_install_consumer_smoke
+        COMMAND ${CMAKE_COMMAND}
+                -DINSTALL_CONFIG=$<CONFIG>
+                -P "${CMAKE_CURRENT_BINARY_DIR}/install_consumer_smoke.cmake")
+endif()
 
 install(FILES
         "${CMAKE_CURRENT_BINARY_DIR}/kprotocolConfig.cmake"
