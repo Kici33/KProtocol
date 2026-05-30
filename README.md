@@ -33,10 +33,26 @@ Prerequisites:
 - On Windows: Visual Studio or appropriate build tools
 
 ```bash
-cmake -S . -B build
-cmake --build build --config Release
-ctest --test-dir build --output-on-failure
+npm ci
+npm run generate
+cmake --preset release
+cmake --build --preset release
+ctest --preset release
 ```
+
+For a network-free CMake configure, provide a local Asio checkout and use the
+offline preset:
+
+```bash
+cmake --preset release-offline -DKPROTOCOL_ASIO_SOURCE_DIR=/path/to/asio
+cmake --build --preset release-offline
+ctest --preset release-offline
+```
+
+`KPROTOCOL_BUILD_GENERATED_PACKETS=ON` now fails fast when `generated/` is
+missing or incomplete. Use `npm ci && npm run generate` to recreate it from the
+locked `minecraft-data` package, or pass
+`-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF` for a baseline-only build.
 
 By default the library compiles the committed multi-version packet catalog under
 `generated/` (packet keys across every known catalog version from 1.8 through

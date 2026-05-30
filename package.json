@@ -8,6 +8,6 @@
     "embed:translation": "node tools/embed_translation_mappings.mjs"
   },
   "devDependencies": {
-    "minecraft-data": "^3.84.0"
+    "minecraft-data": "3.110.2"
   }
 }

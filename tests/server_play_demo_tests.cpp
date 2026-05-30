@@ -70,9 +70,8 @@ std::set<std::string> decode_clientbound_keys(
             const auto decoded = registry.decode_packet(
                 frame, version, state, kprotocol::PacketDirection::clientbound);
             keys.insert(decoded.key);
-        } catch (const std::exception& ex) {
+        } catch (const std::exception&) {
             // Ignore undecodable frames while draining configuration/login.
-            std::cerr << "ignored clientbound frame in state decode: " << ex.what() << '\n';
         }
     }
     return keys;
@@ -196,7 +195,6 @@ void run_modern_client_flow(
     }
     KPC_CHECK(got_login_success, "login_success");
 
-    std::cerr << "modern flow: sending login_ack\n";
     write_packet(socket, registry, kprotocol::CLoginAcknowledgedPacket{}.to_packet(), version);
 
     bool got_configuration_finish = false;
@@ -214,11 +212,9 @@ void run_modern_client_flow(
     }
     KPC_CHECK(got_configuration_finish, "configuration finish");
 
-    std::cerr << "modern flow: sending configuration finish\n";
     write_packet(socket, registry, kprotocol::CFinishConfigurationPacket{}.to_packet(), version);
 
     inbound.clear();
-    std::cerr << "modern flow: collecting play packets\n";
     const auto keys = collect_play_keys(socket, registry, version);
     KPC_CHECK(keys.contains("play.clientbound.block_change"), "block_change");
     KPC_CHECK(keys.contains("play.clientbound.scoreboard_display_objective"), "scoreboard display");
@@ -282,6 +278,9 @@ int main() {
         register_login_ack_schema(registry);
 
         auto server = make_play_demo_server(registry, translator);
+        server.on_error([](const std::string& error) {
+            std::cerr << "server error: " << error << '\n';
+        });
         KPC_CHECK(server.start(0, kInternalVersion), "server.start");
         const auto port = server.listen_port();
 

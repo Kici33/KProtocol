@@ -1,0 +1,64 @@
+{
+  "version": 6,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "release",
+      "displayName": "Release",
+      "description": "Reproducible local release build with generated packet catalog and tests.",
+      "binaryDir": "${sourceDir}/build/release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "KPROTOCOL_BUILD_TESTS": "ON",
+        "KPROTOCOL_BUILD_EXAMPLES": "OFF",
+        "KPROTOCOL_BUILD_GENERATED_PACKETS": "ON",
+        "KPROTOCOL_BUILD_REAL_CLIENT_TESTS": "OFF",
+        "KPROTOCOL_FETCH_ASIO": "ON"
+      }
+    },
+    {
+      "name": "release-offline",
+      "displayName": "Release Offline",
+      "description": "Release build that refuses network dependency fetches; set KPROTOCOL_ASIO_SOURCE_DIR.",
+      "inherits": "release",
+      "binaryDir": "${sourceDir}/build/release-offline",
+      "cacheVariables": {
+        "KPROTOCOL_FETCH_ASIO": "OFF"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "configuration": "Release"
+    },
+    {
+      "name": "release-offline",
+      "configurePreset": "release-offline",
+      "configuration": "Release"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "release-offline",
+      "configurePreset": "release-offline",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ]
+}

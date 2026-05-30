@@ -12,6 +12,8 @@ option(KPROTOCOL_BUILD_REAL_CLIENT_TESTS
        "Add opt-in tests that run an external real Minecraft client against kprotocol_play_demo" OFF)
 option(KPROTOCOL_BUILD_GENERATED_PACKETS
        "Compile the committed generated/ packet catalog into kprotocol_packets" ON)
+option(KPROTOCOL_FETCH_ASIO
+       "Download standalone Asio with CMake FetchContent when KPROTOCOL_ASIO_SOURCE_DIR is not set" ON)
 option(BUILD_EXAMPLE            "(deprecated) alias of KPROTOCOL_BUILD_EXAMPLES" OFF)
 if(BUILD_EXAMPLE)
     set(KPROTOCOL_BUILD_EXAMPLES ON CACHE BOOL "" FORCE)
@@ -29,6 +31,12 @@ set(KPROTOCOL_REAL_CLIENT_VERSIONS "1.8:47,1.21.1:767"
 set(KPROTOCOL_REAL_CLIENT_PORT "25565"
     CACHE STRING
     "Local port used by the opt-in real-client integration test")
+set(KPROTOCOL_ASIO_SOURCE_DIR ""
+    CACHE PATH
+    "Path to a local Asio checkout containing asio/include; avoids network fetches when set")
+
+set(FETCHCONTENT_UPDATES_DISCONNECTED ON CACHE BOOL
+    "Do not update already-populated FetchContent dependencies during configure" FORCE)
 
 find_package(ZLIB REQUIRED)
 
@@ -99,12 +107,18 @@ target_link_libraries(kprotocol_packets PUBLIC kprotocol_core)
 # The committed generator output lives under generated/include and
 # generated/registry. Header layout: generated/include/kprotocol/generated/*.hpp
 # so a single -I generated/include exposes them at #include "kprotocol/generated/...".
-if(KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/include")
+if(KPROTOCOL_BUILD_GENERATED_PACKETS
+        AND (NOT EXISTS "${GENERATED_DIR}/include"
+             OR NOT EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp"))
+    message(FATAL_ERROR
+        "KPROTOCOL_BUILD_GENERATED_PACKETS=ON requires generated packet files. "
+        "Run `npm ci && npm run generate`, or configure with "
+        "-DKPROTOCOL_BUILD_GENERATED_PACKETS=OFF for the baseline-only build.")
+endif()
+if(KPROTOCOL_BUILD_GENERATED_PACKETS)
     target_include_directories(kprotocol_packets PUBLIC
         $<BUILD_INTERFACE:${GENERATED_DIR}/include>
     )
-endif()
-if(KPROTOCOL_BUILD_GENERATED_PACKETS AND EXISTS "${GENERATED_DIR}/registry/register_all_packets.cpp")
     message(STATUS "kprotocol_packets: including generated registry source")
     target_sources(kprotocol_packets PRIVATE ${GENERATED_DIR}/registry/register_all_packets.cpp)
     target_compile_definitions(kprotocol_packets PUBLIC KPROTOCOL_HAS_GENERATED_CATALOG=1)
@@ -142,14 +156,37 @@ endif()
 # Asio (standalone, header-only) — used only by kprotocol_server.
 # ============================================================================
 include(FetchContent)
-FetchContent_Declare(
-    kprotocol_asio
-    GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
-    GIT_TAG        asio-1-30-2
-)
-FetchContent_GetProperties(kprotocol_asio)
-if(NOT kprotocol_asio_POPULATED)
-    FetchContent_MakeAvailable(kprotocol_asio)
+if(KPROTOCOL_ASIO_SOURCE_DIR)
+    if(NOT EXISTS "${KPROTOCOL_ASIO_SOURCE_DIR}/asio/include")
+        message(FATAL_ERROR
+            "KPROTOCOL_ASIO_SOURCE_DIR must point to an Asio source tree "
+            "containing asio/include")
+    endif()
+    add_library(kprotocol_asio INTERFACE)
+    target_include_directories(kprotocol_asio SYSTEM INTERFACE
+        $<BUILD_INTERFACE:${KPROTOCOL_ASIO_SOURCE_DIR}/asio/include>)
+    target_compile_definitions(kprotocol_asio INTERFACE ASIO_STANDALONE)
+    if(WIN32)
+        target_compile_definitions(kprotocol_asio INTERFACE _WIN32_WINNT=0x0A00)
+    endif()
+    add_library(kprotocol::asio ALIAS kprotocol_asio)
+else()
+    if(NOT KPROTOCOL_FETCH_ASIO)
+        message(FATAL_ERROR
+            "Standalone Asio is required. Set KPROTOCOL_ASIO_SOURCE_DIR to a "
+            "local Asio checkout, or enable KPROTOCOL_FETCH_ASIO.")
+    endif()
+    FetchContent_Declare(
+        kprotocol_asio
+        GIT_REPOSITORY https://github.com/chriskohlhoff/asio.git
+        GIT_TAG        asio-1-30-2
+        GIT_SHALLOW    TRUE
+        GIT_PROGRESS   FALSE
+    )
+    FetchContent_GetProperties(kprotocol_asio)
+    if(NOT kprotocol_asio_POPULATED)
+        FetchContent_MakeAvailable(kprotocol_asio)
+    endif()
     if(NOT TARGET kprotocol_asio)
         add_library(kprotocol_asio INTERFACE)
         target_include_directories(kprotocol_asio SYSTEM INTERFACE
