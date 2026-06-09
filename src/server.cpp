@@ -16,6 +16,7 @@
 #include <asio/read.hpp>
 #include <asio/redirect_error.hpp>
 #include <asio/steady_timer.hpp>
+#include <asio/system_error.hpp>
 #include <asio/use_awaitable.hpp>
 #include <asio/write.hpp>
 
@@ -602,6 +603,18 @@ struct MinecraftServer::Impl {
             try {
                 bytes_read = co_await shared->socket->async_read_some(
                     asio::buffer(recv_buffer), asio::use_awaitable);
+            } catch (const asio::system_error& ex) {
+                const auto code = ex.code();
+                const bool expected_disconnect =
+                    code == asio::error::eof ||
+                    code == asio::error::connection_reset ||
+                    code == asio::error::operation_aborted;
+                if (running.load() && !expected_disconnect) {
+                    emit_error(
+                        std::string("Read error from ") + shared->remote + ": " +
+                        ex.what());
+                }
+                break;
             } catch (const std::exception& ex) {
                 if (running.load()) {
                     emit_error(std::string("Read error from ") + shared->remote + ": " + ex.what());

@@ -683,6 +683,20 @@ function extractDirection(directionEntry, globalTypes) {
             if (!flattened.ok) {
                 result.push(unsupportedPacket(wireName, id, flattened.reason));
             } else {
+                // This packet contains an array of structured known-pack
+                // entries. byte_array would add a second VarInt length and
+                // corrupt the element count, so preserve the encoded array.
+                if (wireName === 'select_known_packs') {
+                    flattened.fields = [{ name: 'packs', type: 'rest_buffer' }];
+                } else if (wireName === 'registry_data' &&
+                           flattened.fields.some(field => field.name === 'entries')) {
+                    flattened.fields = [
+                        { name: 'id', type: 'string' },
+                        { name: 'entries', type: 'rest_buffer' },
+                    ];
+                } else if (wireName === 'tags') {
+                    flattened.fields = [{ name: 'tags', type: 'rest_buffer' }];
+                }
                 result.push({ wireName, id, fields: flattened.fields, status: 'ok' });
             }
         } else {

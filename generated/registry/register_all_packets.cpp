@@ -245,7 +245,7 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         });
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
             {"id", kprotocol::FieldType::string},
-            {"entries", kprotocol::FieldType::byte_array}
+            {"entries", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -317,7 +317,7 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 14);
         schema.ids.emplace(KnownVersion::v1_21_11, 14);
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"packs", kprotocol::FieldType::byte_array}
+            {"packs", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -389,7 +389,7 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 13);
         schema.ids.emplace(KnownVersion::v1_21_11, 13);
         schema.field_sets.emplace(KnownVersion::v1_20_2, std::vector<FieldSpec>{
-            {"tags", kprotocol::FieldType::byte_array}
+            {"tags", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
@@ -597,7 +597,7 @@ static void register_generated_packets_batch_0(PacketRegistry& registry) {
         schema.ids.emplace(KnownVersion::v1_21_9, 7);
         schema.ids.emplace(KnownVersion::v1_21_11, 7);
         schema.field_sets.emplace(KnownVersion::v1_20_5, std::vector<FieldSpec>{
-            {"packs", kprotocol::FieldType::byte_array}
+            {"packs", kprotocol::FieldType::rest_buffer}
         });
         registry.register_schema(std::move(schema));
     }
