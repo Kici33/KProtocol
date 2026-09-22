@@ -30,10 +30,10 @@ application-specific packets.
 ### Boundaries
 
 KProtocol is a protocol library and lightweight server runtime, not a complete
-game server. It does not implement Mojang authentication/session servers,
-world/chunk simulation, permissions, persistence, inventory semantics, or full
-gameplay rules. Generated packets cover wire IDs and field shapes; complex
-packet semantics still need application-level validation and translation rules.
+game server. It does not implement world/chunk simulation, permissions, 
+persistence, inventory semantics, or full gameplay rules. 
+Generated packets cover wire IDs and field shapes; complex packet semantics 
+still need application-level validation and translation rules.
 
 ### Version model
 
