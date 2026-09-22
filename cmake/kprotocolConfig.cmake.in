@@ -2,6 +2,14 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(ZLIB)
+set(kprotocol_auth_FOUND @KPROTOCOL_BUILD_AUTH@)
+set(kprotocol_client_FOUND @KPROTOCOL_BUILD_CLIENT@)
+if(kprotocol_auth_FOUND)
+    find_dependency(CURL)
+    find_dependency(OpenSSL)
+    find_dependency(Threads)
+    find_dependency(nlohmann_json 3.11)
+endif()
 
 include("${CMAKE_CURRENT_LIST_DIR}/kprotocolTargets.cmake")
 

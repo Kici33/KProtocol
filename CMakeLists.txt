@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(kprotocol VERSION 0.2.0 LANGUAGES CXX)
+project(kprotocol VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -9,6 +9,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(KPROTOCOL_BUILD_TESTS_DEFAULT ${PROJECT_IS_TOP_LEVEL})
 option(KPROTOCOL_BUILD_TESTS    "Build kprotocol unit + integration tests" ${KPROTOCOL_BUILD_TESTS_DEFAULT})
 option(KPROTOCOL_BUILD_EXAMPLES "Build kprotocol example binaries"         OFF)
+option(KPROTOCOL_BUILD_AUTH "Build Microsoft/Minecraft authentication and HTTPS support" OFF)
+option(KPROTOCOL_BUILD_CLIENT "Build the outbound protocol-47 Minecraft client (includes auth)" OFF)
+if(KPROTOCOL_BUILD_CLIENT)
+    set(KPROTOCOL_BUILD_AUTH ON)
+endif()
 option(KPROTOCOL_BUILD_REAL_CLIENT_TESTS
        "Add opt-in tests that run an external real Minecraft client against kprotocol_play_demo" OFF)
 option(KPROTOCOL_BUILD_GENERATED_PACKETS
@@ -254,6 +259,47 @@ target_link_libraries(kprotocol INTERFACE
 )
 add_library(kprotocol::kprotocol ALIAS kprotocol)
 
+# Optional outbound-client functionality. Existing server/codec-only builds do
+# not need curl, OpenSSL or JSON. Public targets work in-tree and after install.
+set(KPROTOCOL_OPTIONAL_TARGETS "")
+if(KPROTOCOL_BUILD_AUTH)
+    find_package(CURL REQUIRED)
+    find_package(OpenSSL REQUIRED)
+    find_package(Threads REQUIRED)
+    if(NOT TARGET nlohmann_json::nlohmann_json)
+        find_package(nlohmann_json 3.11 REQUIRED)
+    endif()
+    add_library(kprotocol_auth src/microsoft_auth.cpp src/auth_cache.cpp src/http.cpp src/crypto.cpp)
+    set_target_properties(kprotocol_auth PROPERTIES EXPORT_NAME auth)
+    target_compile_features(kprotocol_auth PUBLIC cxx_std_20)
+    target_compile_definitions(kprotocol_auth PUBLIC KPROTOCOL_HAS_AUTH=1)
+    target_include_directories(kprotocol_auth PUBLIC
+        $<BUILD_INTERFACE:${KPROTOCOL_SOURCE_DIR}/include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
+    target_link_libraries(kprotocol_auth PUBLIC CURL::libcurl OpenSSL::Crypto
+        nlohmann_json::nlohmann_json Threads::Threads)
+    if(WIN32)
+        target_link_libraries(kprotocol_auth PRIVATE crypt32)
+    endif()
+    kprotocol_apply_warnings(kprotocol_auth)
+    add_library(kprotocol::auth ALIAS kprotocol_auth)
+    target_link_libraries(kprotocol INTERFACE kprotocol_auth)
+    list(APPEND KPROTOCOL_OPTIONAL_TARGETS kprotocol_auth)
+endif()
+if(KPROTOCOL_BUILD_CLIENT)
+    add_library(kprotocol_client src/minecraft_client.cpp src/chat.cpp src/message_queue.cpp)
+    set_target_properties(kprotocol_client PROPERTIES EXPORT_NAME client)
+    target_compile_definitions(kprotocol_client PUBLIC KPROTOCOL_HAS_CLIENT=1)
+    target_link_libraries(kprotocol_client PUBLIC kprotocol::auth kprotocol::codec kprotocol::asio)
+    if(WIN32)
+        target_link_libraries(kprotocol_client PRIVATE ws2_32 mswsock)
+    endif()
+    kprotocol_apply_warnings(kprotocol_client)
+    add_library(kprotocol::client ALIAS kprotocol_client)
+    target_link_libraries(kprotocol INTERFACE kprotocol_client)
+    list(APPEND KPROTOCOL_OPTIONAL_TARGETS kprotocol_client)
+endif()
+
 # ============================================================================
 # Examples
 # ============================================================================
@@ -269,6 +315,19 @@ endif()
 # ============================================================================
 if(KPROTOCOL_BUILD_TESTS)
     enable_testing()
+
+    if(KPROTOCOL_BUILD_AUTH)
+        add_executable(kprotocol_auth_tests tests/auth_tests.cpp)
+        target_link_libraries(kprotocol_auth_tests PRIVATE kprotocol::auth)
+        add_test(NAME kprotocol_auth_tests COMMAND kprotocol_auth_tests)
+        set_tests_properties(kprotocol_auth_tests PROPERTIES TIMEOUT 30)
+    endif()
+    if(KPROTOCOL_BUILD_CLIENT)
+        add_executable(kprotocol_client_tests tests/client_tests.cpp)
+        target_link_libraries(kprotocol_client_tests PRIVATE kprotocol::client)
+        add_test(NAME kprotocol_client_tests COMMAND kprotocol_client_tests)
+        set_tests_properties(kprotocol_client_tests PROPERTIES TIMEOUT 30)
+    endif()
 
     set(KPROTOCOL_TEST_NAMES
         codec_tests
@@ -361,6 +420,7 @@ include(CMakePackageConfigHelpers)
 
 install(TARGETS
         kprotocol kprotocol_codec kprotocol_core kprotocol_packets kprotocol_server kprotocol_asio
+        ${KPROTOCOL_OPTIONAL_TARGETS}
     EXPORT kprotocolTargets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
